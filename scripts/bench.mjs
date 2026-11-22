@@ -28,8 +28,12 @@ const items = SET.items.filter((x) => !only || only.includes(x.form));
 const sha = execSync("git rev-parse --short HEAD", { cwd: ROOT }).toString().trim();
 const dirty = execSync("git status --porcelain -- src", { cwd: ROOT }).toString().trim() !== "";
 const date = new Date().toISOString().slice(0, 10);
-const OUT = path.join(ROOT, "evidence/bench");
+// --out DIR keeps raw rows + the per-paste summary out of the repo (used for the frozen kill-test set, which stays in the
+// kitchen); the aggregate file (counts and ranges only, no paste text) always lands in evidence/bench/aggregates/.
+const OUT = path.resolve(ROOT, arg("out", "evidence/bench"));
+const AGG = path.join(ROOT, "evidence/bench/aggregates");
 fs.mkdirSync(OUT, { recursive: true });
+fs.mkdirSync(AGG, { recursive: true });
 
 let contended = false;
 try {
@@ -118,6 +122,43 @@ try {
     warmP50: range((s) => s.latencyMs.warmP50),
     warmP95: range((s) => s.latencyMs.warmP95),
   };
+  const armName = hintsMode === "off" && !hintsFile ? "off" : "hints";
+  const aggDoc = {
+    set: SET.set,
+    setSha256: setHash,
+    pastes: items.length,
+    forms,
+    arm: armName,
+    hintsSource: hintsFile ? `file:${hintsFile}` : hintsMode === "cloud" ? "cloud" : "none",
+    hintsSha,
+    repeats,
+    date,
+    commit: sha,
+    srcDirty: dirty,
+    promptVersion: meta.versions.prompt,
+    gateVersion: meta.versions.gate,
+    chrome: meta.ua,
+    machine: "Apple M1 Max, 32 GB (builder's laptop)",
+    contendedBySiblingChrome: contended,
+    path: "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
+    metrics: agg,
+    perRepeat: summaries.map((s) => ({
+      jsonValid: s.jsonValid,
+      onDeviceBatches: s.onDeviceBatches,
+      stalls: s.stalls,
+      rawAccuracyStrict: s.rawAccuracyStrict,
+      acceptedWrongPct: s.acceptedWrongPct,
+      acceptedWrongCount: s.acceptedWrongRows.length,
+      coverage: s.coverage,
+      usefulCoverage: s.usefulCoverage,
+      warmP50: s.latencyMs.warmP50,
+      warmP95: s.latencyMs.warmP95,
+    })),
+    rawRowsInRepo: !process.argv.includes("--out"),
+  };
+  const aggFile = path.join(AGG, `${date}-${sha}-${SET.set}-${armName}.json`);
+  fs.writeFileSync(aggFile, JSON.stringify(aggDoc, null, 1) + "\n");
+  const redact = process.argv.includes("--out");
   const md = [
     `# Bench: ${SET.set} · hints ${hintsMode === "off" && !hintsFile ? "off" : "on"} · ${repeats} repeat(s)`,
     "",
@@ -133,9 +174,10 @@ try {
     `JSON valid per repeat: ${summaries.map((s) => s.jsonValid).join(" · ")} · on-device batches: ${summaries.map((s) => s.onDeviceBatches).join(" · ")} · stalls: ${summaries.map((s) => s.stalls).join(" · ")}`,
     "",
     "## Accepted-wrong rows (the dangerous ones)",
-    ...summaries.flatMap((s, i) => s.acceptedWrongRows.map((w) => `- r${i + 1} ${w.id} \`${w.field}\`: shown "${w.shown}" · gold "${w.gold}"`)),
+    ...summaries.flatMap((s, i) => s.acceptedWrongRows.map((w) => (redact ? `- r${i + 1} ${w.id} \`${w.field}\`` : `- r${i + 1} ${w.id} \`${w.field}\`: shown "${w.shown}" · gold "${w.gold}"`))),
     "",
     "Raw rows: " + files.map((f) => `\`${f}\``).join(", "),
+    `Aggregate: \`${path.relative(ROOT, aggFile)}\``,
     "",
   ].join("\n");
   const mdFile = path.join(OUT, `${date}-${sha}-${SET.set}-${hintsMode === "off" && !hintsFile ? "off" : "hints"}-summary.md`);

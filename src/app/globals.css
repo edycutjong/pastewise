@@ -103,3 +103,17 @@ body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body)
   .paper.reading::after { animation: none; }
   .fill { transition: none; }
 }
+
+/* site nav + static pages (bench, receipt) */
+.site-nav { display: flex; gap: 6px; padding: 0 40px 4px; }
+.site-nav a { font: 600 14px/1 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 8px 12px; border: 1px solid transparent; transition: color 120ms, border-color 120ms; }
+.site-nav a:hover { color: var(--ink); border-color: var(--ink); }
+.site-nav a[aria-current="page"] { color: var(--ink); border-color: var(--ink); }
+.site-nav a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.page { display: grid; gap: 20px; padding: 16px 40px 48px; max-width: 1200px; }
+.page .sheet h2.cap { margin: 0 0 10px; }
+table.data { border-collapse: collapse; width: 100%; font: 13px var(--font-data); }
+table.data th, table.data td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+table.data th { font: 600 12px var(--font-display); letter-spacing: .08em; text-transform: uppercase; }
+.delta { margin: 10px 0 0; font-weight: 500; }
+.fine { margin: 10px 0 0; font-size: 13px; color: var(--muted); }

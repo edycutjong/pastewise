@@ -18,6 +18,8 @@ import { FORMS, formById, type InputDef } from "@/forms/defs";
 import type { FormSpec } from "@/forms/types";
 import { readForm, type Hint } from "@/schema/buildSchema";
 import { gateField, GATE_VERSION } from "@/gate";
+import LedgerStrip from "./LedgerStrip";
+import SiteNav from "./SiteNav";
 import { boxClass, countBoxes, mergeBatch, stateNote, type Box, type FormRun } from "./runState";
 import { pasteTokens, tokensFound } from "@/ledger/tokens";
 
@@ -354,6 +356,7 @@ export default function FillApp() {
         <h1>Pastewise</h1>
         <p>Paste a messy order message. The form fills on this laptop, and code accepts only what is in your text.</p>
       </header>
+      <SiteNav current="fill" />
       <main className="desk">
         <section className="sheet" aria-label="Top sheet: your message">
           <div className="sheet-head">
@@ -562,56 +565,6 @@ function FieldBox(props: {
           ))}
         </div>
       )}
-    </div>
-  );
-}
-
-function LedgerStrip({ bytes, records }: { bytes: number; records: ReturnType<typeof ledger.records> }) {
-  return (
-    <div className="strip" id="ledger">
-      <div className="strip-row">
-        <span className="cap">Text from your paste sent to the cloud</span>
-        <b data-testid="ledger-bytes">{fmt(bytes)} bytes found</b>
-      </div>
-      {records.some((r) => r.unreadable) && (
-        <div className="notice" role="status">
-          {records.filter((r) => r.unreadable).length} request(s) had a body this page could not read, so they are not counted above — see the
-          table.
-        </div>
-      )}
-      <details>
-        <summary>
-          {records.length} outbound request{records.length === 1 ? "" : "s"} this session, each checked for words and numbers from your paste
-        </summary>
-        <table>
-          <thead>
-            <tr>
-              <th>t (ms)</th>
-              <th>host</th>
-              <th>purpose</th>
-              <th>bytes</th>
-              <th>paste bytes found</th>
-            </tr>
-          </thead>
-          <tbody>
-            {records.map((r, i) => (
-              <tr key={i}>
-                <td>{r.t}</td>
-                <td>{r.host}</td>
-                <td>{r.purpose}</td>
-                <td>{fmt(r.size)}</td>
-                <td>{r.unreadable ? "unreadable body" : fmt(r.pasteBytesFound)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <p>
-          Counting rule: words of 4+ letters and digit runs of 4+ digits from your paste, minus the empty form&apos;s own labels and
-          common words. Each request is checked against every message filled in this session; a request sent before your first Fill
-          has nothing to be checked against. Not caught: shorter pieces, text changed before sending, and the reCAPTCHA frame (the recorded
-          browser network log in this repo covers those).
-        </p>
-      </details>
     </div>
   );
 }
