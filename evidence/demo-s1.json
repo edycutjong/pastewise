@@ -1,0 +1,141 @@
+{
+ "label": "SYNTHETIC — invented details, no real person; phone numbers use the 5550 block (never dial them)",
+ "paste": "fixtures/demo/S1.json",
+ "form": "C",
+ "commit": "c67d663",
+ "date": "2026-11-22",
+ "hintsFile": "evidence/bench/hints-C-2026-11-22.json",
+ "definition": "correct = the box shows the gold value as found in your text (an empty gold counts when the box is not found)",
+ "off": {
+  "runs": 10,
+  "onDevice": "10/10",
+  "perField": {
+   "cnee_nm": {
+    "correct": 0,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "cnee_tel": {
+    "correct": 0,
+    "found": 0,
+    "amber": 10,
+    "empty": 0
+   },
+   "addr_1": {
+    "correct": 9,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "dist_city": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "st_prov": {
+    "correct": 10,
+    "found": 0,
+    "amber": 0,
+    "empty": 10
+   },
+   "zip": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "desc": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "pcs": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "svc": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "rmks": {
+    "correct": 5,
+    "found": 9,
+    "amber": 1,
+    "empty": 0
+   }
+  }
+ },
+ "hints": {
+  "runs": 10,
+  "onDevice": "10/10",
+  "perField": {
+   "cnee_nm": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "cnee_tel": {
+    "correct": 0,
+    "found": 0,
+    "amber": 10,
+    "empty": 0
+   },
+   "addr_1": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "dist_city": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "st_prov": {
+    "correct": 9,
+    "found": 1,
+    "amber": 0,
+    "empty": 9
+   },
+   "zip": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "desc": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "pcs": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "svc": {
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
+    "empty": 0
+   },
+   "rmks": {
+    "correct": 8,
+    "found": 8,
+    "amber": 2,
+    "empty": 0
+   }
+  }
+ }
+}
