@@ -159,21 +159,22 @@ p{margin:0}
 .retype li{margin:0 0 40px}
 .retype b{display:block;font:700 46px/1.1 var(--font-display);letter-spacing:.04em;text-transform:uppercase}
 /* steps (slide 6) */
-.cols{display:grid;grid-template-columns:1.05fr .95fr 1fr;gap:34px;margin-top:44px}
+.cols{display:grid;grid-template-columns:1.05fr .95fr 1fr;gap:34px;margin-top:30px}
 .col h3{font:700 26px/1 var(--font-display);letter-spacing:.12em;text-transform:uppercase;margin:0 0 16px;color:var(--muted)}
 .msg{background:var(--sheet);padding:24px 26px;font-size:24px;line-height:1.6}
-.ans,.verd{list-style:none;margin:0;padding:0;font:22px/1.35 var(--font-data)}
-.ans li,.verd li{display:grid;grid-template-columns:140px 1fr;gap:14px;padding:9px 0;border-bottom:1px solid var(--rule)}
+.ans,.verd{list-style:none;margin:0;padding:0;font:20px/1.3 var(--font-data)}
+.ans li,.verd li{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:5px 0;border-bottom:1px solid var(--rule)}
 .ans li span:first-child,.verd li span:first-child{font:600 18px/1.4 var(--font-display);letter-spacing:.1em;color:var(--muted)}
 .verd li.found span:last-child{color:var(--after)}
 .verd li.amber span:last-child{color:var(--before)}
 .verd li.empty span:last-child{color:var(--muted)}
-.verd li small{display:block;font:18px/1.3 var(--font-body);color:var(--before)}
+.verd li small{display:block;font:16px/1.25 var(--font-body);color:var(--before)}
 .verd li.found small{color:var(--after)}
+.verd li.empty small{color:var(--muted)}
 .col.s{transition:opacity .35s}
 .frame[data-step="0"] .s1,.frame[data-step="0"] .s2,.frame[data-step="0"] .s3,.frame[data-step="1"] .s2,.frame[data-step="1"] .s3,.frame[data-step="2"] .s3{opacity:0}
-.rec-line{margin-top:30px;font:24px/1.4 var(--font-data);display:flex;gap:16px;align-items:center}
-.rec-line b{font-weight:400;background:var(--sheet);border:2px solid var(--ink);padding:2px 12px;color:var(--after)}
+.rec-line{margin-top:18px;font:24px/1.4 var(--font-data);display:flex;gap:16px;align-items:center}
+.rec-line b{font-weight:400;background:var(--sheet);border:2px solid var(--ink);padding:2px 12px;color:var(--ink)}
 /* press demo (slide 3) */
 .press-demo{margin-top:56px}
 .pd-top{background:var(--copy);padding:26px 32px;font-size:34px;line-height:1.6;border-left:5px solid var(--ink)}
@@ -256,7 +257,7 @@ p{margin:0}
 .ask{display:grid;grid-template-columns:1.2fr .8fr;gap:80px;align-items:center;margin-top:30px}
 .path{font-size:38px;line-height:1.45}
 .path li{margin-bottom:26px}
-.ask .qr svg{width:440px;height:440px;background:var(--sheet);padding:16px}
+.ask .qr svg{width:500px;height:500px;background:var(--sheet);padding:16px}
 .ask .url{font:30px var(--font-data);margin-top:18px;color:var(--sheet)}
 .limits{margin-top:44px;font-size:28px;line-height:1.5;color:color-mix(in srgb,var(--sheet) 80%,var(--ink))}
 /* chrome */
@@ -369,7 +370,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 
 <section class="frame" data-steps="3" aria-label="Slide 5 of 10: one recorded fill, step by step"><div class="slide">
   <p class="kick"><i>Sheet 04</i> One recorded fill · press → to step</p>
-  <h2 style="font-size:84px">The model proposes. <em>Code decides.</em></h2>
+  <h2 style="font-size:72px">The model proposes. <em>Code decides.</em></h2>
   <div class="cols">
     <div class="col"><h3>The message</h3><div class="msg">hiii 👋 it&#x27;s Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:<br>Mrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.<br>her old number 0813-5550-2290 is dead don&#x27;t use it, new one is 0857 5550 8812.<br>express pls, she needs them before Friday 🙏 leave at the guard post if nobody home</div><div class="runmeta"><span class="pw-badge" style="font-size:18px">on_device</span> Chrome 157 · M1 Max · 6.06 s · gate v4</div></div>
     <div class="col s s1"><h3>Nano's answer (raw)</h3><ul class="ans"><li><span>CNEE</span><span>Maya Kusuma</span></li><li><span>CNEE TEL</span><span>085755508812</span></li><li><span>ADDR 1</span><span>Jl. Cempaka Putih Raya No. 41</span></li><li><span>DIST/CITY</span><span>Jakarta Pusat</span></li><li><span>ST/PROV</span><span>&mdash;</span></li><li><span>ZIP</span><span>10510</span></li><li><span>DESC</span><span>2 linen tablecloths (the sage ones)</span></li><li><span>PCS</span><span>2</span></li><li><span>SVC</span><span>EXP</span></li><li><span>RMKS</span><span>express pls, she needs them before Friday 🙏 leave at the guard post if nobody 홈</span></li></ul></div>
@@ -414,7 +415,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
     <div class="srow"><b>Wrong shown as found</b><span class="v">5.9%</span><span class="aim">aimed ≤ 3%</span><span class="stamp">Missed</span></div>
     <div class="srow"><b>Warm median</b><span class="v">2.34 s</span><span class="aim">aimed ≤ 2 s</span><span class="stamp">Missed</span></div>
   </div>
-  <div class="notes3"><div><b>2.0%</b>wrong in name, phone, address, postal</div><div><b>135/135</b>valid JSON, all on_device</div><div><b>682 B</b>consent bytes shown = wire log</div></div>
+  <div class="notes3"><div><b>2.0%</b>critical boxes only: name, phone, address, postal</div><div><b>135/135</b>valid JSON, all on_device</div><div><b>682 B</b>consent bytes shown = wire log</div></div>
   <div class="foot"><span>evidence/bench/report-holdout.json · evidence/consent-path-2026-11-22.json · synthetic data · one M1 Max</span></div>
   <aside class="speaker-notes">These are the numbers on a held-out set written before any run and hashed. We missed all three bars we aimed for, and we say so. Most wrong values are free-text notes; in the boxes where an error does damage it is two percent.</aside>
 </div></section>
@@ -423,11 +424,11 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
   <p class="kick"><i>Sheet 08</i> What arrives filled</p>
   <h2>Most boxes arrive filled. <em class="amb">The doubtful ones wait for you.</em></h2>
   <div class="impact">
-    <div class="big"><b>77.9%</b><span>right value, found in your text</span></div>
-    <div class="big amb"><b>17.7%</b><span>amber for a second look</span></div>
-    <div class="big"><b>2.0%</b><span>wrong in name, phone, address, postal boxes</span></div>
+    <div class="big"><b>77.9%</b><span>of boxes with an answer: right value, found in your text</span></div>
+    <div class="big amb"><b>17.7%</b><span>of all boxes: amber for a second look</span></div>
+    <div class="big"><b>2.0%</b><span>critical boxes (name, phone, address, postal) wrong</span></div>
   </div>
-  <p class="runrow">Recorded run: <b>6</b> pressed through · <b class="a">3</b> amber · <b class="e">1</b> empty · 6.06 s on-device, first fill of the session</p>
+  <p class="runrow">Recorded run: <b>6</b> pressed through · <b class="a">3</b> amber · <b class="e">1</b> empty · 6.06 s on-device</p>
   <p class="forms3">Courier notes · front-desk bookings · shop orders</p>
   <div class="foot"><span>held-out set, 45 pairs × 3, hints off · evidence/bench/report-holdout.json</span></div>
   <aside class="speaker-notes">The impact is the typing that disappears: on held-out messages most boxes arrive with the right value, and the boxes code could not accept are amber instead of wrong. Anyone who takes orders or bookings in chat re-types the same details; these are the three forms we built and measured.</aside>
