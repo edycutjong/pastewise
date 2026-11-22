@@ -32,7 +32,7 @@ const ABOUT: Record<string, string> = {
   "form-c-mid": "10 order messages for the legacy consignment-note form (C), whose boxes have cryptic names like CNEE and ZIP. Used while building, so not a held-out set.",
   dev: "The tuning set used while building.",
   bench: "60 order messages (each run on the plain order form A and on the legacy consignment-note form C) and 60 hotel-booking messages (form B): 180 message-form pairs, written before any run and used to decide what the gate must never show as found. Not a held-out set. The first rows were measured with gate v3; gate v4 then made recipient-name boxes always amber (see the per-form table).",
-  holdout: "45 message-form pairs (15 orders on forms A and C, 15 bookings on form B) written without sight of any bench result and hashed before any run on it, with traps the bench does not contain: relative dates, two dates in one booking, RT/RW address parts and forwarded From:/To: header blocks. Run once per prompt and gate version, on the frozen release.",
+  holdout: "45 message-form pairs (15 order messages each run on forms A and C = 30 pairs, plus 15 booking messages on form B) written without sight of any bench result and hashed before any run on it, with traps the bench does not contain: relative dates, two dates in one booking, RT/RW address parts and forwarded From:/To: header blocks. Run once per prompt and gate version, on the frozen release.",
 };
 
 function load(): Agg[] {
@@ -99,8 +99,8 @@ export default function Bench() {
                     <th>Teacher hints</th>
                     <th>Wrong value shown as found (% of all boxes)</th>
                     <th>Right value in the box (strict)</th>
-                    <th>Filled (coverage)</th>
-                    <th>Filled and right</th>
+                    <th>Filled (coverage, of boxes with an answer in the message)</th>
+                    <th>Filled and right (same base)</th>
                     <th>Left amber</th>
                     <th>Warm p50 / p95</th>
                     <th>JSON valid per repeat</th>

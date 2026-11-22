@@ -12,6 +12,7 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 | Under the paste box, click the sample **Gift order with two phone numbers** (message **S1**, [`fixtures/demo/S1.json`](fixtures/demo/S1.json); the click also switches to form **C · CONSIGNMENT NOTE**), then press **Fill this message**. Pasting S1 by hand? Pick tab C first | Boxes fill in carbon blue; each value's source words are underlined in the message |
 | Look at the **CNEE TEL** box | It stays **amber**: the message holds two phone numbers (an old dead one and a new one), and the code refuses to guess |
 | Look at the badge on the fill | `ON_DEVICE` on a Chrome with Gemini Nano. This is the `inferenceSource` Firebase AI Logic reports |
+| Press **Copy for a spreadsheet** | A header row and a values row go to the clipboard, tab-separated; the status line names any box still amber, copied as it stands |
 | Press **Teach this form** | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload, and after a fresh cloud call its `IN_CLOUD` source (otherwise it says it is showing a saved copy) |
 | Open [`/receipt/`](https://pastewise.edycu.dev/receipt/) | The recorded network log behind the "0 bytes" counter |
 | Open [`/bench/`](https://pastewise.edycu.dev/bench/) | The measured numbers below, with hints off and on |
