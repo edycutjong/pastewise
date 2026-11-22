@@ -111,7 +111,11 @@ export default function Bench() {
                   {rows.map((a) => (
                     <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}`}>
                       <td>
-                        {a.arm === "off" ? "off" : `on (hints from the ${a.hintsSource === "cloud" ? "cloud teacher" : a.hintsSource})`}
+                        {a.arm === "off"
+                          ? "off"
+                          : a.hintsSource === "cloud"
+                            ? "on (hints from the cloud teacher)"
+                            : `on (frozen cloud hints saved in ${String(a.hintsSource ?? "").replace(/^file:/, "")})`}
                         {a.stalledRun && <div className="fine">first run, with model stalls{a.note ? " — see note" : ""}</div>}
                       </td>
                       <td>{pct(a.metrics.acceptedWrongPct)}</td>
@@ -211,6 +215,12 @@ export default function Bench() {
             “Wrong value shown as found” counts values that the code accepted (they appear in the message and pass the field&apos;s format check) but
             that are not the right value for that box. The code checks presence and format, not truth, so this number is never zero and the boxes stay
             editable. Recipient names are never shown as found: after the bench, the recipient-name boxes on forms A and C became always amber (gate v4); the guest name on form B was not changed. Only the held-out set was measured on that frozen release; the bench and earlier sets were used while building. The bars we aimed for on the held-out set (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were missed, and the numbers above say by how much.
+            {all.some((a) => a.srcDirty) && (
+              <>
+                {" "}“(dirty)” after a commit means <span className="mono">src/</span> had uncommitted changes when that arm ran; it is marked, not hidden, and the
+                run file records its prompt and gate versions.
+              </>
+            )}
           </p>
         </section>
       </main>
