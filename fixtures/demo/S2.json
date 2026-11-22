@@ -1,0 +1,21 @@
+{
+ "label": "SYNTHETIC — invented details, no real person; phone numbers use the 5550 block (never dial them)",
+ "id": "S2",
+ "form": "B",
+ "paste": "Subject: room for next month\nHello, I'd like to book a double room for 3 nights, arriving 28 Dec. Name is Arjun Mehta, mobile +62 811 5550 4471,\nemail arjun.mehta@example.com. Could we get a quiet room away from the lift? Booking ref 77120934 from my last stay, if useful.\nThanks, Arjun",
+ "gold": {
+  "guest_name": "Arjun Mehta",
+  "phone": "081155504471",
+  "email": "arjun.mehta@example.com",
+  "room_type": "double",
+  "check_in": "2026-12-28",
+  "nights": "3",
+  "requests": "quiet room away from the lift"
+ },
+ "expect": {
+  "check_in": {
+   "state": "amber",
+   "reason": "year_assumed"
+  }
+ }
+}

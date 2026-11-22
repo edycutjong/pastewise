@@ -1,0 +1,159 @@
+// External half of the 0-bytes receipt: records every network request the
+// browser makes (CDP Network domain on the page AND every auto-attached target:
+// iframes such as reCAPTCHA, workers) while the demo pastes are filled through
+// the real UI, then scans every URL + body for paste tokens (same rule as the
+// in-page ledger, src/ledger/tokens.ts).
+//
+// Verdict: 0 paste-token hits on the on-device path. A positive control (a
+// request to localhost carrying the paste, never leaving this machine) must be
+// caught, or the checker itself is broken and the run fails.
+//
+// Usage: npm run build && node scripts/egress_check.mjs [--base URL]
+import fs from "node:fs";
+import path from "node:path";
+import { execSync } from "node:child_process";
+import { ROOT, serveOut, launchChrome, openApp, fillOnce, sleep } from "./lib/chrome.mjs";
+
+const arg = (k, d) => {
+  const i = process.argv.indexOf(`--${k}`);
+  return i > 0 ? process.argv[i + 1] : d;
+};
+const base = arg("base");
+const DEMO = path.join(ROOT, "fixtures/demo");
+const demos = ["S1", "S2", "S3", "S4", "S5"].map((id) => JSON.parse(fs.readFileSync(path.join(DEMO, `${id}.json`), "utf8")));
+const sha = execSync("git rev-parse --short HEAD", { cwd: ROOT }).toString().trim();
+const date = new Date().toISOString().slice(0, 10);
+
+const srv = base ? { close() {} } : serveOut();
+const chrome = await launchChrome();
+const reqs = [];
+const attached = []; // child targets the capture attached to (iframes, workers)
+let phase = "boot";
+try {
+  // open the app, attach CDP, then reload so the capture starts before the page's first request
+  const app = await openApp(chrome.browser, { base, today: "2026-11-22" });
+  const appSession = await app.createCDPSession();
+  const conn = appSession.connection();
+  const watch = async (session, kind) => {
+    session.on("Network.requestWillBeSent", async (e) => {
+      let body = e.request.postData ?? "";
+      if (!body && e.request.hasPostData) {
+        try {
+          body = (await session.send("Network.getRequestPostData", { requestId: e.requestId })).postData ?? "";
+        } catch {
+          body = "";
+        }
+      }
+      const local = /^(data|blob):/.test(e.request.url); // in-memory resources, not network
+      reqs.push({ phase, target: kind, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local });
+    });
+    session.on("Target.attachedToTarget", async (e) => {
+      attached.push({ type: e.targetInfo.type, host: (() => { try { return new URL(e.targetInfo.url).host; } catch { return ""; } })() });
+      const child = conn.session(e.sessionId);
+      if (!child) return;
+      await watch(child, e.targetInfo.type);
+      try {
+        await child.send("Network.enable");
+        await child.send("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: false, flatten: true });
+        await child.send("Runtime.runIfWaitingForDebugger");
+      } catch {
+        /* target went away */
+      }
+    });
+    await session.send("Network.enable");
+    await session.send("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: false, flatten: true });
+  };
+  await watch(appSession, "page");
+  await app.reload({ waitUntil: "networkidle2" });
+  await app.waitForFunction(() => !!window.__pastewise);
+  phase = "idle-after-load";
+  await sleep(1500);
+
+  const results = [];
+  for (const d of demos) {
+    phase = `fill:${d.id}`;
+    const before = reqs.filter((r) => !r.local).length;
+    const during = () => reqs.filter((r) => !r.local).length - before;
+    if (d.paste.length > 2000) {
+      // over-long paste: must be refused before any model call
+      await app.$eval("#paste", (el, v) => {
+        Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set.call(el, v);
+        el.dispatchEvent(new Event("input", { bubbles: true }));
+      }, d.paste);
+      await sleep(100);
+      const prev = await app.evaluate(() => window.__pastewise.last?.runId ?? null);
+      await app.click("#fill");
+      await sleep(1500);
+      const notice = await app.$eval('[role="status"]', (e) => e.textContent).catch(() => "");
+      const after = await app.evaluate(() => window.__pastewise.last?.runId ?? null);
+      results.push({ id: d.id, form: d.form, refused: prev === after && /limit/.test(notice), notice, requestsDuring: during() });
+    } else {
+      const rec = await fillOnce(app, d.form, d.paste);
+      await sleep(800);
+      results.push({ id: d.id, form: d.form, inferenceSource: rec.batches.map((b) => b.inferenceSource), requestsDuring: during() });
+    }
+  }
+  // the cloud teacher on form C: real requests, empty form only
+  phase = "teach:C";
+  const teach = await app.evaluate(() => window.__pastewise.teach("C").then((t) => ({ n: t.hints.length, src: t.inferenceSource })));
+  await sleep(800);
+  // positive control: a localhost request carrying S3 must be caught
+  phase = "canary";
+  await app.evaluate((p) => fetch(`/__egress_canary?m=${encodeURIComponent(p)}`).catch(() => null), demos[2].paste);
+  await sleep(800);
+
+  // scan every request against every demo paste's tokens (same rule as the ledger)
+  const tokenSets = {};
+  for (const d of demos) tokenSets[d.id] = await app.evaluate((p, f) => window.__pastewise.tokens(p, f), d.paste, d.form);
+  const rows = [];
+  for (const r of reqs) {
+    const text = `${r.url}\n${r.body}`;
+    const hits = {};
+    for (const [id, toks] of Object.entries(tokenSets)) {
+      const f = await app.evaluate((t, k) => window.__pastewise.scan(t, k), text, toks);
+      if (f.hits.length) hits[id] = { tokens: f.hits.length, bytes: f.bytes };
+    }
+    let host = "";
+    try {
+      host = new URL(r.url).host;
+    } catch {
+      host = r.url.slice(0, 40);
+    }
+    rows.push({ phase: r.phase, target: r.target, local: r.local || undefined, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
+  }
+  const real = rows.filter((r) => r.phase !== "canary");
+  const hitRows = real.filter((r) => Object.keys(r.hits).length);
+  const canaryCaught = rows.some((r) => r.phase === "canary" && r.hits.S3);
+  const fillPhases = results.filter((r) => !r.refused);
+  const verdict = {
+    pasteTokenHitsOnRealRequests: hitRows.length,
+    requestsDuringOnDeviceFills: fillPhases.reduce((n, r) => n + r.requestsDuring, 0),
+    overLongRefused: results.find((r) => r.id === "S5")?.refused ?? false,
+    allFillsOnDevice: fillPhases.every((r) => r.inferenceSource.every((s) => s === "on_device")),
+    teacherCalled: teach,
+    positiveControlCaught: canaryCaught,
+    pass: hitRows.length === 0 && canaryCaught,
+  };
+  const out = {
+    label: "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
+    date,
+    commit: sha,
+    base: base ?? "http://localhost:3102 (static export)",
+    capture: "CDP Network.requestWillBeSent on the page + Target.setAutoAttach({flatten:true}) children (iframes, workers)",
+    rule: "paste tokens = digit runs >= 4 + words >= 4 chars minus the empty form's vocabulary and a stop-list (src/ledger/tokens.ts)",
+    attachedTargets: attached,
+    fills: results,
+    verdict,
+    requests: rows,
+  };
+  const OUT = path.join(ROOT, "evidence/network");
+  fs.mkdirSync(OUT, { recursive: true });
+  const file = path.join(OUT, `${date}-${sha}${base ? "-live" : "-local"}.json`);
+  fs.writeFileSync(file, JSON.stringify(out, null, 1) + "\n");
+  console.log(JSON.stringify(verdict, null, 1));
+  console.log(`requests: ${rows.length} (${[...new Set(rows.map((r) => r.host))].join(", ")}) -> ${path.relative(ROOT, file)}`);
+  if (!verdict.pass) process.exitCode = 1;
+} finally {
+  await chrome.close();
+  srv.close();
+}

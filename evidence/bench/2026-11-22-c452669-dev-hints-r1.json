@@ -1,0 +1,2067 @@
+{
+ "label": "SYNTHETIC — every paste, name, phone (5550 block or 0000-style placeholders) and address is invented; no real person",
+ "set": "dev",
+ "setSha256": "f27f406fbf6b0a9bd48cb7d464db2cf6e6b853a0ddcd30d07671c80b9c6d03a7",
+ "repeat": 1,
+ "commit": "c452669",
+ "srcDirty": false,
+ "date": "2026-11-22",
+ "today": "2026-11-22",
+ "hints": "cloud",
+ "hintsSha": "1cbd54847bcc010a",
+ "promptVersion": "p0c-v3",
+ "gateVersion": "2",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": false,
+ "validRun": true,
+ "summary": {
+  "pastes": 10,
+  "jsonValid": "10/10",
+  "fields": 84,
+  "rawAccuracyStrict": 86.9,
+  "rawAccuracyP0c": 89.29,
+  "presentFieldAccuracy": 86.67,
+  "acceptedCorrectPct": 80.95,
+  "acceptedWrong": 2,
+  "acceptedWrongPct": 2.38,
+  "wrongAmongAccepted": 2.86,
+  "coverage": 93.33,
+  "usefulCoverage": 90.67,
+  "usefulCoverageCritical": 93.33,
+  "criticalAcceptedWrongPct": 0,
+  "ordersWithCriticalErrorPct": 0,
+  "amberPct": 5.95,
+  "amberByReason": {
+   "too_few_words": 1,
+   "two_candidates": 2,
+   "year_assumed": 1,
+   "not_in_text": 1
+  },
+  "amberButRightPct": 3.57,
+  "emptyPct": 10.71,
+  "latencyMs": {
+   "warmP50": 2175,
+   "warmP95": 2702,
+   "cold": 5036,
+   "n": 9
+  },
+  "batches": 10,
+  "onDeviceBatches": "10/10",
+  "stalls": 0,
+  "stallsRecovered": 0,
+  "acceptedWrongRows": [
+   {
+    "id": "DC1",
+    "field": "desc",
+    "gold": "batik scarves",
+    "shown": "box of batik scarves",
+    "proposed": "4 box of batik scarves"
+   },
+   {
+    "id": "DC1",
+    "field": "rmks",
+    "gold": "ring the bell twice",
+    "shown": "same day if possible! ring the bell twice",
+    "proposed": "same day if possible! ring the bell twice"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "id": "DA1",
+   "form": "A",
+   "record": {
+    "runId": "4f38de2b-a9ec-46d7-8f9c-f8f31b3db4a9",
+    "form": "A",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 110,
+    "hints": 9,
+    "cold": true,
+    "done": true,
+    "discarded": false,
+    "totalMs": 5036,
+    "batches": [
+     {
+      "keys": [
+       "name",
+       "phone",
+       "street",
+       "city",
+       "province",
+       "postal_code",
+       "item",
+       "quantity",
+       "notes"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 5036,
+      "attempts": 1,
+      "raw": "{\"name\":\"Tia Ramadhani\",\"phone\":\"081300001111\",\"street\":\"Jl. Kopo 9\",\"city\":\"Bandung\",\"province\":\"Jawa Barat\",\"postal_code\":\"40222\",\"item\":\"notebooks\",\"quantity\":\"2\",\"notes\":\"Thanks\"}"
+     }
+    ],
+    "fields": {
+     "name": {
+      "proposed": "Tia Ramadhani",
+      "state": "found",
+      "value": "Tia Ramadhani"
+     },
+     "phone": {
+      "proposed": "081300001111",
+      "state": "found",
+      "value": "081300001111"
+     },
+     "street": {
+      "proposed": "Jl. Kopo 9",
+      "state": "found",
+      "value": "Jl. Kopo 9"
+     },
+     "city": {
+      "proposed": "Bandung",
+      "state": "found",
+      "value": "Bandung"
+     },
+     "province": {
+      "proposed": "Jawa Barat",
+      "state": "found",
+      "value": "Jawa Barat"
+     },
+     "postal_code": {
+      "proposed": "40222",
+      "state": "found",
+      "value": "40222"
+     },
+     "item": {
+      "proposed": "notebooks",
+      "state": "found",
+      "value": "notebooks"
+     },
+     "quantity": {
+      "proposed": "2",
+      "state": "found",
+      "value": "2"
+     },
+     "notes": {
+      "proposed": "Thanks",
+      "state": "empty",
+      "value": ""
+     }
+    }
+   }
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "record": {
+    "runId": "beab12bf-85b7-41a6-8a59-4abaf3e7cb99",
+    "form": "A",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 92,
+    "hints": 9,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2155,
+    "batches": [
+     {
+      "keys": [
+       "name",
+       "phone",
+       "street",
+       "city",
+       "province",
+       "postal_code",
+       "item",
+       "quantity",
+       "notes"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2155,
+      "attempts": 1,
+      "raw": "{\"name\":\"Sam Tan\",\"phone\":\"087710102020\",\"street\":\"Jl. Basuki Rahmat 5\",\"city\":\"Surabaya\",\"province\":\"Jawa Timur\",\"postal_code\":\"\",\"item\":\"desk lamp\",\"quantity\":\"1\",\"notes\":\"hurry pls\"}"
+     }
+    ],
+    "fields": {
+     "name": {
+      "proposed": "Sam Tan",
+      "state": "found",
+      "value": "Sam Tan"
+     },
+     "phone": {
+      "proposed": "087710102020",
+      "state": "found",
+      "value": "087710102020"
+     },
+     "street": {
+      "proposed": "Jl. Basuki Rahmat 5",
+      "state": "found",
+      "value": "Jl. Basuki Rahmat 5"
+     },
+     "city": {
+      "proposed": "Surabaya",
+      "state": "found",
+      "value": "Surabaya"
+     },
+     "province": {
+      "proposed": "Jawa Timur",
+      "state": "found",
+      "value": "Jawa Timur"
+     },
+     "postal_code": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "item": {
+      "proposed": "desk lamp",
+      "state": "found",
+      "value": "desk lamp"
+     },
+     "quantity": {
+      "proposed": "1",
+      "state": "found",
+      "value": "1"
+     },
+     "notes": {
+      "proposed": "hurry pls",
+      "state": "amber",
+      "value": "",
+      "reason": "too_few_words"
+     }
+    }
+   }
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "record": {
+    "runId": "34e2bf3f-8a39-43ae-b916-3688fe94d983",
+    "form": "B",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 101,
+    "hints": 7,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2561,
+    "batches": [
+     {
+      "keys": [
+       "guest_name",
+       "phone",
+       "email",
+       "room_type",
+       "check_in",
+       "nights",
+       "requests"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2561,
+      "attempts": 1,
+      "raw": "{\n\"guest_name\": \"Anna Lee\",\n\"phone\": \"081122223333\",\n\"email\": \"anna.lee@example.com\",\n\"room_type\": \"single\",\n\"check_in\": \"2026-12-12\",\n\"nights\": \"2\",\n\"requests\": \"high floor\"\n}"
+     }
+    ],
+    "fields": {
+     "guest_name": {
+      "proposed": "Anna Lee",
+      "state": "found",
+      "value": "Anna Lee"
+     },
+     "phone": {
+      "proposed": "081122223333",
+      "state": "found",
+      "value": "081122223333"
+     },
+     "email": {
+      "proposed": "anna.lee@example.com",
+      "state": "found",
+      "value": "anna.lee@example.com"
+     },
+     "room_type": {
+      "proposed": "single",
+      "state": "found",
+      "value": "single"
+     },
+     "check_in": {
+      "proposed": "2026-12-12",
+      "state": "found",
+      "value": "2026-12-12"
+     },
+     "nights": {
+      "proposed": "2",
+      "state": "found",
+      "value": "2"
+     },
+     "requests": {
+      "proposed": "high floor",
+      "state": "found",
+      "value": "high floor"
+     }
+    }
+   }
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "record": {
+    "runId": "faffbf54-895a-4e83-9f5d-24ffce04b227",
+    "form": "B",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 61,
+    "hints": 7,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 1938,
+    "batches": [
+     {
+      "keys": [
+       "guest_name",
+       "phone",
+       "email",
+       "room_type",
+       "check_in",
+       "nights",
+       "requests"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 1938,
+      "attempts": 1,
+      "raw": "{\"guest_name\":\"Ben\",\"phone\":\"081200009999\",\"email\":\"\",\"room_type\":\"double\",\"check_in\":\"2027-01-05\",\"nights\":\"3\",\"requests\":\"\"}"
+     }
+    ],
+    "fields": {
+     "guest_name": {
+      "proposed": "Ben",
+      "state": "found",
+      "value": "Ben"
+     },
+     "phone": {
+      "proposed": "081200009999",
+      "state": "found",
+      "value": "081200009999"
+     },
+     "email": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "room_type": {
+      "proposed": "double",
+      "state": "found",
+      "value": "double"
+     },
+     "check_in": {
+      "proposed": "2027-01-05",
+      "state": "found",
+      "value": "2027-01-05"
+     },
+     "nights": {
+      "proposed": "3",
+      "state": "found",
+      "value": "3"
+     },
+     "requests": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     }
+    }
+   }
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "record": {
+    "runId": "351639d1-f60d-49e2-a2f6-aeac83758634",
+    "form": "A",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 153,
+    "hints": 9,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2451,
+    "batches": [
+     {
+      "keys": [
+       "name",
+       "phone",
+       "street",
+       "city",
+       "province",
+       "postal_code",
+       "item",
+       "quantity",
+       "notes"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2451,
+      "attempts": 1,
+      "raw": "{\"name\":\"Rina Wulandari\",\"phone\":\"089655503301\",\"street\":\"Jl. Gajah Mada 12\",\"city\":\"Pontianak\",\"province\":\"Kalimantan Barat\",\"postal_code\":\"78111\",\"item\":\"scented candle (vanilla)\",\"quantity\":\"3\",\"notes\":\"no rush, thx!!\"}"
+     }
+    ],
+    "fields": {
+     "name": {
+      "proposed": "Rina Wulandari",
+      "state": "found",
+      "value": "Rina Wulandari"
+     },
+     "phone": {
+      "proposed": "089655503301",
+      "state": "found",
+      "value": "089655503301"
+     },
+     "street": {
+      "proposed": "Jl. Gajah Mada 12",
+      "state": "found",
+      "value": "Jl. Gajah Mada 12"
+     },
+     "city": {
+      "proposed": "Pontianak",
+      "state": "found",
+      "value": "Pontianak"
+     },
+     "province": {
+      "proposed": "Kalimantan Barat",
+      "state": "found",
+      "value": "Kalimantan Barat"
+     },
+     "postal_code": {
+      "proposed": "78111",
+      "state": "found",
+      "value": "78111"
+     },
+     "item": {
+      "proposed": "scented candle (vanilla)",
+      "state": "found",
+      "value": "scented candle"
+     },
+     "quantity": {
+      "proposed": "3",
+      "state": "found",
+      "value": "3"
+     },
+     "notes": {
+      "proposed": "no rush, thx!!",
+      "state": "found",
+      "value": "no rush"
+     }
+    }
+   }
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "record": {
+    "runId": "7d552e6b-0f37-46d0-8623-68b63fbb593d",
+    "form": "A",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 195,
+    "hints": 9,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2175,
+    "batches": [
+     {
+      "keys": [
+       "name",
+       "phone",
+       "street",
+       "city",
+       "province",
+       "postal_code",
+       "item",
+       "quantity",
+       "notes"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2175,
+      "attempts": 1,
+      "raw": "{\"name\":\"Dani Pratama\",\"phone\":\"081855506620\",\"street\":\"Jl. Sudirman 21\",\"city\":\"Pekanbaru\",\"province\":\"\",\"postal_code\":\"28112\",\"item\":\"phone cases\",\"quantity\":\"2\",\"notes\":\"Call before delivery.\"}"
+     }
+    ],
+    "fields": {
+     "name": {
+      "proposed": "Dani Pratama",
+      "state": "found",
+      "value": "Dani Pratama"
+     },
+     "phone": {
+      "proposed": "081855506620",
+      "state": "amber",
+      "value": "081855506620",
+      "reason": "two_candidates",
+      "candidates": [
+       "081855506620",
+       "081555501187"
+      ]
+     },
+     "street": {
+      "proposed": "Jl. Sudirman 21",
+      "state": "found",
+      "value": "Jl. Sudirman 21"
+     },
+     "city": {
+      "proposed": "Pekanbaru",
+      "state": "found",
+      "value": "Pekanbaru"
+     },
+     "province": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "postal_code": {
+      "proposed": "28112",
+      "state": "found",
+      "value": "28112"
+     },
+     "item": {
+      "proposed": "phone cases",
+      "state": "found",
+      "value": "phone cases"
+     },
+     "quantity": {
+      "proposed": "2",
+      "state": "found",
+      "value": "2"
+     },
+     "notes": {
+      "proposed": "Call before delivery.",
+      "state": "found",
+      "value": "Call before delivery"
+     }
+    }
+   }
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "record": {
+    "runId": "d9504f42-d3b3-499e-8d24-92ab773b30f3",
+    "form": "B",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 142,
+    "hints": 7,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2025,
+    "batches": [
+     {
+      "keys": [
+       "guest_name",
+       "phone",
+       "email",
+       "room_type",
+       "check_in",
+       "nights",
+       "requests"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2025,
+      "attempts": 1,
+      "raw": "{\"guest_name\":\"Mr. Kenji Watanabe\",\"phone\":\"\",\"email\":\"kenji.w@example.org\",\"room_type\":\"suite\",\"check_in\":\"2027-03-14\",\"nights\":\"five\",\"requests\":\"Late arrival around midnight.\"}"
+     }
+    ],
+    "fields": {
+     "guest_name": {
+      "proposed": "Mr. Kenji Watanabe",
+      "state": "found",
+      "value": "Kenji Watanabe"
+     },
+     "phone": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "email": {
+      "proposed": "kenji.w@example.org",
+      "state": "found",
+      "value": "kenji.w@example.org"
+     },
+     "room_type": {
+      "proposed": "suite",
+      "state": "found",
+      "value": "suite"
+     },
+     "check_in": {
+      "proposed": "2027-03-14",
+      "state": "found",
+      "value": "2027-03-14"
+     },
+     "nights": {
+      "proposed": "five",
+      "state": "found",
+      "value": "5"
+     },
+     "requests": {
+      "proposed": "Late arrival around midnight.",
+      "state": "found",
+      "value": "Late arrival around midnight"
+     }
+    }
+   }
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "record": {
+    "runId": "d3a0bf57-6644-41ba-8b87-7d657d544bf5",
+    "form": "B",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 100,
+    "hints": 7,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2010,
+    "batches": [
+     {
+      "keys": [
+       "guest_name",
+       "phone",
+       "email",
+       "room_type",
+       "check_in",
+       "nights",
+       "requests"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2010,
+      "attempts": 1,
+      "raw": "{\"guest_name\":\"Priya Nair\",\"phone\":\"+6282155507719\",\"email\":\"\",\"room_type\":\"double\",\"check_in\":\"2026-01-09\",\"nights\":\"2\",\"requests\":\"\"}"
+     }
+    ],
+    "fields": {
+     "guest_name": {
+      "proposed": "Priya Nair",
+      "state": "found",
+      "value": "Priya Nair"
+     },
+     "phone": {
+      "proposed": "+6282155507719",
+      "state": "found",
+      "value": "082155507719"
+     },
+     "email": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "room_type": {
+      "proposed": "double",
+      "state": "found",
+      "value": "double"
+     },
+     "check_in": {
+      "proposed": "2026-01-09",
+      "state": "amber",
+      "value": "2027-01-09",
+      "reason": "year_assumed"
+     },
+     "nights": {
+      "proposed": "2",
+      "state": "found",
+      "value": "2"
+     },
+     "requests": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     }
+    }
+   }
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "record": {
+    "runId": "19a1fcdc-2ea9-4bf0-8f3c-0f87e7251fe1",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 164,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2702,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2702,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Yusuf Hakim\",\"cnee_tel\":\"085255504410\",\"addr_1\":\"Jl. Ahmad Yani 30\",\"dist_city\":\"Balikpapan\",\"st_prov\":\"Kalimantan Timur\",\"zip\":\"76114\",\"desc\":\"4 box of batik scarves\",\"pcs\":\"4\",\"svc\":\"STD\",\"rmks\":\"same day if possible! ring the bell twice\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Yusuf Hakim",
+      "state": "found",
+      "value": "Yusuf Hakim"
+     },
+     "cnee_tel": {
+      "proposed": "085255504410",
+      "state": "found",
+      "value": "085255504410"
+     },
+     "addr_1": {
+      "proposed": "Jl. Ahmad Yani 30",
+      "state": "found",
+      "value": "Jl. Ahmad Yani 30"
+     },
+     "dist_city": {
+      "proposed": "Balikpapan",
+      "state": "found",
+      "value": "Balikpapan"
+     },
+     "st_prov": {
+      "proposed": "Kalimantan Timur",
+      "state": "found",
+      "value": "Kalimantan Timur"
+     },
+     "zip": {
+      "proposed": "76114",
+      "state": "found",
+      "value": "76114"
+     },
+     "desc": {
+      "proposed": "4 box of batik scarves",
+      "state": "found",
+      "value": "box of batik scarves"
+     },
+     "pcs": {
+      "proposed": "4",
+      "state": "found",
+      "value": "4"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "amber",
+      "value": "",
+      "reason": "not_in_text"
+     },
+     "rmks": {
+      "proposed": "same day if possible! ring the bell twice",
+      "state": "found",
+      "value": "same day if possible! ring the bell twice"
+     }
+    }
+   }
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "record": {
+    "runId": "4e05f896-9d61-4ca6-a3e2-258ba3c9bc4c",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 191,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2475,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2475,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Pak Joko Susilo\",\"cnee_tel\":\"081355509902\",\"addr_1\":\"Jl. Malioboro 7\",\"dist_city\":\"Yogyakarta\",\"st_prov\":\"\",\"zip\":\"55213\",\"desc\":\"1 wooden tray\",\"pcs\":\"1\",\"svc\":\"STD\",\"rmks\":\"Fragile, keep upright.\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Pak Joko Susilo",
+      "state": "found",
+      "value": "Joko Susilo"
+     },
+     "cnee_tel": {
+      "proposed": "081355509902",
+      "state": "amber",
+      "value": "081355509902",
+      "reason": "two_candidates",
+      "candidates": [
+       "02745550118",
+       "081355509902"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Malioboro 7",
+      "state": "found",
+      "value": "Jl. Malioboro 7"
+     },
+     "dist_city": {
+      "proposed": "Yogyakarta",
+      "state": "found",
+      "value": "Yogyakarta"
+     },
+     "st_prov": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "zip": {
+      "proposed": "55213",
+      "state": "found",
+      "value": "55213"
+     },
+     "desc": {
+      "proposed": "1 wooden tray",
+      "state": "found",
+      "value": "wooden tray"
+     },
+     "pcs": {
+      "proposed": "1",
+      "state": "found",
+      "value": "1"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "found",
+      "value": "STD"
+     },
+     "rmks": {
+      "proposed": "Fragile, keep upright.",
+      "state": "found",
+      "value": "Fragile, keep upright"
+     }
+    }
+   }
+  }
+ ],
+ "fieldRows": [
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "name",
+   "kind": "name",
+   "gold": "Tia Ramadhani",
+   "proposed": "Tia Ramadhani",
+   "shown": "Tia Ramadhani",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "081300001111",
+   "proposed": "081300001111",
+   "shown": "081300001111",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "street",
+   "kind": "address",
+   "gold": "Jl. Kopo 9",
+   "proposed": "Jl. Kopo 9",
+   "shown": "Jl. Kopo 9",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "city",
+   "kind": "text",
+   "gold": "Bandung",
+   "proposed": "Bandung",
+   "shown": "Bandung",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "province",
+   "kind": "text",
+   "gold": "Jawa Barat",
+   "proposed": "Jawa Barat",
+   "shown": "Jawa Barat",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "postal_code",
+   "kind": "postal",
+   "gold": "40222",
+   "proposed": "40222",
+   "shown": "40222",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "item",
+   "kind": "text",
+   "gold": "notebooks",
+   "proposed": "notebooks",
+   "shown": "notebooks",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "quantity",
+   "kind": "int",
+   "gold": "2",
+   "proposed": "2",
+   "shown": "2",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA1",
+   "form": "A",
+   "field": "notes",
+   "kind": "notes",
+   "gold": "",
+   "proposed": "Thanks",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "name",
+   "kind": "name",
+   "gold": "Sam Tan",
+   "proposed": "Sam Tan",
+   "shown": "Sam Tan",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "087710102020",
+   "proposed": "087710102020",
+   "shown": "087710102020",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "street",
+   "kind": "address",
+   "gold": "Jl. Basuki Rahmat 5",
+   "proposed": "Jl. Basuki Rahmat 5",
+   "shown": "Jl. Basuki Rahmat 5",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "city",
+   "kind": "text",
+   "gold": "Surabaya",
+   "proposed": "Surabaya",
+   "shown": "Surabaya",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "province",
+   "kind": "text",
+   "gold": "Jawa Timur",
+   "proposed": "Jawa Timur",
+   "shown": "Jawa Timur",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "postal_code",
+   "kind": "postal",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "item",
+   "kind": "text",
+   "gold": "desk lamp",
+   "proposed": "desk lamp",
+   "shown": "desk lamp",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "quantity",
+   "kind": "int",
+   "gold": "1",
+   "proposed": "1",
+   "shown": "1",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "field": "notes",
+   "kind": "notes",
+   "gold": "hurry",
+   "proposed": "hurry pls",
+   "shown": "",
+   "state": "amber",
+   "reason": "too_few_words",
+   "rawStrict": false,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "guest_name",
+   "kind": "name",
+   "gold": "Anna Lee",
+   "proposed": "Anna Lee",
+   "shown": "Anna Lee",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "081122223333",
+   "proposed": "081122223333",
+   "shown": "081122223333",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "email",
+   "kind": "email",
+   "gold": "anna.lee@example.com",
+   "proposed": "anna.lee@example.com",
+   "shown": "anna.lee@example.com",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "room_type",
+   "kind": "enum",
+   "gold": "single",
+   "proposed": "single",
+   "shown": "single",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "check_in",
+   "kind": "date",
+   "gold": "2026-12-12",
+   "proposed": "2026-12-12",
+   "shown": "2026-12-12",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "nights",
+   "kind": "int",
+   "gold": "2",
+   "proposed": "2",
+   "shown": "2",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "field": "requests",
+   "kind": "notes",
+   "gold": "high floor",
+   "proposed": "high floor",
+   "shown": "high floor",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "guest_name",
+   "kind": "name",
+   "gold": "Ben",
+   "proposed": "Ben",
+   "shown": "Ben",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "081200009999",
+   "proposed": "081200009999",
+   "shown": "081200009999",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "email",
+   "kind": "email",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "room_type",
+   "kind": "enum",
+   "gold": "double",
+   "proposed": "double",
+   "shown": "double",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "check_in",
+   "kind": "date",
+   "gold": "2027-01-05",
+   "proposed": "2027-01-05",
+   "shown": "2027-01-05",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "nights",
+   "kind": "int",
+   "gold": "3",
+   "proposed": "3",
+   "shown": "3",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "field": "requests",
+   "kind": "notes",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "name",
+   "kind": "name",
+   "gold": "Rina Wulandari",
+   "proposed": "Rina Wulandari",
+   "shown": "Rina Wulandari",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "089655503301",
+   "proposed": "089655503301",
+   "shown": "089655503301",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "street",
+   "kind": "address",
+   "gold": "Jl. Gajah Mada 12",
+   "proposed": "Jl. Gajah Mada 12",
+   "shown": "Jl. Gajah Mada 12",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "city",
+   "kind": "text",
+   "gold": "Pontianak",
+   "proposed": "Pontianak",
+   "shown": "Pontianak",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "province",
+   "kind": "text",
+   "gold": "Kalimantan Barat",
+   "proposed": "Kalimantan Barat",
+   "shown": "Kalimantan Barat",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "postal_code",
+   "kind": "postal",
+   "gold": "78111",
+   "proposed": "78111",
+   "shown": "78111",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "item",
+   "kind": "text",
+   "gold": "scented candle",
+   "proposed": "scented candle (vanilla)",
+   "shown": "scented candle",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "quantity",
+   "kind": "int",
+   "gold": "3",
+   "proposed": "3",
+   "shown": "3",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "field": "notes",
+   "kind": "notes",
+   "gold": "no rush",
+   "proposed": "no rush, thx!!",
+   "shown": "no rush",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "name",
+   "kind": "name",
+   "gold": "Dani Pratama",
+   "proposed": "Dani Pratama",
+   "shown": "Dani Pratama",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "081855506620",
+   "proposed": "081855506620",
+   "shown": "081855506620",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "street",
+   "kind": "address",
+   "gold": "Jl. Sudirman 21",
+   "proposed": "Jl. Sudirman 21",
+   "shown": "Jl. Sudirman 21",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "city",
+   "kind": "text",
+   "gold": "Pekanbaru",
+   "proposed": "Pekanbaru",
+   "shown": "Pekanbaru",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "province",
+   "kind": "text",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "postal_code",
+   "kind": "postal",
+   "gold": "28112",
+   "proposed": "28112",
+   "shown": "28112",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "item",
+   "kind": "text",
+   "gold": "phone cases",
+   "proposed": "phone cases",
+   "shown": "phone cases",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "quantity",
+   "kind": "int",
+   "gold": "2",
+   "proposed": "2",
+   "shown": "2",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "field": "notes",
+   "kind": "notes",
+   "gold": "Call before delivery",
+   "proposed": "Call before delivery.",
+   "shown": "Call before delivery",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "guest_name",
+   "kind": "name",
+   "gold": "Kenji Watanabe",
+   "proposed": "Mr. Kenji Watanabe",
+   "shown": "Kenji Watanabe",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "email",
+   "kind": "email",
+   "gold": "kenji.w@example.org",
+   "proposed": "kenji.w@example.org",
+   "shown": "kenji.w@example.org",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "room_type",
+   "kind": "enum",
+   "gold": "suite",
+   "proposed": "suite",
+   "shown": "suite",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "check_in",
+   "kind": "date",
+   "gold": "2027-03-14",
+   "proposed": "2027-03-14",
+   "shown": "2027-03-14",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "nights",
+   "kind": "int",
+   "gold": "5",
+   "proposed": "five",
+   "shown": "5",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "field": "requests",
+   "kind": "notes",
+   "gold": "Late arrival around midnight",
+   "proposed": "Late arrival around midnight.",
+   "shown": "Late arrival around midnight",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "guest_name",
+   "kind": "name",
+   "gold": "Priya Nair",
+   "proposed": "Priya Nair",
+   "shown": "Priya Nair",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "phone",
+   "kind": "phone",
+   "gold": "082155507719",
+   "proposed": "+6282155507719",
+   "shown": "082155507719",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "email",
+   "kind": "email",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "room_type",
+   "kind": "enum",
+   "gold": "double",
+   "proposed": "double",
+   "shown": "double",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "check_in",
+   "kind": "date",
+   "gold": "2027-01-09",
+   "proposed": "2026-01-09",
+   "shown": "2027-01-09",
+   "state": "amber",
+   "reason": "year_assumed",
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "amber"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "nights",
+   "kind": "int",
+   "gold": "2",
+   "proposed": "2",
+   "shown": "2",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "field": "requests",
+   "kind": "notes",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Yusuf Hakim",
+   "proposed": "Yusuf Hakim",
+   "shown": "Yusuf Hakim",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "085255504410",
+   "proposed": "085255504410",
+   "shown": "085255504410",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Ahmad Yani 30",
+   "proposed": "Jl. Ahmad Yani 30",
+   "shown": "Jl. Ahmad Yani 30",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Balikpapan",
+   "proposed": "Balikpapan",
+   "shown": "Balikpapan",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "Kalimantan Timur",
+   "proposed": "Kalimantan Timur",
+   "shown": "Kalimantan Timur",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "76114",
+   "proposed": "76114",
+   "shown": "76114",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "batik scarves",
+   "proposed": "4 box of batik scarves",
+   "shown": "box of batik scarves",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "4",
+   "proposed": "4",
+   "shown": "4",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "SDD",
+   "proposed": "STD",
+   "shown": "",
+   "state": "amber",
+   "reason": "not_in_text",
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "amber"
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "ring the bell twice",
+   "proposed": "same day if possible! ring the bell twice",
+   "shown": "same day if possible! ring the bell twice",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Joko Susilo",
+   "proposed": "Pak Joko Susilo",
+   "shown": "Joko Susilo",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "081355509902",
+   "proposed": "081355509902",
+   "shown": "081355509902",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Malioboro 7",
+   "proposed": "Jl. Malioboro 7",
+   "shown": "Jl. Malioboro 7",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Yogyakarta",
+   "proposed": "Yogyakarta",
+   "shown": "Yogyakarta",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "55213",
+   "proposed": "55213",
+   "shown": "55213",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "wooden tray",
+   "proposed": "1 wooden tray",
+   "shown": "wooden tray",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "1",
+   "proposed": "1",
+   "shown": "1",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "STD",
+   "proposed": "STD",
+   "shown": "STD",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "Fragile, keep upright",
+   "proposed": "Fragile, keep upright.",
+   "shown": "Fragile, keep upright",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  }
+ ]
+}

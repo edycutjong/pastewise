@@ -1,0 +1,27 @@
+{
+ "label": "SYNTHETIC — invented details, no real person; phone numbers use the 5550 block (never dial them)",
+ "id": "S1",
+ "form": "C",
+ "paste": "hiii 👋 it's Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:\nMrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.\nher old number 0813-5550-2290 is dead don't use it, new one is 0857 5550 8812.\nexpress pls, she needs them before Friday 🙏 leave at the guard post if nobody home",
+ "gold": {
+  "cnee_nm": "Ratna Kusuma",
+  "cnee_tel": "085755508812",
+  "addr_1": "Jl. Cempaka Putih Raya No. 41",
+  "dist_city": "Jakarta Pusat",
+  "st_prov": "",
+  "zip": "10510",
+  "desc": "linen tablecloths",
+  "pcs": "2",
+  "svc": "EXP",
+  "rmks": "leave at the guard post if nobody home"
+ },
+ "expect": {
+  "cnee_tel": {
+   "state": "amber",
+   "reason": "two_candidates"
+  },
+  "st_prov": {
+   "state": "not_found_or_empty"
+  }
+ }
+}

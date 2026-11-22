@@ -1,0 +1,18 @@
+{
+ "label": "SYNTHETIC — invented details, no real person; phone numbers use the 5550 block (never dial them)",
+ "id": "S3",
+ "form": "A",
+ "paste": "Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please.",
+ "gold": {
+  "name": "Budi Santoso",
+  "phone": "081255507734",
+  "street": "Jl. Diponegoro 88",
+  "city": "Semarang",
+  "province": "Jawa Tengah",
+  "postal_code": "50241",
+  "item": "ceramic mug set",
+  "quantity": "1",
+  "notes": "Gift wrap"
+ },
+ "expect": {}
+}

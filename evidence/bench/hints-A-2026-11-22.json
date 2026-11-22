@@ -1,0 +1,94 @@
+{
+ "form": "A",
+ "inferenceSource": "in_cloud",
+ "ms": 11323,
+ "dropped": 0,
+ "payload": {
+  "title": "Shipping / order form",
+  "fields": [
+   {
+    "key": "name",
+    "caption": "Recipient name"
+   },
+   {
+    "key": "phone",
+    "caption": "Phone"
+   },
+   {
+    "key": "street",
+    "caption": "Street address"
+   },
+   {
+    "key": "city",
+    "caption": "City"
+   },
+   {
+    "key": "province",
+    "caption": "Province"
+   },
+   {
+    "key": "postal_code",
+    "caption": "Postal code"
+   },
+   {
+    "key": "item",
+    "caption": "Item"
+   },
+   {
+    "key": "quantity",
+    "caption": "Quantity"
+   },
+   {
+    "key": "notes",
+    "caption": "Delivery notes"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "key": "name",
+   "meaning": "Full name of the person receiving the order",
+   "expected": "name"
+  },
+  {
+   "key": "phone",
+   "meaning": "Contact phone number for delivery updates",
+   "expected": "phone"
+  },
+  {
+   "key": "street",
+   "meaning": "Street address where the item should be delivered",
+   "expected": "address"
+  },
+  {
+   "key": "city",
+   "meaning": "City for the delivery address",
+   "expected": "text"
+  },
+  {
+   "key": "province",
+   "meaning": "Province or state for the delivery address",
+   "expected": "text"
+  },
+  {
+   "key": "postal_code",
+   "meaning": "Postal or zip code for the delivery address",
+   "expected": "postal"
+  },
+  {
+   "key": "item",
+   "meaning": "Name or description of the item being ordered",
+   "expected": "text"
+  },
+  {
+   "key": "quantity",
+   "meaning": "Number of items you wish to order",
+   "expected": "int"
+  },
+  {
+   "key": "notes",
+   "meaning": "Any special instructions for delivering the package",
+   "expected": "notes"
+  }
+ ]
+}

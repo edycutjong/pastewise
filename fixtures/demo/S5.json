@@ -1,0 +1,14 @@
+{
+ "label": "SYNTHETIC — invented details, no real person; phone numbers use the 5550 block (never dial them)",
+ "id": "S5",
+ "form": "A",
+ "paste": "Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please. O",
+ "gold": {},
+ "expect": {
+  "_run": {
+   "state": "refused",
+   "reason": "over_char_cap"
+  }
+ },
+ "note": "Over-long paste (eval E5): refused before any model call; nothing sent."
+}
