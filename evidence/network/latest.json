@@ -1,7 +1,7 @@
 {
  "label": "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
  "date": "2026-11-22",
- "commit": "ae97f31",
+ "commit": "5c94379",
  "base": "https://pastewise.edycu.dev",
  "capture": "CDP Network.requestWillBeSent on the page + Target.setAutoAttach({flatten:true}) children (iframes, workers)",
  "rule": "paste tokens = digit runs >= 4 + words >= 4 chars minus the empty form's vocabulary and a stop-list (src/ledger/tokens.ts)",
@@ -215,7 +215,7 @@
    "type": "Script",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/_next/static/immutable/chunks/41uyd43q0kbsj.js",
+   "path": "/_next/static/immutable/chunks/3m7l647s_qojv.js",
    "size": 74,
    "hits": {}
   },
@@ -225,7 +225,7 @@
    "type": "Script",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/_next/static/immutable/chunks/2-1nkwnu3ts-9.js",
+   "path": "/_next/static/immutable/chunks/413yn_478544a.js",
    "size": 74,
    "hits": {}
   },
@@ -235,7 +235,7 @@
    "type": "Script",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/_next/static/immutable/chunks/1l1bb39yf8hwx.js",
+   "path": "/_next/static/immutable/chunks/09_njtekd30w-.js",
    "size": 74,
    "hits": {}
   },
@@ -315,8 +315,8 @@
    "type": "Fetch",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/bench/__next._tree.txt",
-   "size": 72,
+   "path": "/receipt/__next._tree.txt",
+   "size": 74,
    "hits": {}
   },
   {
@@ -325,8 +325,8 @@
    "type": "Fetch",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/receipt/__next._tree.txt",
-   "size": 74,
+   "path": "/bench/__next._tree.txt",
+   "size": 72,
    "hits": {}
   },
   {
@@ -387,7 +387,7 @@
    "method": "POST",
    "host": "www.google.com",
    "path": "/recaptcha/enterprise/reload",
-   "size": 11488,
+   "size": 12107,
    "hits": {}
   },
   {
@@ -417,7 +417,7 @@
    "method": "POST",
    "host": "www.google.com",
    "path": "/recaptcha/enterprise/clr",
-   "size": 2029,
+   "size": 2014,
    "hits": {}
   },
   {
