@@ -1,7 +1,7 @@
 {
  "label": "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
  "date": "2026-11-22",
- "commit": "9b1fbe2",
+ "commit": "eb9701a",
  "base": "http://localhost:3102 (static export)",
  "capture": "CDP Network.requestWillBeSent on the page + Target.setAutoAttach({flatten:true}) children (iframes, workers)",
  "rule": "paste tokens = digit runs >= 4 + words >= 4 chars minus the empty form's vocabulary and a stop-list (src/ledger/tokens.ts)",
@@ -215,7 +215,7 @@
    "type": "Script",
    "method": "GET",
    "host": "localhost:3102",
-   "path": "/_next/static/chunks/1ne79nr5dbasr.js",
+   "path": "/_next/static/chunks/0jkyseqj86hca.js",
    "size": 58,
    "hits": {}
   },
@@ -237,26 +237,6 @@
    "host": "www.google.com",
    "path": "/recaptcha/enterprise.js",
    "size": 62,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Script",
-   "method": "GET",
-   "host": "www.gstatic.com",
-   "path": "/recaptcha/releases/4i3aN5wAweL7i3ADI7BSX4B-/recaptcha__en.js",
-   "size": 84,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Document",
-   "method": "GET",
-   "host": "www.google.com",
-   "path": "/recaptcha/enterprise/anchor",
-   "size": 240,
    "hits": {}
   },
   {
@@ -287,6 +267,26 @@
    "host": "localhost:3102",
    "path": "/bench/",
    "size": 28,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "www.gstatic.com",
+   "path": "/recaptcha/releases/4i3aN5wAweL7i3ADI7BSX4B-/recaptcha__en.js",
+   "size": 84,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Document",
+   "method": "GET",
+   "host": "www.google.com",
+   "path": "/recaptcha/enterprise/anchor",
+   "size": 240,
    "hits": {}
   },
   {
@@ -325,8 +325,8 @@
    "type": "Fetch",
    "method": "GET",
    "host": "localhost:3102",
-   "path": "/__next.__PAGE__.txt",
-   "size": 63,
+   "path": "/receipt/__next.receipt.__PAGE__.txt",
+   "size": 79,
    "hits": {}
   },
   {
@@ -335,8 +335,8 @@
    "type": "Fetch",
    "method": "GET",
    "host": "localhost:3102",
-   "path": "/receipt/__next.receipt.__PAGE__.txt",
-   "size": 79,
+   "path": "/__next.__PAGE__.txt",
+   "size": 63,
    "hits": {}
   },
   {
@@ -398,6 +398,16 @@
    "host": "",
    "path": "image/svg+xml;base64,PHN2",
    "size": 30,
+   "hits": {}
+  },
+  {
+   "phase": "teach:C",
+   "target": "page",
+   "type": "Other",
+   "method": "OPTIONS",
+   "host": "content-firebaseappcheck.googleapis.com",
+   "path": "/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:",
+   "size": 189,
    "hits": {}
   },
   {
