@@ -240,7 +240,11 @@ export default function FillApp() {
     }
     setPhase("reading");
     const t0 = clock();
-    const results = await fillForm(s, paste, {
+    // the run counts only while it is still this form's latest run, the message is unchanged and its tab is still open
+    const live = () => runIdRef.current[formId] === runId && textRef.current === paste && activeRef.current === formId;
+    let results: BatchResult[];
+    try {
+      results = await fillForm(s, paste, {
       today,
       timeoutMs: rcNumber("fill_timeout_ms"),
       // the first call of a page session also loads the model: only its first attempt gets twice the budget
@@ -251,13 +255,21 @@ export default function FillApp() {
         setPhase("retrying");
       },
       onBatch: (b) => {
-        if (runIdRef.current[formId] === runId && textRef.current === paste) applyBatch(formId, runId, s, b, today);
+        if (live()) applyBatch(formId, runId, s, b, today);
       },
     });
+    } catch (e) {
+      // fill.ts turns model errors into results; this guards anything unexpected so the button never stays locked
+      setNotice("Something went wrong on this laptop's model, so nothing was filled. Try again.");
+      record({ ...base, done: true, error: String(e) });
+      setRuns((prev) => (prev[formId]?.runId === runId ? { ...prev, [formId]: undefined } : prev));
+      setPhase("idle");
+      return;
+    }
     const totalMs = Math.round(clock() - t0);
     filledOnce.current = true;
-    const discarded = runIdRef.current[formId] !== runId || textRef.current !== paste;
-    if (discarded) setNotice("The message changed while it was being read, so that result was dropped. Press Fill again.");
+    const discarded = !live();
+    if (discarded) setNotice("The message or the form changed while it was being read, so that result was dropped. Press Fill again.");
     setRuns((prev) => {
       const r = prev[formId];
       return r && r.runId === runId ? { ...prev, [formId]: { ...r, ms: totalMs, done: true, discarded } } : prev;
@@ -295,12 +307,12 @@ export default function FillApp() {
   }
 
   const cur = runs[active];
-  const stale = !!cur && cur.paste !== text;
+  const stale = !!cur && (cur.paste !== text || !!cur.discarded);
   const def = formById(active);
 
   // underlines: accepted values of the active form's current run
   const spans = useMemo(() => {
-    if (!cur || cur.paste !== text) return [] as { a: number; b: number; key: string }[];
+    if (!cur || cur.paste !== text || cur.discarded) return [] as { a: number; b: number; key: string }[];
     const out: { a: number; b: number; key: string }[] = [];
     for (const [key, box] of Object.entries(cur.boxes)) {
       if (box.edited || !box.gate) continue;
@@ -420,7 +432,7 @@ export default function FillApp() {
                     inp={inp}
                     index={i}
                     box={runs[f.id]?.boxes[inp.name]}
-                    stale={!!runs[f.id] && runs[f.id]!.paste !== text}
+                    stale={!!runs[f.id] && (runs[f.id]!.paste !== text || !!runs[f.id]!.discarded)}
                     onEdit={(v) => edit(inp.name, v)}
                     onHot={setHot}
                   />
@@ -444,7 +456,7 @@ export default function FillApp() {
                 {b}
               </span>
             ))}
-            {cur?.done && !stale && (
+            {cur?.done && !stale && !cur.discarded && (
               <span className="sum">
                 {counts.found} of {counts.total} found in your text · {counts.amber} to check · {counts.empty} empty
                 {counts.edited ? ` · ${counts.edited} edited by you` : ""}
@@ -455,7 +467,7 @@ export default function FillApp() {
               {cur?.done && !stale && !cur.discarded ? `Filled ${counts.found} of ${counts.total}; ${counts.amber} to check.` : ""}
             </span>
           </div>
-          {cur?.done && !stale && (
+          {cur?.done && !stale && !cur.discarded && (
             <div className="check">
               <h2 className="cap">To check</h2>
               {toCheck.length === 0 ? (

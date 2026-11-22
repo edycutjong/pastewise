@@ -9,27 +9,37 @@ export type PhoneRun = { digits: string; display: string; span: Span };
 
 const RUN = /\+?\d(?:[ \t\-.()]{0,2}\d)*/g;
 
-export const normPhone = (d: string) => (d.startsWith("62") ? "0" + d.slice(2) : d);
+/** +62 / 62 -> 0, only for "+62…" or a bare "628…" (Indonesian mobile); other digit runs are left alone. */
+export const normPhone = (d: string, raw = "") =>
+  d.startsWith("62") && (raw.trim().startsWith("+") || d[2] === "8") ? "0" + d.slice(2) : d;
+
+const qualifies = (raw: string, d: string) => d.length >= 9 && d.length <= 15 && (d.startsWith("0") || raw.startsWith("+"));
 
 export function phoneRuns(paste: string): PhoneRun[] {
   const out: PhoneRun[] = [];
   const seen = new Set<string>();
   for (const m of paste.matchAll(RUN)) {
-    const raw = m[0].trim();
-    const d = normPhone(digits(raw));
-    if (d.length < 9 || d.length > 15) continue;
-    // phone-like = starts with 0 (after +62/62 -> 0) or is written with a leading +; a bare 9-digit order ref is not
-    if (!d.startsWith("0") && !raw.startsWith("+")) continue;
-    if (seen.has(d)) continue;
-    seen.add(d);
-    out.push({ digits: d, display: m[0].trim(), span: [m.index!, m.index! + m[0].length] });
+    // a run may have swallowed a short number in front ("No. 12 0812 5550 7734", "50241 0812…"):
+    // try the run, then the run without its leading space-separated groups, and keep the first phone-like one
+    const text = m[0];
+    const starts = [0, ...[...text.matchAll(/[ \t]+(?=[+\d])/g)].map((g) => g.index! + g[0].length)];
+    for (const st of starts) {
+      const raw = text.slice(st).trim();
+      const d = normPhone(digits(raw), raw);
+      if (!qualifies(raw, d)) continue;
+      if (!seen.has(d)) {
+        seen.add(d);
+        out.push({ digits: d, display: raw, span: [m.index! + st, m.index! + text.length] });
+      }
+      break;
+    }
   }
   return out;
 }
 
 export function gatePhone(paste: string, proposed: string): GateResult {
   const runs = phoneRuns(paste);
-  const d = normPhone(digits(proposed));
+  const d = normPhone(digits(proposed), proposed);
   const hit = runs.find((r) => r.digits === d);
   if (runs.length >= 2) {
     return amber("two_candidates", hit ? hit.digits : "", proposed, {

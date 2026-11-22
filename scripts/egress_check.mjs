@@ -37,15 +37,17 @@ try {
   const watch = async (session, kind) => {
     session.on("Network.requestWillBeSent", async (e) => {
       let body = e.request.postData ?? "";
+      let bodyUnreadable = false;
       if (!body && e.request.hasPostData) {
         try {
           body = (await session.send("Network.getRequestPostData", { requestId: e.requestId })).postData ?? "";
         } catch {
           body = "";
+          bodyUnreadable = true; // counted in the verdict: a body we could not scan is never a silent "clean"
         }
       }
       const local = /^(data|blob):/.test(e.request.url); // in-memory resources, not network
-      reqs.push({ phase, target: kind, type: e.type, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local });
+      reqs.push({ phase, target: kind, type: e.type, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local, bodyUnreadable: bodyUnreadable || undefined });
     });
     session.on("Target.attachedToTarget", async (e) => {
       attached.push({ type: e.targetInfo.type, host: (() => { try { return new URL(e.targetInfo.url).host; } catch { return ""; } })() });
@@ -54,14 +56,14 @@ try {
       await watch(child, e.targetInfo.type);
       try {
         await child.send("Network.enable");
-        await child.send("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: false, flatten: true });
+        await child.send("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: true, flatten: true });
         await child.send("Runtime.runIfWaitingForDebugger");
       } catch {
         /* target went away */
       }
     });
     await session.send("Network.enable");
-    await session.send("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: false, flatten: true });
+    await session.send("Target.setAutoAttach", { autoAttach: true, waitForDebuggerOnStart: true, flatten: true });
   };
   await watch(appSession, "page");
   await app.reload({ waitUntil: "networkidle2" });
@@ -90,7 +92,7 @@ try {
     } else {
       const rec = await fillOnce(app, d.form, d.paste);
       await sleep(800);
-      results.push({ id: d.id, form: d.form, inferenceSource: rec.batches.map((b) => b.inferenceSource), requestsDuring: during() });
+      results.push({ id: d.id, form: d.form, inferenceSource: rec.batches.map((b) => b.inferenceSource), error: rec.error ?? null, requestsDuring: during() });
     }
   }
   // the cloud teacher on form C: real requests, empty form only
@@ -119,7 +121,7 @@ try {
     } catch {
       host = r.url.slice(0, 40);
     }
-    rows.push({ phase: r.phase, target: r.target, type: r.type, local: r.local || undefined, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
+    rows.push({ phase: r.phase, target: r.target, type: r.type, local: r.local || undefined, bodyUnreadable: r.bodyUnreadable, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
   }
   // completeness of the on-screen receipt: every fetch/XHR/beacon/WebSocket the page itself sent must be in the in-page ledger
   const ledgerRecs = await app.evaluate(() => window.__pastewise.ledger().map((r) => ({ host: r.host, api: r.api, pasteBytesFound: r.pasteBytesFound })));
@@ -136,7 +138,9 @@ try {
     pasteTokenHitsOnRealRequests: hitRows.length,
     requestsDuringOnDeviceFills: fillPhases.reduce((n, r) => n + r.requestsDuring, 0),
     overLongRefused: results.find((r) => r.id === "S5")?.refused ?? false,
-    allFillsOnDevice: fillPhases.every((r) => r.inferenceSource.every((s) => s === "on_device")),
+    // every non-refused demo paste must have produced at least one batch, all on_device, and no error
+    allFillsOnDevice: fillPhases.length > 0 && fillPhases.every((r) => !r.error && r.inferenceSource.length > 0 && r.inferenceSource.every((s) => s === "on_device")),
+    unreadableRequestBodies: rows.filter((r) => r.bodyUnreadable).length,
     teacherCalled: teach,
     positiveControlCaught: canaryCaught,
     inPageLedger: { requests: ledgerRecs.length, byHost: ledgerHosts, cdpApiRequestsByHost: cdpApi, missingFromLedger, canaryCaughtByLedger: ledgerCanaryCaught },
@@ -149,6 +153,7 @@ try {
     missingFromLedger.length === 0 &&
     verdict.overLongRefused &&
     verdict.allFillsOnDevice &&
+    verdict.unreadableRequestBodies === 0 &&
     verdict.requestsDuringOnDeviceFills === 0;
   const out = {
     label: "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",

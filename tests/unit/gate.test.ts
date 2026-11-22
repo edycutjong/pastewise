@@ -65,6 +65,15 @@ describe("phone", () => {
     expect(phoneRuns("Order 123456789, call 0811 5550 4471").map((r) => r.digits)).toEqual(["081155504471"]);
     expect(phoneRuns("call +44 20 5550 0199")[0].digits).toBe("442055500199");
   });
+  it("a short number in front of a phone does not hide it", () => {
+    expect(phoneRuns("Jl. Melati 12 0812-5550-7890").map((r) => r.digits)).toEqual(["081255507890"]);
+    expect(phoneRuns("Semarang 50241 0812 5550 7734").map((r) => [r.digits, r.display])).toEqual([["081255507734", "0812 5550 7734"]]);
+    expect(g("send 2 0812 5550 7734", f("phone", "phone"), "0812 5550 7734").state).toBe("found");
+  });
+  it("62 -> 0 only for +62 or a bare 628… mobile; a 62… order ref stays as it is", () => {
+    expect(phoneRuns("ref 6212345678").map((r) => r.digits)).toEqual([]);
+    expect(phoneRuns("wa 6281255507734")[0].digits).toBe("081255507734");
+  });
   it("a newline never joins two runs", () => {
     expect(phoneRuns("zip 10510\n0813 5550 2290").map((r) => r.digits)).toEqual(["081355502290"]);
   });

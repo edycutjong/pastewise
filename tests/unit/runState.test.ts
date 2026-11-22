@@ -35,6 +35,11 @@ describe("mergeBatch", () => {
     const r = mergeBatch(run({ boxes: { name: { value: "Sari D.", edited: true } } }), "r1", fields, batch({ name: "Sari Dewi", phone: "" }), "2026-11-22")!;
     expect(r.boxes.name).toEqual({ value: "Sari D.", edited: true });
   });
+  it("a failed batch never overwrites an edited box either", () => {
+    const r = mergeBatch(run({ boxes: { phone: { value: "0812", edited: true } } }), "r1", fields, batch({}, "timed_out"), "2026-11-22")!;
+    expect(r.boxes.phone).toEqual({ value: "0812", edited: true });
+    expect(r.boxes.name).toEqual({ value: "", failed: "timed_out" });
+  });
   it("a failed batch turns its boxes amber with the failure, no values", () => {
     const r = mergeBatch(run(), "r1", fields, batch({}, "error"), "2026-11-22")!;
     expect(r.boxes.name).toEqual({ value: "", failed: "error" });

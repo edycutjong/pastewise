@@ -25,12 +25,12 @@ export type BatchResult = {
 const TIMEOUT = Symbol("timeout");
 
 async function once(fields: FieldSpec[], title: string, paste: string, today: string, timeoutMs: number) {
-  const schema = toJsonSchema(fields);
-  const model = deviceModel(schema); // fresh instance per attempt
   const t0 = performance.now();
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<typeof TIMEOUT>((r) => (timer = setTimeout(() => r(TIMEOUT), timeoutMs)));
   try {
+    const schema = toJsonSchema(fields);
+    const model = deviceModel(schema); // fresh instance per attempt; a construction error is an "error" result, never a throw
     const r = await Promise.race([model.generateContent(buildPrompt(title, fields, paste, today)), timeout]);
     const ms = Math.round(performance.now() - t0);
     if (r === TIMEOUT) return { kind: "timeout" as const, ms };
@@ -57,9 +57,11 @@ export async function fillBatch(
 ): Promise<BatchResult> {
   const keys = fields.map((f) => f.key);
   let total = 0;
+  let firstFail: string | undefined;
   let last: Awaited<ReturnType<typeof once>> | null = null;
   for (let attempt = 1; attempt <= 2; attempt++) {
     const retryReason = attempt === 2 && last ? last.kind : undefined;
+    if (retryReason) firstFail = retryReason;
     if (retryReason) onRetry?.(retryReason as "timeout" | "invalid" | "error");
     last = await once(fields, title, paste, today, attempt === 1 ? firstAttemptTimeoutMs : timeoutMs);
     total += last.ms;
@@ -73,7 +75,7 @@ export async function fillBatch(
     inferenceSource: "inferenceSource" in l ? l.inferenceSource : undefined,
     ms: total,
     attempts: 2,
-    retryReason: "see status",
+    retryReason: firstFail,
     raw: "raw" in l ? l.raw : undefined,
     error: "error" in l ? l.error : l.kind === "timeout" ? `no answer within ${timeoutMs} ms` : undefined,
   };

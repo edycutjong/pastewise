@@ -76,6 +76,13 @@ describe("fillBatch", () => {
 });
 
 describe("fillForm", () => {
+  it("only batch 1's first attempt gets the cold budget", async () => {
+    // batch 1 answers in 80 ms (inside the 200 ms cold budget); batch 2 needs 80 ms but has the 40 ms base budget twice
+    script.push({ text: JSON.stringify({ name: "Ali" }), delayMs: 80 }, { text: JSON.stringify({ pcs: "3" }), delayMs: 80 }, { text: JSON.stringify({ pcs: "3" }), delayMs: 80 });
+    const r = await fillForm({ id: "X", title: "T", fields }, "Ali 3", { today: "2026-11-22", timeoutMs: 40, coldTimeoutMs: 200, batchMax: 1 });
+    expect(r.map((b) => [b.status, b.attempts])).toEqual([["ok", 1], ["timed_out", 2]]);
+    expect(r[1].retryReason).toBe("timeout");
+  });
   it("one call per batch of batch_max_fields", async () => {
     script.push({ text: JSON.stringify({ name: "Ali" }) }, { text: JSON.stringify({ pcs: "3" }) });
     const r = await fillForm({ id: "X", title: "T", fields }, "Ali 3", { today: "2026-11-22", timeoutMs: 200, batchMax: 1 });
