@@ -17,6 +17,10 @@ export type FieldSpec = {
   kindSource: "dom" | "hint" | "default";
   options?: { value: string; text: string }[];
   maxLength?: number;
+  /** the box's own limits from the DOM (min/max on number inputs, the HTML pattern); the gate enforces them */
+  min?: number;
+  max?: number;
+  pattern?: string;
   placeholder?: string;
   /** plain-words meaning from the teacher, if hints are on */
   hint?: string;

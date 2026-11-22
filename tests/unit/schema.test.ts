@@ -16,6 +16,9 @@ function render(id: string): HTMLFormElement {
       i.autoComplete ? `autocomplete="${i.autoComplete}"` : "",
       i.inputMode ? `inputmode="${i.inputMode}"` : "",
       i.maxLength ? `maxlength="${i.maxLength}"` : "",
+      i.pattern ? `pattern="${i.pattern}"` : "",
+      i.min !== undefined ? `min="${i.min}"` : "",
+      i.max !== undefined ? `max="${i.max}"` : "",
     ].join(" ");
   const html = def.inputs
     .map((i) => {
@@ -47,6 +50,12 @@ describe("readForm (live DOM -> FieldSpec)", () => {
       quantity: "int/plain/dom",
       notes: "notes/notes/dom",
     });
+  });
+  it("carries the box's own limits (min/max, pattern) into the field spec for the gate", () => {
+    const b = readForm(render("B"), "B", "Hotel");
+    expect(b.fields.find((f) => f.key === "nights")).toMatchObject({ kind: "int", min: 1, max: 60 });
+    const a = readForm(render("A"), "A", "Shipping / order form");
+    expect(a.fields.find((f) => f.key === "postal_code")).toMatchObject({ pattern: "\\d{5}", maxLength: 5 });
   });
   it("skips hidden inputs and buttons; reads captions from label[for]", () => {
     const s = readForm(render("B"), "B", "Hotel");

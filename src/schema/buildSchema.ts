@@ -81,6 +81,12 @@ export function fieldFromControl(el: El, root: ParentNode, hint?: Hint | null): 
   }
   const ml = Number(el.getAttribute("maxlength"));
   if (ml > 0) spec.maxLength = ml;
+  for (const a of ["min", "max"] as const) {
+    const raw = el.getAttribute(a);
+    if (raw !== null && raw.trim() !== "" && Number.isFinite(Number(raw))) spec[a] = Number(raw);
+  }
+  const pat = el.getAttribute("pattern");
+  if (pat) spec.pattern = pat;
   const ph = el.getAttribute("placeholder");
   if (ph) spec.placeholder = ph;
   if (hint) spec.hint = hint.meaning;

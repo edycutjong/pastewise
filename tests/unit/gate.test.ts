@@ -33,6 +33,30 @@ describe("normalize + spans", () => {
   });
   it("matches whole words only", () => {
     expect(findWords(normalize("Budiman street"), "budi")).toEqual([]);
+  });  it("an astral letter (two UTF-16 units) does not shift later spans or the accepted value", () => {
+    const paste = "for 𠀋𠀋 and Ratna Kusuma, thanks";
+    const [[a, b]] = findWords(normalize(paste), normalize("ratna kusuma").text);
+    expect(paste.slice(a, b)).toBe("Ratna Kusuma");
+    const [[c, d]] = findWords(normalize(paste), normalize("𠀋𠀋").text);
+    expect(paste.slice(c, d)).toBe("𠀋𠀋");
+    expect(g(paste, f("name", "name", "name"), "Ratna Kusuma").value).toBe("Ratna Kusuma");
+  });
+});
+
+describe("the box's own limits (maxlength, min/max, pattern)", () => {
+  it("a number above the box's max stays amber even when it is in the paste", () => {
+    expect(g("staying 61 nights", f("nights", "int", "plain", { min: 1, max: 60 }), "61").reason).toBe("format");
+    expect(g("staying 3 nights", f("nights", "int", "plain", { min: 1, max: 60 }), "3").state).toBe("found");
+  });
+  it("a postal value the box's pattern refuses stays amber", () => {
+    expect(g("ZIP AB123 please", f("postal_code", "postal", "plain", { pattern: "\\d{5}", maxLength: 5 }), "AB123").reason).toBe("format");
+    expect(g("Jakarta 10510", f("postal_code", "postal", "plain", { pattern: "\\d{5}", maxLength: 5 }), "10510").state).toBe("found");
+  });
+  it("a value longer than the box's maxlength stays amber", () => {
+    expect(g(S3, f("city", "text", "plain", { maxLength: 5 }), "Semarang").reason).toBe("format");
+  });
+  it("an unparsable pattern is ignored, as the browser ignores it", () => {
+    expect(g("Jakarta 10510", f("postal_code", "postal", "plain", { pattern: "(" }), "10510").state).toBe("found");
   });
 });
 

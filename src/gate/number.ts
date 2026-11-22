@@ -27,7 +27,7 @@ export function gateInt(paste: string, proposed: string): GateResult {
     const words = [NUMBER_WORDS[n], ID_WORDS[n]].filter(Boolean);
     for (const w of words) {
       const at = ` ${norm.text} `.indexOf(` ${w} `);
-      if (at >= 0) spans.push([norm.map[at], norm.map[at + w.length - 1] + 1]);
+      if (at >= 0) spans.push([norm.map[at], norm.ends[at + w.length - 1]]);
     }
   }
   return spans.length ? found(String(n), proposed, spans.slice(0, 1)) : amber("not_in_text", "", proposed);
