@@ -1,0 +1,14 @@
+rules_version = '2';
+// Form hints are structure only (labels, names, options), never customer data.
+// Clients may read them; only the builder's seed script (Admin SDK) writes.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /hints/{formFingerprint} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
