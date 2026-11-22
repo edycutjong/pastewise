@@ -270,13 +270,15 @@ export default function FillApp() {
    *  a failed or slow fetch keeps the last activated value (the explicit Yes is still required either way). */
   async function refreshKill(): Promise<boolean> {
     const { rc } = firebase();
+    let prevInterval = 60_000;
     try {
+      prevInterval = rc.settings.minimumFetchIntervalMillis;
       rc.settings.minimumFetchIntervalMillis = 0;
       await withTimeout(fetchAndActivate(rc), 2500, "rc timeout");
     } catch {
       /* keep the last activated value */
     } finally {
-      rc.settings.minimumFetchIntervalMillis = 60_000;
+      rc.settings.minimumFetchIntervalMillis = prevInterval;
     }
     const k = cloudKillSwitch();
     setKill(k);
@@ -314,6 +316,7 @@ export default function FillApp() {
       fields: {},
     };
     if (!viaConsent && api) {
+      const initAtStart = initRef.current; // this run waits on the init it started with, even if the ref is reset meanwhile
       try {
         const a = await api.availability(DEVICE_AVAILABILITY);
         setAvail(a);
@@ -321,13 +324,13 @@ export default function FillApp() {
         if (a === "downloadable" || a === "downloading") setDownloading(true);
         // a model that is already downloaded must start quickly; a download may take many minutes
         const limit = a === "available" ? 60_000 : 20 * 60_000;
-        await withTimeout(initRef.current ?? Promise.resolve(), limit, `the model did not start within ${limit / 1000} s`);
+        await withTimeout(initAtStart ?? Promise.resolve(), limit, `the model did not start within ${limit / 1000} s (reload the page to try again)`);
         setProgress(null);
         setDownloading(false);
       } catch (e) {
+        if (runIdRef.current[formId] !== runId) return false; // superseded (the person chose the cloud instead, or pressed Fill again): leave the newer run's overlay alone
         setDownloading(false);
         setProgress(null);
-        if (runIdRef.current[formId] !== runId) return false; // the person chose the cloud instead while this waited
         setPhase("idle");
         setRuns((prev) => ({ ...prev, [formId]: undefined }));
         record({ ...base, done: true, error: String(e) });
@@ -708,7 +711,11 @@ export default function FillApp() {
         requestCount={requestCount}
         onDecline={() => {
           setConsent((c) => ({ ...c, open: false, state: "ask" }));
-          setNotice("Nothing was sent. Type the form by hand, or press Fill to ask again.");
+          setNotice(
+            consent.state === "failed"
+              ? "The request that failed may still have reached the cloud — the receipt shows what left. Type the form by hand, or press Fill and say Yes again."
+              : "Nothing was sent. Type the form by hand, or press Fill to ask again.",
+          );
         }}
       />
       <TeachDrawer

@@ -66,7 +66,7 @@ export default function Bench() {
         {all.length === 0 && <p className="notice">No bench run is committed yet.</p>}
         {sets.map((set) => {
           const rows = all.filter((a) => a.set === set);
-          const first = rows[0];
+          const first = rows.find((r) => !r.stalledRun) ?? rows[0];
           return (
             <section key={set} className="sheet" aria-label={`Set ${set}`}>
               <h2 className="cap">
@@ -92,7 +92,7 @@ export default function Bench() {
                     <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}`}>
                       <td>
                         {a.arm === "off" ? "off" : `on (hints from the ${a.hintsSource === "cloud" ? "cloud teacher" : a.hintsSource})`}
-                        {a.stalledRun && <div className="fine">first run, with model stalls — see note</div>}
+                        {a.stalledRun && <div className="fine">first run, with model stalls{a.note ? " — see note" : ""}</div>}
                       </td>
                       <td>{pct(a.metrics.acceptedWrongPct)}</td>
                       <td>{pct(a.metrics.rawAccuracyStrict)}</td>

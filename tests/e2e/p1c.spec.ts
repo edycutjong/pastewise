@@ -174,3 +174,30 @@ test("consent Yes: one request for a double click, IN_CLOUD badge, bytes counted
   await expect(page.locator("#A-name")).toHaveValue("Tia Ramadhani");
   await expect(page.getByText("Nothing was sent.")).toHaveCount(0);
 });
+
+test("consent Yes that fails: the sheet says so, a new Yes is needed, and declining does not claim nothing was sent", async ({ page }) => {
+  await page.addInitScript(() => {
+    (globalThis as { FIREBASE_APPCHECK_DEBUG_TOKEN?: string }).FIREBASE_APPCHECK_DEBUG_TOKEN = "00000000-0000-4000-8000-000000000000";
+  });
+  const cors = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "POST, OPTIONS" };
+  await page.route("**/content-firebaseappcheck.googleapis.com/**", (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", headers: cors, body: JSON.stringify({ token: "stand-in", ttl: "3600s" }) }),
+  );
+  let calls = 0;
+  await page.route("**/firebasevertexai.googleapis.com/**", (route) => {
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: cors });
+    calls++;
+    return route.fulfill({ status: 500, contentType: "application/json", headers: cors, body: JSON.stringify({ error: { code: 500, message: "stand-in failure" } }) });
+  });
+  await page.goto("/");
+  await page.locator("#paste").fill(MSG);
+  await page.getByRole("button", { name: /Fill this message/ }).click();
+  const sheet = page.getByRole("dialog", { name: /Send this one message to the cloud/ });
+  await sheet.getByTestId("consent-send").click();
+  await expect(sheet.getByTestId("consent-failed")).toBeVisible({ timeout: 20000 });
+  await expect(sheet.getByTestId("consent-send")).toBeEnabled();
+  expect(calls).toBeGreaterThan(0);
+  await sheet.getByTestId("consent-decline").click();
+  await expect(page.getByRole("status").filter({ hasText: "may still have reached the cloud" })).toBeVisible();
+  await expect(page.getByRole("button", { name: /Fill this message/ })).toBeEnabled();
+});
