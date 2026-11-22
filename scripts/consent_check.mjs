@@ -50,6 +50,11 @@ try {
   out.consentBytesShown = await app.$eval('[data-testid="consent-bytes"] b', (e) => e.textContent).catch(() => null);
   out.messageBytes = new TextEncoder().encode(S1.paste).length;
   out.aiRequests = (await app.evaluate(() => window.__pastewise.ledger())).filter((r) => /vertexai|generativelanguage/.test(r.host)).map((r) => ({ host: r.host, size: r.size, tokensFound: r.hits }));
+  // the ledger counts the message once per AI Logic request that carried it (a timed-out first attempt plus its retry = 2)
+  const afterYes = (await app.evaluate(() => window.__pastewise.ledger())).slice(before).filter((r) => /vertexai|generativelanguage/.test(r.host) && r.consentRunId);
+  out.aiRequestsCarryingMessage = afterYes.length;
+  out.consentBytesExpected = afterYes.length * out.messageBytes;
+  out.consentShownMatchesRequests = out.consentBytesShown === `${out.consentBytesExpected.toLocaleString("en-US")} bytes`;
   const f = path.join(ROOT, `evidence/consent-path-${new Date().toISOString().slice(0, 10)}.json`);
   fs.writeFileSync(f, JSON.stringify(out, null, 1) + "\n");
   console.log(JSON.stringify(out, null, 1));

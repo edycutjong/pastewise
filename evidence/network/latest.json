@@ -1,7 +1,7 @@
 {
  "label": "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
  "date": "2026-11-22",
- "commit": "5c94379",
+ "commit": "2d03efc",
  "base": "https://pastewise.edycu.dev",
  "capture": "CDP Network.requestWillBeSent on the page + Target.setAutoAttach({flatten:true}) children (iframes, workers)",
  "rule": "paste tokens = digit runs >= 4 + words >= 4 chars minus the empty form's vocabulary and a stop-list (src/ledger/tokens.ts)",
@@ -215,7 +215,7 @@
    "type": "Script",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/_next/static/immutable/chunks/3m7l647s_qojv.js",
+   "path": "/_next/static/immutable/chunks/3uuar8si7nq7a.js",
    "size": 74,
    "hits": {}
   },
@@ -225,7 +225,7 @@
    "type": "Script",
    "method": "GET",
    "host": "pastewise.edycu.dev",
-   "path": "/_next/static/immutable/chunks/413yn_478544a.js",
+   "path": "/_next/static/immutable/chunks/1ko7-p85brmtj.js",
    "size": 74,
    "hits": {}
   },
@@ -387,7 +387,7 @@
    "method": "POST",
    "host": "www.google.com",
    "path": "/recaptcha/enterprise/reload",
-   "size": 12107,
+   "size": 12127,
    "hits": {}
   },
   {
@@ -407,7 +407,7 @@
    "method": "POST",
    "host": "content-firebaseappcheck.googleapis.com",
    "path": "/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:",
-   "size": 2616,
+   "size": 2595,
    "hits": {}
   },
   {
@@ -417,7 +417,7 @@
    "method": "POST",
    "host": "www.google.com",
    "path": "/recaptcha/enterprise/clr",
-   "size": 2014,
+   "size": 1996,
    "hits": {}
   },
   {
