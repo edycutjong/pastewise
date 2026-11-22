@@ -68,12 +68,17 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      - name: Firebase web config present (repository variables)
+        run: |
+          for v in NEXT_PUBLIC_FIREBASE_API_KEY NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN NEXT_PUBLIC_FIREBASE_PROJECT_ID NEXT_PUBLIC_FIREBASE_APP_ID NEXT_PUBLIC_RECAPTCHA_ENTERPRISE_SITE_KEY; do
+            [ -n "${!v}" ] || { echo "::error::repository variable $v is empty. Set it under Settings > Secrets and variables > Actions > Variables (see CONTRIBUTING.md)"; exit 1; }
+          done
       - run: npm run build
-      - name: Bundle budget (static JS, KB)
+      - name: Bundle budget (static assets, KB on disk)
         run: |
           KB=$(du -sk out/_next/static | cut -f1)
-          echo "static assets: ${KB} KB"
-          [ "$KB" -le 4000 ] || { echo "::error::static assets ${KB} KB exceed the 4000 KB budget"; exit 1; }
+          echo "static assets: ${KB} KB (measured 1520 KB when this budget was set)"
+          [ "$KB" -le 1800 ] || { echo "::error::static assets ${KB} KB exceed the 1800 KB budget"; exit 1; }
       - uses: actions/upload-artifact@v4
         with:
           name: out
@@ -132,8 +137,8 @@ jobs:
           retention-days: 7
 
   gate:
-    name: "6 · Deploy gate"
+    name: "6 · Gate summary"
     needs: [quality, security, build, e2e, perf]
     runs-on: ubuntu-latest
     steps:
-      - run: echo "All gates green. Vercel deploys main from the same commit."
+      - run: echo "All five stages green for this commit. Vercel deploys main independently; make this check required in branch protection to turn it into a real gate."

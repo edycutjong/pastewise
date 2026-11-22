@@ -30,7 +30,7 @@ Through the real page, `ONLY_ON_DEVICE`, 3 repeats per row, prompt `p0c-v3`, App
 | off | 80.7% (80.3–81.5) | 5.9% (5.1–6.4) | 2.0% | 2.34 s / 2.94 s | 45/45 ×3 |
 | on (frozen cloud hints) | 81.5% (80.0–82.6) | 5.3% (5.1–5.4) | 1.3% | 2.40 s / 2.93 s | 45/45 ×3 |
 
-The bars set before the run (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were all missed. Free-text boxes (notes, remarks, requests) account for most
+The bars we aimed for (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were all missed. Free-text boxes (notes, remarks, requests) account for most
 of the wrong-shown figure; see the README for the split.
 
 **180-pair bench (60 orders on forms A and C, 60 bookings on form B), gate v3, commits `c5e56c5` (off) and `b939206` (on; same `src/`):** hints off strict 80.6%,
@@ -65,5 +65,5 @@ The bench opens a headed Chrome, uses the real Fill button and scores the app's 
 ## 4. What this does not show
 
 - It is a hosted web app, not a Chrome extension: it does not fill forms on other sites.
-- The held-out set is 45 pairs: its ranges are wide, and two boxes (guest name on B, ADDR 1 on C) were above 5% wrong-shown there.
+- The held-out set is 45 pairs: its ranges are wide. Among the name/phone/address/postal boxes, two were above 5% wrong-shown with hints off (guest name on B, ADDR 1 on C, 6.7% each) and one with hints on (STREET on A).
 - Form C still shows wrong values 4.7–5.8% of the time on the held-out set; see "Honest limits" in the [README](README.md).

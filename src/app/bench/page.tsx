@@ -208,7 +208,7 @@ export default function Bench() {
           <p>
             “Wrong value shown as found” counts values that the code accepted (they appear in the message and pass the field&apos;s format check) but
             that are not the right value for that box. The code checks presence and format, not truth, so this number is never zero and the boxes stay
-            editable. Names are never shown as found: after the bench, the recipient-name boxes became always amber (gate v4). Only the held-out set was measured on that frozen release; the bench and earlier sets were used while building. The bars set before the held-out run were missed, and the numbers above say by how much.
+            editable. Names are never shown as found: after the bench, the recipient-name boxes became always amber (gate v4). Only the held-out set was measured on that frozen release; the bench and earlier sets were used while building. The bars we aimed for on the held-out set (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were missed, and the numbers above say by how much.
           </p>
         </section>
       </main>

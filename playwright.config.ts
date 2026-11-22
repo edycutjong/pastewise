@@ -6,5 +6,5 @@ export default defineConfig({
   use: { baseURL: process.env.E2E_BASE_URL ?? "http://localhost:3102", channel: process.env.PW_CHANNEL ?? "chrome" },
   webServer: process.env.E2E_BASE_URL
     ? undefined
-    : { command: "npx --yes serve out -l 3102", url: "http://localhost:3102", reuseExistingServer: false, timeout: 60_000 },
+    : { command: "npx serve out -l 3102", url: "http://localhost:3102", reuseExistingServer: false, timeout: 60_000 },
 });

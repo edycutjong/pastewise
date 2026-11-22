@@ -69,3 +69,20 @@ test("unplug: the on-device model dies mid-fill -> a visible failure, every box 
   for (const id of ["name", "phone", "street", "city"]) await expect(page.locator(`#A-${id}`)).toHaveValue("");
   expect(ai).toEqual([]);
 });
+
+// Control for the unplug test above: the same stand-in model, plugged in (it answers with valid JSON), fills the boxes.
+test("unplug control: the same stand-in model, answering, fills the boxes it is given", async ({ page }) => {
+  await page.addInitScript(() => {
+    const answer = JSON.stringify({ name: "Budi Santoso", phone: "081255507734", street: "Jl. Diponegoro 88", city: "Semarang", province: "Jawa Tengah", postal_code: "50241", item: "ceramic mug set", quantity: "1", notes: "Gift wrap please" });
+    (globalThis as unknown as { LanguageModel: unknown }).LanguageModel = {
+      availability: async () => "available",
+      params: async () => ({ defaultTopK: 3, maxTopK: 8, defaultTemperature: 1, maxTemperature: 2 }),
+      create: async () => ({ prompt: async () => answer, promptStreaming: () => { throw new Error("not used"); }, destroy() {}, inputUsage: 0, inputQuota: 9000 }),
+    };
+  });
+  await page.goto("/");
+  await page.getByTestId("sample-S3").click();
+  await page.getByRole("button", { name: /Fill this message/ }).click();
+  await expect(page.locator("#A-phone")).toHaveValue("081255507734", { timeout: 40_000 });
+  await expect(page.locator("#A-city")).toHaveValue("Semarang");
+});

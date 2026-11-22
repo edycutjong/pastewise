@@ -14,7 +14,7 @@ import { amber, type GateResult } from "./types";
 
 export const GATE_VERSION = "4";
 
-/** Release response (eval plan §6, decided before any run): a critical field whose accepted-wrong rate on the bench set
+/** Release response: a critical field whose accepted-wrong rate on the bench set
  *  exceeded 5% (mean of 3 repeats, hints off) is always amber. Measured 2026-11-22 on the 180-pair bench: recipient name on
  *  form A 10.6% and on form C 8.3% (the model picks the sender, a kinship word, an organisation). The box is still pre-filled
  *  with the model's value, but it is never shown as "found in your text": the person confirms it. Keys are unique per form. */

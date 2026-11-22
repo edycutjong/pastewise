@@ -34,6 +34,9 @@ test("live: /bench and /receipt render from committed evidence", async ({ page }
     expect(res?.status(), path).toBe(200);
     await expect(page.locator("main")).not.toBeEmpty();
   }
+  await page.goto("/bench/");
+  await expect(page.getByRole("heading", { name: /Set holdout/ })).toBeVisible();
+  await expect(page.getByText("57077867")).toBeVisible();
 });
 
 test("live: no Nano in this profile, so Fill opens the consent sheet and sends nothing before a Yes", async ({ page }) => {
@@ -50,9 +53,23 @@ test("live: no Nano in this profile, so Fill opens the consent sheet and sends n
   expect(ai).toEqual([]);
 });
 
-test("live: App Check is enforced, an unattested request to AI Logic is rejected", async ({ request }) => {
-  const res = await request.post("https://firebasevertexai.googleapis.com/v1beta/projects/pastewise-hybrid-ai/locations/global/publishers/google/models/gemini-2.5-flash:generateContent", {
-    data: { contents: [{ role: "user", parts: [{ text: "hi" }] }] },
-  });
-  expect([400, 401, 403]).toContain(res.status());
+test("live: App Check is enforced, a request with the public API key but no App Check token is rejected for that reason", async ({ request }) => {
+  // The key is public by design (it ships in the bundle); it comes from .env.local or LIVE_FIREBASE_API_KEY, never from the repo.
+  let key = process.env.LIVE_FIREBASE_API_KEY ?? "";
+  if (!key) {
+    try {
+      key = /^NEXT_PUBLIC_FIREBASE_API_KEY=(.+)$/m.exec((await import("node:fs")).readFileSync(".env.local", "utf8"))?.[1]?.trim() ?? "";
+    } catch {
+      /* no .env.local */
+    }
+  }
+  test.skip(!key, "needs the public Firebase API key (.env.local or LIVE_FIREBASE_API_KEY)");
+  const url = "https://firebasevertexai.googleapis.com/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateContent";
+  const body = { contents: [{ role: "user", parts: [{ text: "hi" }] }] };
+  const res = await request.post(url, { headers: { "x-goog-api-key": key }, data: body });
+  expect(res.status()).toBe(401);
+  expect((await res.json()).error.message).toMatch(/App Check/i);
+  // control: the same call without the key is a different error, so the assertion above is about App Check and not about a missing key
+  const noKey = await request.post(url, { data: body });
+  expect((await noKey.json()).error.message).not.toMatch(/App Check/i);
 });

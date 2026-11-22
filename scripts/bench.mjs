@@ -39,6 +39,27 @@ fs.mkdirSync(AGG, { recursive: true });
 // The held-out set is scored once per (prompt version, gate version): a second run needs a printed reason.
 const rerunReason = arg("rerun-reason");
 const loadAtStart = os.loadavg().map((x) => +x.toFixed(1));
+const armName0 = hintsMode === "off" && !hintsFile ? "off" : "hints";
+const staticVer = (f, re) => new RegExp(re).exec(fs.readFileSync(path.join(ROOT, f), "utf8"))?.[1] ?? "?";
+const promptV = staticVer("src/ai/prompt.ts", 'PROMPT_VERSION = "([^"]+)"');
+const gateV = staticVer("src/gate/index.ts", 'GATE_VERSION = "([^"]+)"');
+const tree = (d) => { try { return execSync(`git rev-parse HEAD:${d}`, { cwd: ROOT }).toString().trim().slice(0, 12); } catch { return "?"; } };
+const srcTrees = { ai: tree("src/ai"), gate: tree("src/gate") };
+// The set file must be the frozen one: its hash has to match sets/SHA256SUMS when it is listed there.
+const sums = Object.fromEntries(fs.existsSync(path.join(ROOT, "sets/SHA256SUMS")) ? fs.readFileSync(path.join(ROOT, "sets/SHA256SUMS"), "utf8").trim().split("\n").map((l) => l.trim().split(/\s+/).reverse()) : []);
+if (sums[path.basename(setPath)] && sums[path.basename(setPath)] !== setHash) throw new Error(`${path.basename(setPath)} does not match sets/SHA256SUMS (the frozen hash); refusing to run`);
+// The held-out set (by name or by the hash of sets/holdout.json) is scored once per prompt + gate + src/ai + src/gate tree and hints arm,
+// on a clean tree. This check runs BEFORE Chrome is launched.
+const isHoldout = SET.set === "holdout" || (sums["holdout.json"] && sums["holdout.json"] === setHash);
+if (isHoldout) {
+  if (dirty && !rerunReason) throw new Error("holdout refused: src/ has uncommitted changes (commit first, or pass --rerun-reason)");
+  const seen = fs.readdirSync(AGG).map((f) => JSON.parse(fs.readFileSync(path.join(AGG, f), "utf8")))
+    .filter((d) => d.setSha256 === setHash && d.arm === armName0 && d.promptVersion === promptV && d.gateVersion === gateV && (!d.srcTrees || (d.srcTrees.ai === srcTrees.ai && d.srcTrees.gate === srcTrees.gate)));
+  if (seen.length >= 1 && !rerunReason) throw new Error(`holdout already scored for prompt ${promptV} / gate ${gateV} on this hints arm; pass --rerun-reason "<why>"`);
+  if (seen.length >= 1) console.log(`HOLDOUT RERUN (reason: ${rerunReason})`);
+}
+// Never overwrite an earlier record: a second file gets a -runN suffix.
+const uniq = (p) => { if (!fs.existsSync(p)) return p; const e = path.extname(p); for (let n = 2; ; n++) { const q = p.slice(0, -e.length) + `-run${n}` + e; if (!fs.existsSync(q)) return q; } };
 
 let contended = false;
 try {
@@ -54,12 +75,6 @@ const files = [];
 try {
   const page = await openApp(chrome.browser, { base, today: SET.today });
   const meta = await page.evaluate(() => ({ ua: navigator.userAgent, versions: window.__pastewise.versions }));
-  if (SET.set === "holdout") {
-    const key = `${meta.versions.prompt}|${meta.versions.gate}`;
-    const seen = fs.readdirSync(AGG).filter((f) => f.includes("-holdout-")).map((f) => JSON.parse(fs.readFileSync(path.join(AGG, f), "utf8"))).filter((d) => `${d.promptVersion}|${d.gateVersion}` === key && d.arm === (hintsMode === "off" && !hintsFile ? "off" : "hints"));
-    if (seen.length >= 1 && !rerunReason) throw new Error(`holdout already scored for prompt/gate ${key} on this hints arm; pass --rerun-reason "<why>"`);
-    if (seen.length >= 1) console.log(`HOLDOUT RERUN (reason: ${rerunReason})`);
-  }
   const forms = [...new Set(items.map((x) => x.form))];
   const specs = {};
   let hints = {};
@@ -92,7 +107,7 @@ try {
     }
     const { summary, fieldRows } = score(rows);
     const offDevice = rows.filter((x) => x.record.batches.some((b) => b.inferenceSource !== "on_device"));
-    const file = path.join(OUT, `${date}-${sha}-${SET.set}-${hintsMode === "off" && !hintsFile ? "off" : "hints"}-r${r}.json`);
+    const file = uniq(path.join(OUT, `${date}-${sha}-${SET.set}-${hintsMode === "off" && !hintsFile ? "off" : "hints"}-r${r}.json`));
     const doc = {
       label: SET.label,
       set: SET.set,
@@ -153,6 +168,7 @@ try {
     chrome: meta.ua,
     machine: "Apple M1 Max, 32 GB (builder's laptop)",
     contendedBySiblingChrome: contended,
+    srcTrees,
     loadAvgAtStart: loadAtStart,
     loadAvgAtEnd: os.loadavg().map((x) => +x.toFixed(1)),
     rerunReason: rerunReason ?? null,
@@ -172,7 +188,7 @@ try {
     })),
     rawRowsInRepo: !process.argv.includes("--out"),
   };
-  const aggFile = path.join(AGG, `${date}-${sha}-${SET.set}-${armName}.json`);
+  const aggFile = uniq(path.join(AGG, `${date}-${sha}-${SET.set}-${armName}.json`));
   fs.writeFileSync(aggFile, JSON.stringify(aggDoc, null, 1) + "\n");
   const redact = process.argv.includes("--out");
   const md = [
@@ -196,7 +212,7 @@ try {
     `Aggregate: \`${path.relative(ROOT, aggFile)}\``,
     "",
   ].join("\n");
-  const mdFile = path.join(OUT, `${date}-${sha}-${SET.set}-${hintsMode === "off" && !hintsFile ? "off" : "hints"}-summary.md`);
+  const mdFile = uniq(path.join(OUT, `${date}-${sha}-${SET.set}-${hintsMode === "off" && !hintsFile ? "off" : "hints"}-summary.md`));
   fs.writeFileSync(mdFile, md);
   console.log(md);
 } finally {
