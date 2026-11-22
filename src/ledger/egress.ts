@@ -23,13 +23,13 @@ const runs: Run[] = [];
 const records: LedgerRecord[] = [];
 const listeners = new Set<() => void>();
 let installed = false;
-/** Bytes of messages sent to the cloud after an explicit Yes on the consent sheet. Lives beside the records (same page-session
- *  lifetime), so the Fill screen and /receipt read one total. */
-let consentBytes = 0;
+/** Runs sent after an explicit Yes on the consent sheet -> that message's byte length. The "sent with your Yes" total is derived
+ *  from the records themselves: every AI Logic request whose body carries that run's message counts once, including a late
+ *  request that lands after the run has returned; a request without the message (e.g. the empty-form teacher) never counts. */
+const consentRuns = new Map<string, number>();
 
-export function addConsentBytes(n: number) {
-  if (!(n > 0)) return;
-  consentBytes += n;
+export function markConsentRun(runId: string, messageBytes: number) {
+  consentRuns.set(runId, messageBytes);
   listeners.forEach((l) => l());
 }
 
@@ -60,7 +60,8 @@ function record(api: LedgerRecord["api"], url: string, body: string, unreadable 
   let best = { bytes: 0, hits: 0, runId: null as string | null };
   for (const r of runs) {
     const f = tokensFound(text, r.tokens);
-    if (f.bytes > best.bytes) best = { bytes: f.bytes, hits: f.hits.length, runId: r.runId };
+    // ties go to the NEWER run: the same message re-sent (e.g. "use the cloud instead" after a stalled on-device run) belongs to the latest run
+    if (f.bytes > 0 && f.bytes >= best.bytes) best = { bytes: f.bytes, hits: f.hits.length, runId: r.runId };
   }
   records.push({
     t: Math.round(performance.now()),
@@ -137,9 +138,10 @@ export function installLedger() {
 export const ledger = {
   records: () => records.slice(),
   totalPasteBytes: () => records.reduce((n, r) => n + r.pasteBytesFound, 0),
-  consentBytes: () => consentBytes,
+  consentBytes: () =>
+    records.reduce((n, r) => n + (r.runId && r.purpose === "AI Logic (cloud model)" && consentRuns.has(r.runId) ? consentRuns.get(r.runId)! : 0), 0),
   /** cheap snapshot key for useSyncExternalStore */
-  version: () => `${records.length}:${records.reduce((n, r) => n + r.pasteBytesFound, 0)}:${consentBytes}`,
+  version: () => `${records.length}:${records.reduce((n, r) => n + r.pasteBytesFound, 0)}:${consentRuns.size}`,
   subscribe(fn: () => void) {
     listeners.add(fn);
     return () => listeners.delete(fn);

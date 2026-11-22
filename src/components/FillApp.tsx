@@ -4,7 +4,7 @@
 // on-device API present) -> initializeDeviceModel inside the same click ->
 // read the live form's DOM into a schema -> ONLY_ON_DEVICE fill per batch ->
 // code gate per field -> carbon blue (found in your text) or amber (reason).
-import { addConsentBytes, installLedger, ledger, trackRun } from "@/ledger/egress";
+import { installLedger, ledger, markConsentRun, trackRun } from "@/ledger/egress";
 installLedger(); // must run before Firebase makes its first request
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -415,17 +415,16 @@ export default function FillApp() {
         setConsent((c) => ({ ...c, state: "ask" })); // the sheet now shows "the cloud path is off"
         return;
       }
-      const sentBefore = ledger.records().length;
       const runId = crypto.randomUUID();
       runIdRef.current[formId] = runId;
       trackRun(runId, paste, vocabOf(s));
+      // the ledger counts this message once per AI Logic request that actually carries it (a retry sends it again; a late request
+      // still counts; nothing counts if no request went out)
+      markConsentRun(runId, new TextEncoder().encode(paste).length);
       setRuns((prev) => ({ ...prev, [formId]: { runId, paste, boxes: {}, batches: [], ms: 0, done: false } }));
       setViaCloud(true);
       setPhase("preparing");
       const ok = await run(formId, runId, paste, s, todayLocal(), false, null, true);
-      // count the message once per request that actually left (a retry sends it again); nothing counts if no request went out
-      const left = ledger.records().slice(sentBefore).filter((r) => /vertexai|generativelanguage/.test(r.host)).length;
-      addConsentBytes(left * new TextEncoder().encode(paste).length);
       setConsent((c) => (ok ? { ...c, open: false, state: "ask" } : { ...c, open: true, state: "failed" }));
     } catch {
       setViaCloud(false);
