@@ -1,21 +1,22 @@
 {
  "label": "synthetic S1 only",
  "base": "https://pastewise.edycu.dev/",
- "date": "2026-11-22T14:02:43.715Z",
- "commit": "2d03efc",
+ "date": "2026-11-22T14:07:47.648Z",
+ "commit": "94854aa",
  "availability": "downloadable",
  "firstDialog": "Getting the on-device model ready",
  "sheetOpened": true,
  "sheetHeading": "The on-device model isn't ready yet",
  "aiRequestsBeforeYes": 0,
- "afterYesMs": 3219,
+ "afterYesMs": 15616,
  "batches": [
   {
    "status": "ok",
-   "attempts": 1,
-   "ms": 2774,
+   "attempts": 2,
+   "ms": 3065,
    "error": "",
-   "raw": "{\"cnee_nm\": \"Mrs. Ratna Kusuma\", \"cnee_tel\": \"0857 5550 8812\", \"addr_1\": \"Jl. Ce"
+   "retryReason": "timeout",
+   "raw": "{\n  \"cnee_nm\": \"Mrs. Ratna Kusuma\",\n  \"cnee_tel\": \"0857 5550 8812\",\n  \"addr_1\": "
   }
  ],
  "fill": {
@@ -40,16 +41,22 @@
  "badge": [
   "in_cloud"
  ],
- "consentBytesShown": "341 bytes",
+ "consentBytesShown": "682 bytes",
  "messageBytes": 341,
  "aiRequests": [
   {
    "host": "firebasevertexai.googleapis.com",
    "size": 2554,
    "tokensFound": 31
+  },
+  {
+   "host": "firebasevertexai.googleapis.com",
+   "size": 2554,
+   "tokensFound": 31
   }
  ],
- "aiRequestsCarryingMessage": 1,
- "consentBytesExpected": 341,
- "consentShownMatchesRequests": true
+ "aiPostsSeenByChrome": 2,
+ "aiPostsCarryingMessage": 2,
+ "consentBytesExpected": 682,
+ "consentShownMatchesWire": true
 }
