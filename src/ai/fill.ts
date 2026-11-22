@@ -11,13 +11,15 @@ import { deviceModel } from "./models";
 
 export type BatchResult = {
   keys: string[];
-  status: "ok" | "timed_out" | "invalid";
+  status: "ok" | "timed_out" | "invalid" | "error";
   values: Record<string, string>;
   inferenceSource?: string;
   ms: number; // model time for the successful attempt (or total when failed)
   attempts: number;
   raw?: string;
   error?: string;
+  /** why attempt 1 failed when a retry happened (timeout | invalid | error) */
+  retryReason?: string;
 };
 
 const TIMEOUT = Symbol("timeout");
@@ -50,25 +52,28 @@ export async function fillBatch(
   paste: string,
   today: string,
   timeoutMs: number,
-  onRetry?: () => void,
+  onRetry?: (why: "timeout" | "invalid" | "error") => void,
+  firstAttemptTimeoutMs = timeoutMs,
 ): Promise<BatchResult> {
   const keys = fields.map((f) => f.key);
   let total = 0;
   let last: Awaited<ReturnType<typeof once>> | null = null;
   for (let attempt = 1; attempt <= 2; attempt++) {
-    if (attempt === 2) onRetry?.();
-    last = await once(fields, title, paste, today, timeoutMs);
+    const retryReason = attempt === 2 && last ? last.kind : undefined;
+    if (retryReason) onRetry?.(retryReason as "timeout" | "invalid" | "error");
+    last = await once(fields, title, paste, today, attempt === 1 ? firstAttemptTimeoutMs : timeoutMs);
     total += last.ms;
-    if (last.kind === "ok") return { keys, status: "ok", values: last.values, inferenceSource: last.inferenceSource, ms: last.ms, attempts: attempt, raw: last.raw };
+    if (last.kind === "ok") return { keys, status: "ok", values: last.values, inferenceSource: last.inferenceSource, ms: last.ms, attempts: attempt, raw: last.raw, retryReason };
   }
   const l = last!;
   return {
     keys,
-    status: l.kind === "invalid" ? "invalid" : "timed_out",
+    status: l.kind === "invalid" ? "invalid" : l.kind === "error" ? "error" : "timed_out",
     values: {},
     inferenceSource: "inferenceSource" in l ? l.inferenceSource : undefined,
     ms: total,
     attempts: 2,
+    retryReason: "see status",
     raw: "raw" in l ? l.raw : undefined,
     error: "error" in l ? l.error : l.kind === "timeout" ? `no answer within ${timeoutMs} ms` : undefined,
   };
@@ -78,11 +83,20 @@ export async function fillBatch(
 export async function fillForm(
   form: FormSpec,
   paste: string,
-  opts: { today: string; timeoutMs: number; batchMax: number; onBatch?: (b: BatchResult) => void; onRetry?: () => void },
+  opts: {
+    today: string;
+    timeoutMs: number;
+    batchMax: number;
+    /** the first call of a page session also loads the model: only its first attempt gets this longer budget */
+    coldTimeoutMs?: number;
+    onBatch?: (b: BatchResult) => void;
+    onRetry?: (why: "timeout" | "invalid" | "error") => void;
+  },
 ): Promise<BatchResult[]> {
   const out: BatchResult[] = [];
-  for (const b of batches(form.fields, opts.batchMax)) {
-    const r = await fillBatch(b, form.title, paste, opts.today, opts.timeoutMs, opts.onRetry);
+  for (const [i, b] of batches(form.fields, opts.batchMax).entries()) {
+    const first = i === 0 && opts.coldTimeoutMs ? opts.coldTimeoutMs : opts.timeoutMs;
+    const r = await fillBatch(b, form.title, paste, opts.today, opts.timeoutMs, opts.onRetry, first);
     out.push(r);
     opts.onBatch?.(r);
   }

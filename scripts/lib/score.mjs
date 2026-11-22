@@ -15,7 +15,8 @@ const phone = (s) => {
   const d = digits(s);
   return d.startsWith("62") ? "0" + d.slice(2) : d;
 };
-const NUMW = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve"];
+const NUMW = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen",
+  "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty"];
 const int = (s) => {
   const t = String(s ?? "").trim().toLowerCase();
   const w = NUMW.indexOf(t);
@@ -58,6 +59,8 @@ export function score(rows) {
   const accWrongList = [];
   const fieldRows = [];
   let valid = 0, onDevice = 0, batchesN = 0, stalls = 0, recovered = 0;
+  const stallsBy = {};
+  const batchMs = [];
   const ordersWithCrit = new Set();
   const warm = [], cold = [];
   for (const r of rows) {
@@ -65,9 +68,12 @@ export function score(rows) {
     if (rec.batches.length && rec.batches.every((b) => b.status === "ok")) valid++;
     for (const b of rec.batches) {
       batchesN++;
+      if (b.status === "ok" && b.attempts === 1) batchMs.push(b.ms);
       if (b.inferenceSource === "on_device") onDevice++;
       if (b.attempts > 1) {
         stalls++;
+        const why = b.status !== "ok" ? `failed:${b.status}` : `recovered-after:${b.retryReason ?? "unknown"}`;
+        stallsBy[why] = (stallsBy[why] ?? 0) + 1;
         if (b.status === "ok") recovered++;
       }
     }
@@ -106,7 +112,7 @@ export function score(rows) {
         outcome = "amber";
         t.amber++;
         amberBy[out.reason ?? "unknown"] = (amberBy[out.reason ?? "unknown"] ?? 0) + 1;
-        if (gold && (sameStrict(f.kind, out.proposed, gold) || sameStrict(f.kind, out.value, gold))) t.amberRight++;
+        if (gold && sameStrict(f.kind, out.proposed, gold)) t.amberRight++; // the Filler was right; safety cost it
       } else {
         outcome = gold ? "empty_missed" : "empty_correct";
         t.empty++;
@@ -115,6 +121,7 @@ export function score(rows) {
     }
   }
   warm.sort((a, b) => a - b);
+  batchMs.sort((a, b) => a - b);
   const acceptedTotal = t.accC + t.accW;
   return {
     summary: {
@@ -138,10 +145,12 @@ export function score(rows) {
       amberButRightPct: pct(t.amberRight, t.fields),
       emptyPct: pct(t.empty, t.fields),
       latencyMs: { warmP50: q(warm, 0.5), warmP95: q(warm, 0.95), cold: cold[0] ?? null, n: warm.length },
+      batchLatencyMs: { p50: q(batchMs, 0.5), p95: q(batchMs, 0.95), n: batchMs.length, note: "first-attempt ok batches, incl. the cold one" },
       batches: batchesN,
       onDeviceBatches: `${onDevice}/${batchesN}`,
       stalls,
       stallsRecovered: recovered,
+      stallsByOutcome: stallsBy,
       acceptedWrongRows: accWrongList,
     },
     fieldRows,

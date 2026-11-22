@@ -1,6 +1,6 @@
 // phone: the value's digits must equal ONE whole digit run in the paste.
 // Runs may be split only by space, '-', '.', '(', ')' (never a newline);
-// +62 / 62 is normalised to 0; 9-15 digits. Two or more distinct phone-like
+// +62 / 62 is normalised to 0; 9-15 digits starting with 0 or written with +. Two or more distinct phone-like
 // runs -> always amber with both as chips, whatever the model chose.
 import { digits, type Span } from "./normalize";
 import { amber, empty, found, type GateResult } from "./types";
@@ -15,8 +15,11 @@ export function phoneRuns(paste: string): PhoneRun[] {
   const out: PhoneRun[] = [];
   const seen = new Set<string>();
   for (const m of paste.matchAll(RUN)) {
-    const d = normPhone(digits(m[0]));
+    const raw = m[0].trim();
+    const d = normPhone(digits(raw));
     if (d.length < 9 || d.length > 15) continue;
+    // phone-like = starts with 0 (after +62/62 -> 0) or is written with a leading +; a bare 9-digit order ref is not
+    if (!d.startsWith("0") && !raw.startsWith("+")) continue;
     if (seen.has(d)) continue;
     seen.add(d);
     out.push({ digits: d, display: m[0].trim(), span: [m.index!, m.index! + m[0].length] });

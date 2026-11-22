@@ -17,11 +17,10 @@ import { teachForm, type TeachResult } from "@/ai/teacher";
 import { FORMS, formById, type InputDef } from "@/forms/defs";
 import type { FormSpec } from "@/forms/types";
 import { readForm, type Hint } from "@/schema/buildSchema";
-import { gateField, GATE_VERSION, REASON_TEXT, type GateResult } from "@/gate";
+import { gateField, GATE_VERSION } from "@/gate";
+import { boxClass, countBoxes, mergeBatch, stateNote, type Box, type FormRun } from "./runState";
 import { pasteTokens, tokensFound } from "@/ledger/tokens";
 
-type Box = { value: string; gate?: GateResult; edited?: boolean; failed?: "timed_out" | "invalid" };
-type FormRun = { runId: string; paste: string; boxes: Record<string, Box>; batches: BatchResult[]; ms: number; done: boolean; discarded?: boolean };
 type Phase = "idle" | "reading" | "retrying" | "preparing";
 
 export type RunRecord = {
@@ -74,34 +73,12 @@ const clock = () => performance.now();
 type LM = { availability: (o?: unknown) => Promise<string> };
 const lm = () => (globalThis as { LanguageModel?: LM }).LanguageModel;
 
-function boxClass(box: Box | undefined, stale: boolean): string {
-  if (!box) return "";
-  if (box.edited) return "edited";
-  if (box.failed) return "amber";
-  if (!box.gate) return "";
-  if (box.gate.state === "found") return stale ? "found stale" : "found";
-  if (box.gate.state === "amber") return "amber";
-  return "";
-}
-
-function stateNote(box: Box | undefined, stale: boolean): string {
-  if (!box) return "";
-  if (box.edited) return box.gate?.candidates?.some((c) => c.value === box.value) ? "picked by you" : "edited by you";
-  if (box.failed) return REASON_TEXT[box.failed];
-  const g = box.gate;
-  if (!g) return "";
-  if (g.state === "found") return stale ? "from the previous message, fill again" : "found in your text";
-  if (g.state === "empty") return "";
-  if (g.reason === "year_assumed") return `year assumed: ${g.year} — check it`;
-  const why = REASON_TEXT[g.reason ?? "not_in_text"];
-  return g.proposed && g.reason !== "two_candidates" ? `${why} — the model suggested “${g.proposed.slice(0, 60)}”` : why;
-}
-
 export default function FillApp() {
   const [text, setText] = useState("");
   const [active, setActive] = useState<string>("A");
   const [runs, setRuns] = useState<Record<string, FormRun | undefined>>({});
   const [phase, setPhase] = useState<Phase>("idle");
+  const [retryWhy, setRetryWhy] = useState<"timeout" | "invalid" | "error">("timeout");
   const [elapsed, setElapsed] = useState(0);
   const [notice, setNotice] = useState<string | null>(null);
   const [hot, setHot] = useState<string | null>(null);
@@ -182,19 +159,10 @@ export default function FillApp() {
     return () => clearInterval(id);
   }, [phase]);
 
-  function applyBatch(formId: string, runId: string, paste: string, s: FormSpec, b: BatchResult, today: string) {
+  function applyBatch(formId: string, runId: string, s: FormSpec, b: BatchResult, today: string) {
     setRuns((prev) => {
-      const run = prev[formId];
-      if (!run || run.runId !== runId) return prev;
-      const boxes = { ...run.boxes };
-      for (const f of s.fields.filter((x) => b.keys.includes(x.key))) {
-        if (boxes[f.key]?.edited) continue; // never overwrite what the person typed
-        if (b.status === "ok") {
-          const gate = gateField(paste, f, b.values[f.key] ?? "", today);
-          boxes[f.key] = { value: gate.value, gate };
-        } else boxes[f.key] = { value: "", failed: b.status };
-      }
-      return { ...prev, [formId]: { ...run, boxes, batches: [...run.batches, b] } };
+      const next = mergeBatch(prev[formId], runId, s.fields, b, today);
+      return next === prev[formId] ? prev : { ...prev, [formId]: next };
     });
   }
 
@@ -274,12 +242,16 @@ export default function FillApp() {
     const t0 = clock();
     const results = await fillForm(s, paste, {
       today,
-      // the first call of a session also loads the model: it gets twice the budget
-      timeoutMs: rcNumber("fill_timeout_ms") * (cold ? 2 : 1),
+      timeoutMs: rcNumber("fill_timeout_ms"),
+      // the first call of a page session also loads the model: only its first attempt gets twice the budget
+      coldTimeoutMs: cold ? rcNumber("fill_timeout_ms") * 2 : undefined,
       batchMax: rcNumber("batch_max_fields"),
-      onRetry: () => setPhase("retrying"),
+      onRetry: (why) => {
+        setRetryWhy(why);
+        setPhase("retrying");
+      },
       onBatch: (b) => {
-        if (runIdRef.current[formId] === runId && textRef.current === paste) applyBatch(formId, runId, paste, s, b, today);
+        if (runIdRef.current[formId] === runId && textRef.current === paste) applyBatch(formId, runId, s, b, today);
       },
     });
     const totalMs = Math.round(clock() - t0);
@@ -300,7 +272,7 @@ export default function FillApp() {
         fields[f.key] = { proposed: g.proposed, state: g.state, value: g.value, reason: g.reason, candidates: g.candidates?.map((c) => c.value) };
       }
     }
-    record({ ...base, done: true, discarded, totalMs, batches: results.map(({ keys, status, inferenceSource, ms, attempts, raw, error }) => ({ keys, status, inferenceSource, ms, attempts, raw, error })), fields });
+    record({ ...base, done: true, discarded, totalMs, batches: results.map(({ keys, status, inferenceSource, ms, attempts, raw, error, retryReason }) => ({ keys, status, inferenceSource, ms, attempts, raw, error, retryReason })), fields });
     setPhase("idle");
   }
 
@@ -355,18 +327,7 @@ export default function FillApp() {
     return parts;
   }, [spans, text, hot]);
 
-  const counts = useMemo(() => {
-    const c = { found: 0, amber: 0, empty: 0, total: def.inputs.length };
-    if (!cur) return c;
-    for (const i of def.inputs) {
-      const b = cur.boxes[i.name];
-      if (!b) continue;
-      if (b.failed || b.gate?.state === "amber") c.amber++;
-      else if (b.gate?.state === "found") c.found++;
-      else if (b.gate?.state === "empty") c.empty++;
-    }
-    return c;
-  }, [cur, def]);
+  const counts = useMemo(() => countBoxes(cur, def.inputs.map((i) => i.name)), [cur, def]);
 
   const toCheck = cur ? def.inputs.filter((i) => { const b = cur.boxes[i.name]; return b && !b.edited && (b.failed || b.gate?.state === "amber"); }) : [];
   const badges = cur?.batches.map((b) => b.inferenceSource ?? (b.status === "ok" ? "UNKNOWN" : "NO ANSWER")) ?? [];
@@ -468,11 +429,11 @@ export default function FillApp() {
             </form>
           ))}
           <div className="bar">
-            <button type="button" id="fill" className="fill" onClick={onFill} disabled={busy} aria-keyshortcuts="Meta+Enter Control+Enter">
+            <button type="button" id="fill" className="fill" onClick={onFill} aria-disabled={busy} aria-keyshortcuts="Meta+Enter Control+Enter">
               {phase === "idle"
                 ? "Fill this message"
                 : phase === "retrying"
-                  ? `Taking too long — trying once more ${elapsed.toFixed(1)} s`
+                  ? `${retryWhy === "timeout" ? "Taking too long — trying" : "No usable answer — trying"} once more ${elapsed.toFixed(1)} s`
                   : phase === "preparing"
                     ? "Starting the on-device model…"
                     : `Reading on this laptop… ${elapsed.toFixed(1)} s`}
@@ -486,11 +447,12 @@ export default function FillApp() {
             {cur?.done && !stale && (
               <span className="sum">
                 {counts.found} of {counts.total} found in your text · {counts.amber} to check · {counts.empty} empty
+                {counts.edited ? ` · ${counts.edited} edited by you` : ""}
                 {cur.ms ? ` · ${(cur.ms / 1000).toFixed(1)} s` : ""}
               </span>
             )}
             <span className="sr-only" aria-live="polite">
-              {cur?.done ? `Filled ${counts.found} of ${counts.total}; ${counts.amber} to check.` : ""}
+              {cur?.done && !stale && !cur.discarded ? `Filled ${counts.found} of ${counts.total}; ${counts.amber} to check.` : ""}
             </span>
           </div>
           {cur?.done && !stale && (
@@ -577,7 +539,7 @@ function FieldBox(props: {
           {note}
         </div>
       )}
-      {!box?.edited && box?.gate?.candidates && (
+      {box?.gate?.candidates && (!box.edited || box.gate.candidates.some((c) => c.value === box.value)) && (
         <div role="group" aria-label="Numbers in your text">
           {box.gate.candidates.map((c) => (
             <button key={c.value} type="button" className="chip" aria-pressed={box.value === c.value} onClick={() => onEdit(c.value)}>
@@ -597,6 +559,12 @@ function LedgerStrip({ bytes, records }: { bytes: number; records: ReturnType<ty
         <span className="cap">Text from your paste sent to the cloud</span>
         <b data-testid="ledger-bytes">{fmt(bytes)} bytes found</b>
       </div>
+      {records.some((r) => r.unreadable) && (
+        <div className="notice" role="status">
+          {records.filter((r) => r.unreadable).length} request(s) had a body this page could not read, so they are not counted above — see the
+          table.
+        </div>
+      )}
       <details>
         <summary>
           {records.length} outbound request{records.length === 1 ? "" : "s"} this session, each checked for words and numbers from your paste
@@ -625,8 +593,9 @@ function LedgerStrip({ bytes, records }: { bytes: number; records: ReturnType<ty
         </table>
         <p>
           Counting rule: words of 4+ letters and digit runs of 4+ digits from your paste, minus the empty form&apos;s own labels and
-          common words. Not caught: shorter pieces, text changed before sending, and the reCAPTCHA frame (the recorded browser network log
-          in this repo covers those).
+          common words. Each request is checked against every message filled in this session; a request sent before your first Fill
+          has nothing to be checked against. Not caught: shorter pieces, text changed before sending, and the reCAPTCHA frame (the recorded
+          browser network log in this repo covers those).
         </p>
       </details>
     </div>

@@ -61,6 +61,10 @@ describe("phone", () => {
   it("an 8-digit booking ref is not phone-like", () => {
     expect(phoneRuns("Booking ref 77120934, phone 0811 5550 4471").map((r) => r.digits)).toEqual(["081155504471"]);
   });
+  it("a 9-digit order reference is not phone-like (no leading 0 or +)", () => {
+    expect(phoneRuns("Order 123456789, call 0811 5550 4471").map((r) => r.digits)).toEqual(["081155504471"]);
+    expect(phoneRuns("call +44 20 5550 0199")[0].digits).toBe("442055500199");
+  });
   it("a newline never joins two runs", () => {
     expect(phoneRuns("zip 10510\n0813 5550 2290").map((r) => r.digits)).toEqual(["081355502290"]);
   });

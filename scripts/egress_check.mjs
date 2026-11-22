@@ -45,7 +45,7 @@ try {
         }
       }
       const local = /^(data|blob):/.test(e.request.url); // in-memory resources, not network
-      reqs.push({ phase, target: kind, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local });
+      reqs.push({ phase, target: kind, type: e.type, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local });
     });
     session.on("Target.attachedToTarget", async (e) => {
       attached.push({ type: e.targetInfo.type, host: (() => { try { return new URL(e.targetInfo.url).host; } catch { return ""; } })() });
@@ -119,8 +119,15 @@ try {
     } catch {
       host = r.url.slice(0, 40);
     }
-    rows.push({ phase: r.phase, target: r.target, local: r.local || undefined, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
+    rows.push({ phase: r.phase, target: r.target, type: r.type, local: r.local || undefined, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
   }
+  // completeness of the on-screen receipt: every fetch/XHR/beacon/WebSocket the page itself sent must be in the in-page ledger
+  const ledgerRecs = await app.evaluate(() => window.__pastewise.ledger().map((r) => ({ host: r.host, api: r.api, pasteBytesFound: r.pasteBytesFound })));
+  const byHost = (list) => list.reduce((m, r) => ((m[r.host] = (m[r.host] ?? 0) + 1), m), {});
+  const cdpApi = byHost(rows.filter((r) => r.target === "page" && !r.local && r.method !== "OPTIONS" && ["Fetch", "XHR", "Ping", "WebSocket", "EventSource"].includes(r.type)));
+  const ledgerHosts = byHost(ledgerRecs);
+  const missingFromLedger = Object.entries(cdpApi).filter(([h, n]) => (ledgerHosts[h] ?? 0) < n).map(([h, n]) => ({ host: h, cdp: n, ledger: ledgerHosts[h] ?? 0 }));
+  const ledgerCanaryCaught = ledgerRecs.some((r) => r.host.startsWith("localhost") && r.pasteBytesFound > 0);
   const real = rows.filter((r) => r.phase !== "canary");
   const hitRows = real.filter((r) => Object.keys(r.hits).length);
   const canaryCaught = rows.some((r) => r.phase === "canary" && r.hits.S3);
@@ -132,8 +139,17 @@ try {
     allFillsOnDevice: fillPhases.every((r) => r.inferenceSource.every((s) => s === "on_device")),
     teacherCalled: teach,
     positiveControlCaught: canaryCaught,
-    pass: hitRows.length === 0 && canaryCaught,
+    inPageLedger: { requests: ledgerRecs.length, byHost: ledgerHosts, cdpApiRequestsByHost: cdpApi, missingFromLedger, canaryCaughtByLedger: ledgerCanaryCaught },
+    pass: false,
   };
+  verdict.pass =
+    hitRows.length === 0 &&
+    canaryCaught &&
+    ledgerCanaryCaught &&
+    missingFromLedger.length === 0 &&
+    verdict.overLongRefused &&
+    verdict.allFillsOnDevice &&
+    verdict.requestsDuringOnDeviceFills === 0;
   const out = {
     label: "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
     date,

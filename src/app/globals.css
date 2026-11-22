@@ -80,7 +80,7 @@ body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body)
 .fill { font: 600 16px var(--font-body); padding: 12px 18px; background: var(--ink); color: var(--sheet); border: 0; cursor: pointer; transition: transform 120ms var(--press), opacity 120ms; }
 .fill:hover { transform: translateY(-1px); }
 .fill:active { transform: translateY(1px); }
-.fill[disabled] { opacity: .7; cursor: progress; }
+.fill[aria-disabled="true"] { opacity: .7; cursor: progress; }
 .fill kbd { font: 13px var(--font-data); margin-left: 8px; opacity: .8; }
 .badge { font: 600 12px/1 var(--font-display); letter-spacing: .1em; padding: 6px 8px; border: 1.5px solid var(--ink); text-transform: uppercase; }
 .sum { color: var(--muted); }

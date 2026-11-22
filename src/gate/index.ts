@@ -48,4 +48,6 @@ export const REASON_TEXT: Record<string, string> = {
   too_few_words: "too short to be a note",
   timed_out: "timed out — try again",
   invalid_answer: "no usable answer — try again",
+  invalid: "no usable answer — try again",
+  error: "the on-device model failed — try again",
 };
