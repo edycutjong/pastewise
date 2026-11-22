@@ -194,8 +194,8 @@ console.log("teacher", S.teacher.ms + "ms", S.teacher.inferenceSource, S.teacher
 
 // Consent path model (PREFER_ON_DEVICE). On this Nano profile it must stay on device.
 phase = "consent";
-const it0 = SET.test[0];
-S.consent = await page.evaluate((p, s, m) => window.__pwSpike.consentFill(p, s, m), mkPrompt(SET.forms[it0.form], it0.paste), schemaFor(SET.forms[it0.form]), teacherModelName);
+// Uses the synthetic S1 fixture, never a set item: this summary is committed as evidence.
+S.consent = await page.evaluate((p, s, m) => window.__pwSpike.consentFill(p, s, m), mkPrompt(FORM_C, S1), schemaFor(FORM_C), teacherModelName);
 S.consentNetwork = { aiEndpoint: netIn("consent").filter((n) => AI_HOSTS.test(n.url)).length };
 console.log("consent", S.consent.ms + "ms", S.consent.inferenceSource, S.consent.error ?? S.consent.text?.slice(0, 80));
 
