@@ -81,7 +81,7 @@ The code gate (the part a model cannot override) is [`src/gate/`](src/gate): cle
 
 All numbers below come from committed run files in [`evidence/bench/`](evidence/bench) (raw per-message rows, aggregates, and the per-form report computed from them by [`scripts/bench_report.mjs`](scripts/bench_report.mjs)). They were measured on one machine (Apple M1 Max, 32 GB, Chrome 157, 2026-11-22), through the real page with `ONLY_ON_DEVICE`, three repeats, prompt `p0c-v3`. The data is synthetic. The same numbers are rendered live at [/bench](https://pastewise.edycu.dev/bench/).
 
-**Held-out set, run once on the release (gate v4, commit `f00f35d`).** 45 message-form pairs (15 orders on forms A and C, 15 bookings on form B) written without sight of any bench result and hashed before any run (SHA-256 `57077867…`), with traps the bench does not have (its gold checker rejects them there): relative dates ("this Friday"), two dates in one booking, RT/RW address parts, and forwarded From:/To: header blocks. [`sets/holdout.json`](sets/holdout.json) is in the repo and re-runnable.
+**Held-out set, run once on the release (gate v4, commit `f00f35d`).** 45 message-form pairs (15 orders on forms A and C, 15 bookings on form B) written without sight of any bench result and hashed before any run on it (SHA-256 `57077867…`), with traps the bench does not have (its gold checker rejects them there): relative dates ("this Friday"), two dates in one booking, RT/RW address parts, and forwarded From:/To: header blocks. [`sets/holdout.json`](sets/holdout.json) is in the repo and re-runnable.
 
 | Held-out (mean of 3, range) | Teacher hints off | Hints on (frozen cloud hints) |
 |---|---|---|

@@ -50,11 +50,16 @@ const sums = Object.fromEntries(fs.existsSync(path.join(ROOT, "sets/SHA256SUMS")
 if (sums[path.basename(setPath)] && sums[path.basename(setPath)] !== setHash) throw new Error(`${path.basename(setPath)} does not match sets/SHA256SUMS (the frozen hash); refusing to run`);
 // The held-out set (by name or by the hash of sets/holdout.json) is scored once per prompt + gate + src/ai + src/gate tree and hints arm,
 // on a clean tree. This check runs BEFORE Chrome is launched.
-const isHoldout = SET.set === "holdout" || (sums["holdout.json"] && sums["holdout.json"] === setHash);
+// A renamed or edited copy of the held-out file is still the held-out set: any run whose pastes overlap sets/holdout.json by half or more counts.
+const holdoutFile = path.join(ROOT, "sets/holdout.json");
+if (fs.existsSync(holdoutFile) && sums["holdout.json"] && crypto.createHash("sha256").update(fs.readFileSync(holdoutFile)).digest("hex") !== sums["holdout.json"]) throw new Error("sets/holdout.json does not match sets/SHA256SUMS; refusing to run");
+const holdoutPastes = fs.existsSync(holdoutFile) ? new Set(JSON.parse(fs.readFileSync(holdoutFile, "utf8")).items.map((x) => x.paste)) : new Set();
+const overlap = items.length ? items.filter((x) => holdoutPastes.has(x.paste)).length / items.length : 0;
+const isHoldout = SET.set === "holdout" || (sums["holdout.json"] && sums["holdout.json"] === setHash) || overlap >= 0.5;
 if (isHoldout) {
   if (dirty && !rerunReason) throw new Error("holdout refused: src/ has uncommitted changes (commit first, or pass --rerun-reason)");
   const seen = fs.readdirSync(AGG).map((f) => JSON.parse(fs.readFileSync(path.join(AGG, f), "utf8")))
-    .filter((d) => d.setSha256 === setHash && d.arm === armName0 && d.promptVersion === promptV && d.gateVersion === gateV && (!d.srcTrees || (d.srcTrees.ai === srcTrees.ai && d.srcTrees.gate === srcTrees.gate)));
+    .filter((d) => (d.setSha256 === setHash || d.set === "holdout") && d.arm === armName0 && d.promptVersion === promptV && d.gateVersion === gateV && (!d.srcTrees || (d.srcTrees.ai === srcTrees.ai && d.srcTrees.gate === srcTrees.gate)));
   if (seen.length >= 1 && !rerunReason) throw new Error(`holdout already scored for prompt ${promptV} / gate ${gateV} on this hints arm; pass --rerun-reason "<why>"`);
   if (seen.length >= 1) console.log(`HOLDOUT RERUN (reason: ${rerunReason})`);
 }
