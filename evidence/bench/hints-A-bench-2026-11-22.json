@@ -1,0 +1,94 @@
+{
+ "form": "A",
+ "inferenceSource": "in_cloud",
+ "ms": 7413,
+ "dropped": 0,
+ "payload": {
+  "title": "Shipping / order form",
+  "fields": [
+   {
+    "key": "name",
+    "caption": "Recipient name"
+   },
+   {
+    "key": "phone",
+    "caption": "Phone"
+   },
+   {
+    "key": "street",
+    "caption": "Street address"
+   },
+   {
+    "key": "city",
+    "caption": "City"
+   },
+   {
+    "key": "province",
+    "caption": "Province"
+   },
+   {
+    "key": "postal_code",
+    "caption": "Postal code"
+   },
+   {
+    "key": "item",
+    "caption": "Item"
+   },
+   {
+    "key": "quantity",
+    "caption": "Quantity"
+   },
+   {
+    "key": "notes",
+    "caption": "Delivery notes"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "key": "name",
+   "meaning": "Enter the full name of the recipient.",
+   "expected": "name"
+  },
+  {
+   "key": "phone",
+   "meaning": "Enter a valid phone number for contact.",
+   "expected": "phone"
+  },
+  {
+   "key": "street",
+   "meaning": "Enter the street address for delivery.",
+   "expected": "address"
+  },
+  {
+   "key": "city",
+   "meaning": "Enter the city name.",
+   "expected": "text"
+  },
+  {
+   "key": "province",
+   "meaning": "Enter the state or province.",
+   "expected": "text"
+  },
+  {
+   "key": "postal_code",
+   "meaning": "Enter the postal or ZIP code.",
+   "expected": "postal"
+  },
+  {
+   "key": "item",
+   "meaning": "Enter the name of the item to order.",
+   "expected": "text"
+  },
+  {
+   "key": "quantity",
+   "meaning": "Enter how many items you want.",
+   "expected": "int"
+  },
+  {
+   "key": "notes",
+   "meaning": "Enter any special delivery instructions.",
+   "expected": "notes"
+  }
+ ]
+}

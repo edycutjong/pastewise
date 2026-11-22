@@ -12,11 +12,19 @@ import { gatePostal } from "./postal";
 import { gateText } from "./text";
 import { amber, type GateResult } from "./types";
 
-export const GATE_VERSION = "3";
+export const GATE_VERSION = "4";
+
+/** Release response (eval plan §6, decided before any run): a critical field whose accepted-wrong rate on the bench set
+ *  exceeded 5% (mean of 3 repeats, hints off) is always amber. Measured 2026-11-22 on the 180-pair bench: recipient name on
+ *  form A 10.6% and on form C 8.3% (the model picks the sender, a kinship word, an organisation). The box is still pre-filled
+ *  with the model's value, but it is never shown as "found in your text": the person confirms it. Keys are unique per form. */
+export const ALWAYS_CHECK_KEYS: ReadonlySet<string> = new Set(["name", "cnee_nm"]);
 export type { GateResult, Reason } from "./types";
 
 export function gateField(paste: string, field: FieldSpec, proposed: string, today: string): GateResult {
-  return withinBox(field, gateKind(paste, field, String(proposed ?? ""), today));
+  const r = withinBox(field, gateKind(paste, field, String(proposed ?? ""), today));
+  if (r.state === "found" && ALWAYS_CHECK_KEYS.has(field.key)) return amber("check_by_hand", r.value, r.proposed, { spans: r.spans });
+  return r;
 }
 
 /** HTML pattern semantics: the whole value must match, compiled with the "v" flag as browsers do; a pattern that does not compile
@@ -76,6 +84,7 @@ export const REASON_TEXT: Record<string, string> = {
   year_assumed: "year assumed",
   more_than_one_name: "more than one name",
   too_few_words: "too short to be a note",
+  check_by_hand: "names are always yours to confirm",
   timed_out: "timed out — try again",
   invalid_answer: "no usable answer — try again",
   invalid: "no usable answer — try again",

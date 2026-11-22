@@ -1,0 +1,108 @@
+{
+ "form": "C",
+ "inferenceSource": "in_cloud",
+ "ms": 2829,
+ "dropped": 0,
+ "payload": {
+  "title": "Consignment note",
+  "fields": [
+   {
+    "key": "cnee_nm",
+    "caption": "CNEE"
+   },
+   {
+    "key": "cnee_tel",
+    "caption": "CNEE TEL"
+   },
+   {
+    "key": "addr_1",
+    "caption": "ADDR 1"
+   },
+   {
+    "key": "dist_city",
+    "caption": "DIST/CITY"
+   },
+   {
+    "key": "st_prov",
+    "caption": "ST/PROV"
+   },
+   {
+    "key": "zip",
+    "caption": "ZIP"
+   },
+   {
+    "key": "desc",
+    "caption": "DESC"
+   },
+   {
+    "key": "pcs",
+    "caption": "PCS"
+   },
+   {
+    "key": "svc",
+    "caption": "SVC",
+    "options": [
+     "STD",
+     "EXP",
+     "SDD"
+    ]
+   },
+   {
+    "key": "rmks",
+    "caption": "RMKS"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "key": "cnee_nm",
+   "meaning": "Enter the consignee name",
+   "expected": "name"
+  },
+  {
+   "key": "cnee_tel",
+   "meaning": "Enter the consignee telephone number",
+   "expected": "phone"
+  },
+  {
+   "key": "addr_1",
+   "meaning": "Enter the first line of the address",
+   "expected": "address"
+  },
+  {
+   "key": "dist_city",
+   "meaning": "Enter the district or city",
+   "expected": "text"
+  },
+  {
+   "key": "st_prov",
+   "meaning": "Enter the state or province",
+   "expected": "text"
+  },
+  {
+   "key": "zip",
+   "meaning": "Enter the postal code or ZIP",
+   "expected": "postal"
+  },
+  {
+   "key": "desc",
+   "meaning": "Enter a description of the shipment",
+   "expected": "text"
+  },
+  {
+   "key": "pcs",
+   "meaning": "Enter the number of pieces",
+   "expected": "int"
+  },
+  {
+   "key": "svc",
+   "meaning": "Select the service type",
+   "expected": "enum"
+  },
+  {
+   "key": "rmks",
+   "meaning": "Enter any additional remarks",
+   "expected": "notes"
+  }
+ ]
+}

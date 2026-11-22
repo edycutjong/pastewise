@@ -1,0 +1,492 @@
+{
+ "set": "bench",
+ "gateView": "gate as recorded in the run files",
+ "arms": {
+  "hints": {
+   "repeats": 3,
+   "meta": {
+    "commit": "b939206",
+    "setSha256": "09d660c59dd69e812558852389d83ac923dc8dc88852022b3b8b0c19ca498991",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "3",
+    "hintsSha": "2375a549ea08ea9d",
+    "loadAvgAtStart": [
+     [
+      16.7,
+      18.1,
+      25.2
+     ],
+     [
+      16.7,
+      18.1,
+      25.2
+     ],
+     [
+      16.7,
+      18.1,
+      25.2
+     ]
+    ]
+   },
+   "all": {
+    "fieldsPerRepeat": 1560,
+    "strictAccuracy": 80.51,
+    "wrongShown": 7.52,
+    "amber": 7.86,
+    "amberButRight": 3.35,
+    "rightValueShown": 87.4,
+    "criticalWrongShown": 2.56,
+    "warmP50": 2297,
+    "warmP95": 2825
+   },
+   "byForm": {
+    "A": {
+     "fieldsPerRepeat": 540,
+     "strictAccuracy": 83.46,
+     "wrongShown": 7.78,
+     "amber": 3.83,
+     "amberButRight": 1.42,
+     "rightValueShown": 91.44,
+     "criticalWrongShown": 3.33,
+     "pastes": 60,
+     "jsonValid": "180/180",
+     "warmP50": 2268,
+     "warmP95": 2697
+    },
+    "B": {
+     "fieldsPerRepeat": 420,
+     "strictAccuracy": 79.76,
+     "wrongShown": 6.27,
+     "amber": 15.16,
+     "amberButRight": 7.78,
+     "rightValueShown": 78.64,
+     "criticalWrongShown": 0,
+     "pastes": 60,
+     "jsonValid": "180/180",
+     "warmP50": 2051,
+     "warmP95": 2383
+    },
+    "C": {
+     "fieldsPerRepeat": 600,
+     "strictAccuracy": 78.39,
+     "wrongShown": 8.17,
+     "amber": 6.39,
+     "amberButRight": 2,
+     "rightValueShown": 89.54,
+     "criticalWrongShown": 3.06,
+     "pastes": 60,
+     "jsonValid": "180/180",
+     "warmP50": 2570,
+     "warmP95": 3209
+    }
+   },
+   "fieldTable": {
+    "A.name": {
+     "critical": true,
+     "wrongShown": 8.89,
+     "strict": 71.67,
+     "amber": 0
+    },
+    "A.phone": {
+     "critical": true,
+     "wrongShown": 1.67,
+     "strict": 87.22,
+     "amber": 20
+    },
+    "A.street": {
+     "critical": true,
+     "wrongShown": 2.78,
+     "strict": 97.22,
+     "amber": 0
+    },
+    "A.city": {
+     "critical": false,
+     "wrongShown": 0.56,
+     "strict": 99.44,
+     "amber": 0
+    },
+    "A.province": {
+     "critical": false,
+     "wrongShown": 2.22,
+     "strict": 97.78,
+     "amber": 0
+    },
+    "A.postal_code": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "A.item": {
+     "critical": false,
+     "wrongShown": 7.78,
+     "strict": 65.56,
+     "amber": 1.11
+    },
+    "A.quantity": {
+     "critical": false,
+     "wrongShown": 1.67,
+     "strict": 96.67,
+     "amber": 0.56
+    },
+    "A.notes": {
+     "critical": false,
+     "wrongShown": 44.44,
+     "strict": 35.56,
+     "amber": 12.78
+    },
+    "B.guest_name": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 62.22,
+     "amber": 3.33
+    },
+    "B.phone": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 96.11,
+     "amber": 15
+    },
+    "B.email": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 98.89,
+     "amber": 1.11
+    },
+    "B.room_type": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 96.11,
+     "amber": 3.89
+    },
+    "B.check_in": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 72.78,
+     "amber": 70.56
+    },
+    "B.nights": {
+     "critical": false,
+     "wrongShown": 0.56,
+     "strict": 92.22,
+     "amber": 7.22
+    },
+    "B.requests": {
+     "critical": false,
+     "wrongShown": 43.33,
+     "strict": 40,
+     "amber": 5
+    },
+    "C.cnee_nm": {
+     "critical": true,
+     "wrongShown": 8.33,
+     "strict": 68.33,
+     "amber": 0
+    },
+    "C.cnee_tel": {
+     "critical": true,
+     "wrongShown": 1.67,
+     "strict": 93.33,
+     "amber": 20
+    },
+    "C.addr_1": {
+     "critical": true,
+     "wrongShown": 2.22,
+     "strict": 96.67,
+     "amber": 0
+    },
+    "C.dist_city": {
+     "critical": false,
+     "wrongShown": 3.33,
+     "strict": 96.11,
+     "amber": 0.56
+    },
+    "C.st_prov": {
+     "critical": false,
+     "wrongShown": 3.89,
+     "strict": 96.11,
+     "amber": 0
+    },
+    "C.zip": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "C.desc": {
+     "critical": false,
+     "wrongShown": 19.44,
+     "strict": 27.78,
+     "amber": 0
+    },
+    "C.pcs": {
+     "critical": false,
+     "wrongShown": 1.67,
+     "strict": 97.22,
+     "amber": 1.67
+    },
+    "C.svc": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 68.33,
+     "amber": 31.11
+    },
+    "C.rmks": {
+     "critical": false,
+     "wrongShown": 41.11,
+     "strict": 40,
+     "amber": 10.56
+    }
+   },
+   "onDeviceAll": true
+  },
+  "off": {
+   "repeats": 3,
+   "meta": {
+    "commit": "c5e56c5",
+    "setSha256": "09d660c59dd69e812558852389d83ac923dc8dc88852022b3b8b0c19ca498991",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "3",
+    "hintsSha": null,
+    "loadAvgAtStart": [
+     [
+      44.3,
+      53.1,
+      37.4
+     ],
+     [
+      44.3,
+      53.1,
+      37.4
+     ],
+     [
+      44.3,
+      53.1,
+      37.4
+     ]
+    ]
+   },
+   "all": {
+    "fieldsPerRepeat": 1560,
+    "strictAccuracy": 80.58,
+    "wrongShown": 7.69,
+    "amber": 7.91,
+    "amberButRight": 3.12,
+    "rightValueShown": 86.93,
+    "criticalWrongShown": 2.89,
+    "warmP50": 2320,
+    "warmP95": 2964
+   },
+   "byForm": {
+    "A": {
+     "fieldsPerRepeat": 540,
+     "strictAccuracy": 83.46,
+     "wrongShown": 7.47,
+     "amber": 4.01,
+     "amberButRight": 1.48,
+     "rightValueShown": 91.22,
+     "criticalWrongShown": 3.75,
+     "pastes": 60,
+     "jsonValid": "180/180",
+     "warmP50": 2278,
+     "warmP95": 2714
+    },
+    "B": {
+     "fieldsPerRepeat": 420,
+     "strictAccuracy": 80.16,
+     "wrongShown": 5.79,
+     "amber": 15.24,
+     "amberButRight": 7.62,
+     "rightValueShown": 78.54,
+     "criticalWrongShown": 0,
+     "pastes": 60,
+     "jsonValid": "180/180",
+     "warmP50": 2039,
+     "warmP95": 2496
+    },
+    "C": {
+     "fieldsPerRepeat": 600,
+     "strictAccuracy": 78.28,
+     "wrongShown": 9.22,
+     "amber": 6.28,
+     "amberButRight": 1.44,
+     "rightValueShown": 88.56,
+     "criticalWrongShown": 3.47,
+     "pastes": 60,
+     "jsonValid": "180/180",
+     "warmP50": 2579,
+     "warmP95": 3198
+    }
+   },
+   "fieldTable": {
+    "A.name": {
+     "critical": true,
+     "wrongShown": 10.56,
+     "strict": 72.78,
+     "amber": 0
+    },
+    "A.phone": {
+     "critical": true,
+     "wrongShown": 1.67,
+     "strict": 86.67,
+     "amber": 20
+    },
+    "A.street": {
+     "critical": true,
+     "wrongShown": 2.78,
+     "strict": 97.22,
+     "amber": 0
+    },
+    "A.city": {
+     "critical": false,
+     "wrongShown": 1.11,
+     "strict": 98.89,
+     "amber": 0
+    },
+    "A.province": {
+     "critical": false,
+     "wrongShown": 1.11,
+     "strict": 97.78,
+     "amber": 0
+    },
+    "A.postal_code": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 99.44,
+     "amber": 0.56
+    },
+    "A.item": {
+     "critical": false,
+     "wrongShown": 7.78,
+     "strict": 62.22,
+     "amber": 0
+    },
+    "A.quantity": {
+     "critical": false,
+     "wrongShown": 1.67,
+     "strict": 97.22,
+     "amber": 2.22
+    },
+    "A.notes": {
+     "critical": false,
+     "wrongShown": 40.56,
+     "strict": 38.89,
+     "amber": 13.33
+    },
+    "B.guest_name": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 62.78,
+     "amber": 3.33
+    },
+    "B.phone": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 95.56,
+     "amber": 15.56
+    },
+    "B.email": {
+     "critical": false,
+     "wrongShown": 0.56,
+     "strict": 98.33,
+     "amber": 1.11
+    },
+    "B.room_type": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 96.67,
+     "amber": 3.33
+    },
+    "B.check_in": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 71.11,
+     "amber": 70.56
+    },
+    "B.nights": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 93.89,
+     "amber": 6.67
+    },
+    "B.requests": {
+     "critical": false,
+     "wrongShown": 40,
+     "strict": 42.78,
+     "amber": 6.11
+    },
+    "C.cnee_nm": {
+     "critical": true,
+     "wrongShown": 8.33,
+     "strict": 67.22,
+     "amber": 0
+    },
+    "C.cnee_tel": {
+     "critical": true,
+     "wrongShown": 1.67,
+     "strict": 92.78,
+     "amber": 20
+    },
+    "C.addr_1": {
+     "critical": true,
+     "wrongShown": 3.89,
+     "strict": 96.11,
+     "amber": 0
+    },
+    "C.dist_city": {
+     "critical": false,
+     "wrongShown": 0.56,
+     "strict": 98.33,
+     "amber": 1.11
+    },
+    "C.st_prov": {
+     "critical": false,
+     "wrongShown": 4.44,
+     "strict": 95,
+     "amber": 0
+    },
+    "C.zip": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 99.44,
+     "amber": 0.56
+    },
+    "C.desc": {
+     "critical": false,
+     "wrongShown": 16.67,
+     "strict": 38.33,
+     "amber": 2.22
+    },
+    "C.pcs": {
+     "critical": false,
+     "wrongShown": 1.67,
+     "strict": 92.78,
+     "amber": 1.11
+    },
+    "C.svc": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 66.67,
+     "amber": 32.78
+    },
+    "C.rmks": {
+     "critical": false,
+     "wrongShown": 55,
+     "strict": 36.11,
+     "amber": 5
+    }
+   },
+   "onDeviceAll": true
+  }
+ },
+ "criticalOver5": [
+  {
+   "field": "A.name",
+   "wrongShown": 10.56
+  },
+  {
+   "field": "C.cnee_nm",
+   "wrongShown": 8.33
+  }
+ ]
+}

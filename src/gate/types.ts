@@ -8,6 +8,7 @@ export type Reason =
   | "year_assumed" // the message gives day + month only
   | "more_than_one_name"
   | "too_few_words" // a note that is only greetings / politeness
+  | "check_by_hand" // release rule: this box is always the person's to confirm (bench accepted-wrong above 5%)
   | "timed_out"
   | "invalid_answer";
 

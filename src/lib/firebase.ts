@@ -27,7 +27,7 @@ export const RC_DEFAULTS = {
   fill_timeout_ms: 10000,
   batch_max_fields: 10,
   cloud_kill_switch: false,
-  gate_rules_version: "3", // = GATE_VERSION in src/gate/index.ts (metadata; a unit test keeps them equal)
+  gate_rules_version: "4", // = GATE_VERSION in src/gate/index.ts (metadata; a unit test keeps them equal)
 };
 
 type Services = { app: FirebaseApp; appCheck: AppCheck; ai: AI; rc: RemoteConfig };

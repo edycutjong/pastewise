@@ -1,0 +1,81 @@
+{
+ "form": "B",
+ "inferenceSource": "in_cloud",
+ "ms": 2111,
+ "dropped": 0,
+ "payload": {
+  "title": "Hotel booking / front-desk form",
+  "fields": [
+   {
+    "key": "guest_name",
+    "caption": "Guest name"
+   },
+   {
+    "key": "phone",
+    "caption": "Phone"
+   },
+   {
+    "key": "email",
+    "caption": "Email"
+   },
+   {
+    "key": "room_type",
+    "caption": "Room type",
+    "options": [
+     "single",
+     "double",
+     "suite"
+    ]
+   },
+   {
+    "key": "check_in",
+    "caption": "Check-in date"
+   },
+   {
+    "key": "nights",
+    "caption": "Number of nights"
+   },
+   {
+    "key": "requests",
+    "caption": "Special requests"
+   }
+  ]
+ },
+ "hints": [
+  {
+   "key": "guest_name",
+   "meaning": "Enter the full name of the guest",
+   "expected": "name"
+  },
+  {
+   "key": "phone",
+   "meaning": "Enter a valid phone number",
+   "expected": "phone"
+  },
+  {
+   "key": "email",
+   "meaning": "Enter an email address",
+   "expected": "email"
+  },
+  {
+   "key": "room_type",
+   "meaning": "Select the type of room",
+   "expected": "enum"
+  },
+  {
+   "key": "check_in",
+   "meaning": "Enter the check-in date",
+   "expected": "date"
+  },
+  {
+   "key": "nights",
+   "meaning": "Enter the number of nights to stay",
+   "expected": "int"
+  },
+  {
+   "key": "requests",
+   "meaning": "Enter any special requests or notes",
+   "expected": "notes"
+  }
+ ]
+}
