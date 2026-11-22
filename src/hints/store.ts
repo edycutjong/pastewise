@@ -5,6 +5,7 @@ import { doc, getDoc, getFirestore } from "firebase/firestore";
 import type { FormSpec } from "@/forms/types";
 import { sanitizeHint, type Hint } from "@/schema/buildSchema";
 import { firebase } from "@/lib/firebase";
+import { withTimeout } from "@/lib/timeout";
 
 export type SavedHints = { hints: Hint[]; seededAt: string; dropped: number };
 
@@ -22,9 +23,6 @@ export function validateSaved(raw: unknown, form: FormSpec): SavedHints | null {
 
 export async function readSaved(fp: string, form: FormSpec, timeoutMs = 6000): Promise<SavedHints | null> {
   const db = getFirestore(firebase().app);
-  const snap = await Promise.race([
-    getDoc(doc(db, "hints", fp)),
-    new Promise<never>((_, rej) => setTimeout(() => rej(new Error("saved hints: no answer")), timeoutMs)),
-  ]);
+  const snap = await withTimeout(getDoc(doc(db, "hints", fp)), timeoutMs, "saved hints: no answer");
   return snap.exists() ? validateSaved(snap.data(), form) : null;
 }

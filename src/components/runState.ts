@@ -5,7 +5,7 @@ import type { BatchResult } from "@/ai/fill";
 import type { FieldSpec } from "@/forms/types";
 import { gateField, REASON_TEXT, type GateResult } from "@/gate";
 
-export type Box = { value: string; gate?: GateResult; edited?: boolean; failed?: "timed_out" | "invalid" | "error" };
+export type Box = { value: string; gate?: GateResult; edited?: boolean; failed?: "timed_out" | "invalid" | "error" | "not_sent" };
 export type FormRun = { runId: string; paste: string; boxes: Record<string, Box>; batches: BatchResult[]; ms: number; done: boolean; discarded?: boolean };
 
 /** Applies one batch to the run it belongs to. A different run id -> unchanged; an edited box is never overwritten. */

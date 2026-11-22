@@ -6,6 +6,7 @@
 import type { FormSpec } from "@/forms/types";
 import { sanitizeHint, type Hint } from "@/schema/buildSchema";
 import { teacherModel } from "./models";
+import { withTimeout } from "@/lib/timeout";
 
 export type TeacherPayload = { title: string; fields: { key: string; caption: string; options?: string[] }[] };
 
@@ -30,11 +31,7 @@ export type TeachResult = { hints: Hint[]; dropped: number; inferenceSource?: st
 export async function teachForm(form: FormSpec, modelName: string, timeoutMs = 20000): Promise<TeachResult> {
   const payload = teacherPayload(form);
   const t0 = performance.now();
-  const call = teacherModel(modelName).generateContent(teacherPrompt(payload));
-  const r = await Promise.race([
-    call,
-    new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`teacher: no answer within ${timeoutMs} ms`)), timeoutMs)),
-  ]);
+  const r = await withTimeout(teacherModel(modelName).generateContent(teacherPrompt(payload)), timeoutMs, `teacher: no answer within ${timeoutMs} ms`);
   const parsed = JSON.parse(r.response.text()) as { hints?: Partial<Hint>[] };
   const keys = new Set(form.fields.map((f) => f.key));
   const raw = parsed.hints ?? [];

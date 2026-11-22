@@ -9,6 +9,14 @@ import {
   type LanguageModelCreateOptions,
 } from "firebase/ai";
 import { firebase } from "@/lib/firebase";
+import { cloudKillSwitch } from "@/lib/rc";
+
+/** The one policy check for every model instance that can reach the cloud (consent path, teacher, and the bench hook that
+ *  calls the teacher): Remote Config's cloud_kill_switch on -> no instance is built, so nothing is sent. It cannot recall a
+ *  request already sent, and it sees the last activated Remote Config value. */
+export function assertCloudOn(): void {
+  if (cloudKillSwitch()) throw new Error("cloud path switched off (Remote Config cloud_kill_switch)");
+}
 
 export type JsonSchema = Record<string, unknown>;
 
@@ -43,6 +51,7 @@ export function toCloudSchema(schema: { properties: Record<string, { type: "stri
 
 /** Consent path (no Nano): asked first, then PREFER_ON_DEVICE for that one paste. */
 export function consentModel(schema: JsonSchema, cloudSchema: Schema, teacherModelName: string): GenerativeModel {
+  assertCloudOn();
   return getGenerativeModel(firebase().ai, {
     mode: InferenceMode.PREFER_ON_DEVICE,
     onDeviceParams: {
@@ -74,6 +83,7 @@ export const HINTS_SCHEMA = Schema.object({
 });
 
 export function teacherModel(teacherModelName: string): GenerativeModel {
+  assertCloudOn();
   return getGenerativeModel(firebase().ai, {
     mode: InferenceMode.ONLY_IN_CLOUD,
     inCloudParams: {

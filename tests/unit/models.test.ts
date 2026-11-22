@@ -5,6 +5,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 const getGenerativeModel = vi.fn((_ai: unknown, params: unknown) => ({ params }));
 vi.mock("firebase/ai", async (orig) => ({ ...(await orig<typeof import("firebase/ai")>()), getGenerativeModel }));
 vi.mock("@/lib/firebase", () => ({ firebase: () => ({ ai: { fake: true } }) }));
+const kill = { on: false };
+vi.mock("@/lib/rc", () => ({ cloudKillSwitch: () => kill.on }));
 
 const { deviceModel, consentModel, teacherModel, HINTS_SCHEMA, DEVICE_CREATE_OPTIONS } = await import("@/ai/models");
 const { InferenceMode, Schema } = await import("firebase/ai");
@@ -50,5 +52,24 @@ describe("AI Logic model instances", () => {
     expect(p.mode).toBe(InferenceMode.ONLY_IN_CLOUD);
     expect(p.onDeviceParams).toBeUndefined();
     expect(p.inCloudParams?.generationConfig).toMatchObject({ responseMimeType: "application/json", responseSchema: HINTS_SCHEMA });
+  });
+});
+
+describe("cloud kill switch: one guard where every cloud-capable instance is built", () => {
+  beforeEach(() => {
+    getGenerativeModel.mockClear();
+    kill.on = false;
+  });
+  it("switch on -> no consent model and no teacher model is built, so nothing can be sent", () => {
+    kill.on = true;
+    const cloud = Schema.object({ properties: { name: Schema.string() } });
+    expect(() => consentModel(schema, cloud, "gemini-x")).toThrow(/switched off/);
+    expect(() => teacherModel("gemini-x")).toThrow(/switched off/);
+    expect(getGenerativeModel).not.toHaveBeenCalled();
+  });
+  it("switch on does not touch the on-device path (customer text never had a cloud route)", () => {
+    kill.on = true;
+    deviceModel(schema);
+    expect(getGenerativeModel).toHaveBeenCalledTimes(1);
   });
 });

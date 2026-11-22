@@ -14,7 +14,8 @@ export type Consent = { teacherModel: string };
 
 export type BatchResult = {
   keys: string[];
-  status: "ok" | "timed_out" | "invalid" | "error";
+  /** not_sent: no call was made for this batch because the run was replaced/left, or the cloud path was switched off */
+  status: "ok" | "timed_out" | "invalid" | "error" | "not_sent";
   values: Record<string, string>;
   inferenceSource?: string;
   ms: number; // model time for the successful attempt (or total when failed)
@@ -58,6 +59,7 @@ export async function fillBatch(
   onRetry?: (why: "timeout" | "invalid" | "error") => void,
   firstAttemptTimeoutMs = timeoutMs,
   consent?: Consent,
+  mayDispatch?: () => boolean,
 ): Promise<BatchResult> {
   const keys = fields.map((f) => f.key);
   let total = 0;
@@ -66,6 +68,10 @@ export async function fillBatch(
   for (let attempt = 1; attempt <= 2; attempt++) {
     const retryReason = attempt === 2 && last ? last.kind : undefined;
     if (retryReason) firstFail = retryReason;
+    // checked before EVERY call, retries included: a replaced run or a switched-off cloud makes no new request
+    // (a call already in flight cannot be recalled: the SDK has no abort)
+    if (mayDispatch && !mayDispatch())
+      return { keys, status: "not_sent", values: {}, ms: total, attempts: attempt - 1, retryReason: firstFail, error: "not sent: the run was replaced or the cloud path was switched off" };
     if (retryReason) onRetry?.(retryReason as "timeout" | "invalid" | "error");
     last = await once(fields, title, paste, today, attempt === 1 ? firstAttemptTimeoutMs : timeoutMs, consent);
     total += last.ms;
@@ -98,12 +104,14 @@ export async function fillForm(
     onBatch?: (b: BatchResult) => void;
     onRetry?: (why: "timeout" | "invalid" | "error") => void;
     consent?: Consent;
+    /** asked before every model call; false -> that batch (and every later one) is not_sent */
+    mayDispatch?: () => boolean;
   },
 ): Promise<BatchResult[]> {
   const out: BatchResult[] = [];
   for (const [i, b] of batches(form.fields, opts.batchMax).entries()) {
     const first = i === 0 && opts.coldTimeoutMs ? opts.coldTimeoutMs : opts.timeoutMs;
-    const r = await fillBatch(b, form.title, paste, opts.today, opts.timeoutMs, opts.onRetry, first, opts.consent);
+    const r = await fillBatch(b, form.title, paste, opts.today, opts.timeoutMs, opts.onRetry, first, opts.consent, opts.mayDispatch);
     out.push(r);
     opts.onBatch?.(r);
   }

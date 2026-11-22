@@ -4,7 +4,7 @@
 // on-device API present) -> initializeDeviceModel inside the same click ->
 // read the live form's DOM into a schema -> ONLY_ON_DEVICE fill per batch ->
 // code gate per field -> carbon blue (found in your text) or amber (reason).
-import { installLedger, ledger, trackRun } from "@/ledger/egress";
+import { addConsentBytes, installLedger, ledger, trackRun } from "@/ledger/egress";
 installLedger(); // must run before Firebase makes its first request
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
@@ -15,7 +15,7 @@ import { fillForm, type BatchResult } from "@/ai/fill";
 import { PROMPT_VERSION, buildPrompt } from "@/ai/prompt";
 import { teachForm, teacherPayload, type TeachResult } from "@/ai/teacher";
 import type { Consent } from "@/ai/fill";
-import { rcNumber, rcString, cloudKillSwitch, rcSnapshot } from "@/lib/rc";
+import { rcNumber, rcString, cloudKillSwitch, rcSnapshot, refreshCloudKill } from "@/lib/rc";
 import { withTimeout } from "@/lib/timeout";
 import { formFingerprint } from "@/hints/fingerprint";
 import { readSaved } from "@/hints/store";
@@ -87,7 +87,6 @@ export default function FillApp() {
   const [requestBytes, setRequestBytes] = useState(0);
   const [requestCount, setRequestCount] = useState(1);
   const [consent, setConsent] = useState<{ open: boolean; state: ConsentState; message: string }>({ open: false, state: "ask", message: "" });
-  const [consentBytes, setConsentBytes] = useState(0);
   const [teachOpen, setTeachOpen] = useState(false);
   const [taught, setTaught] = useState<Record<string, Taught | undefined>>({});
   const [hintsOn, setHintsOn] = useState<Record<string, boolean>>({});
@@ -107,6 +106,13 @@ export default function FillApp() {
   const consentForm = useRef<string>("A");
   const savedTried = useRef<Set<string>>(new Set());
   const sendLatch = useRef(false); // one Yes = one send, even on a double click
+  const mounted = useRef(true); // leaving the page stops further model calls of a run in progress
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const phaseRef = useRef<Phase>("idle");
   const manualHints = useRef(false); // the bench/egress hooks set hints directly; the saved-copy loader then stays out of the way
   useEffect(() => {
@@ -266,21 +272,10 @@ export default function FillApp() {
     void run(formId, runId, paste, s, today, cold, api);
   }
 
-  /** Re-fetches Remote Config (short timeout, no 60 s throttle for this one fetch) so a switch flipped after page load is honoured;
-   *  a failed or slow fetch keeps the last activated value (the explicit Yes is still required either way). */
+  /** Fresh read of the cloud switch (shared single-flight fetch in src/lib/rc.ts); a failed or slow fetch keeps the last activated
+   *  value (the explicit Yes is still required either way). */
   async function refreshKill(): Promise<boolean> {
-    const { rc } = firebase();
-    let prevInterval = 60_000;
-    try {
-      prevInterval = rc.settings.minimumFetchIntervalMillis;
-      rc.settings.minimumFetchIntervalMillis = 0;
-      await withTimeout(fetchAndActivate(rc), 2500, "rc timeout");
-    } catch {
-      /* keep the last activated value */
-    } finally {
-      rc.settings.minimumFetchIntervalMillis = prevInterval;
-    }
-    const k = cloudKillSwitch();
+    const k = await refreshCloudKill();
     setKill(k);
     return k;
   }
@@ -356,6 +351,9 @@ export default function FillApp() {
       // the first call of a page session also loads the model: only its first attempt gets twice the budget
       coldTimeoutMs: cold && !viaConsent ? rcNumber("fill_timeout_ms") * 2 : undefined,
       consent: viaConsent ? ({ teacherModel: rcString("teacher_model") } satisfies Consent) : undefined,
+      // before every call (later batches and retries too): only a live, mounted run sends anything, and the consent path also
+      // stops if the cloud switch is on (a replaced run's message is never sent again)
+      mayDispatch: () => mounted.current && live() && (!viaConsent || !cloudKillSwitch()),
       batchMax: rcNumber("batch_max_fields"),
       onRetry: (why) => {
         setRetryWhy(why);
@@ -427,7 +425,7 @@ export default function FillApp() {
       const ok = await run(formId, runId, paste, s, todayLocal(), false, null, true);
       // count the message once per request that actually left (a retry sends it again); nothing counts if no request went out
       const left = ledger.records().slice(sentBefore).filter((r) => /vertexai|generativelanguage/.test(r.host)).length;
-      setConsentBytes((n) => n + left * new TextEncoder().encode(paste).length);
+      addConsentBytes(left * new TextEncoder().encode(paste).length);
       setConsent((c) => (ok ? { ...c, open: false, state: "ask" } : { ...c, open: true, state: "failed" }));
     } catch {
       setViaCloud(false);
@@ -464,7 +462,7 @@ export default function FillApp() {
     setTeachStatus("sending");
     setTeachError(null);
     let why: string;
-    if (cloudKillSwitch()) why = "the cloud is switched off right now";
+    if (await refreshKill()) why = "the cloud is switched off right now"; // same fresh read as the consent path
     else {
       try {
         const r = await teachForm(s, rcString("teacher_model"));
@@ -695,7 +693,7 @@ export default function FillApp() {
               )}
             </div>
           )}
-          <LedgerStrip bytes={pasteBytes} records={records} consentBytes={consentBytes} />
+          <LedgerStrip bytes={pasteBytes} records={records} consentBytes={ledger.consentBytes()} />
         </section>
       </main>
       <FirstRunOverlay open={(downloading && phase === "preparing") || !!dlFailed} progress={progress} failed={dlFailed} onUseCloud={chooseCloudInstead} onClose={() => setDlFailed(null)} />

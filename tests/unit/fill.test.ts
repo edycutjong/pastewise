@@ -89,3 +89,30 @@ describe("fillForm", () => {
     expect(r.map((b) => [b.keys, b.status])).toEqual([[["name"], "ok"], [["pcs"], "ok"]]);
   });
 });
+
+describe("mayDispatch: a replaced run makes no new request", () => {
+  it("checked before every call: false before batch 2 -> batch 2 is not_sent and no model is built for it", async () => {
+    script.push({ text: JSON.stringify({ name: "Ali" }) }, { text: JSON.stringify({ pcs: "3" }) });
+    let live = true;
+    const r = await fillForm({ id: "X", title: "T", fields }, "Ali 3", {
+      today: "2026-11-22",
+      timeoutMs: 200,
+      batchMax: 1,
+      mayDispatch: () => live,
+      onBatch: () => (live = false),
+    });
+    expect(r.map((b) => b.status)).toEqual(["ok", "not_sent"]);
+    expect(instances).toEqual([1]);
+    expect(r[1].attempts).toBe(0);
+  });
+  it("checked before the retry too: a run replaced during attempt 1 never retries", async () => {
+    script.push({ text: "not json" }, { text: ok });
+    let calls = 0;
+    const r = await fillBatch(fields, "T", "Ali 3", "2026-11-22", 200, undefined, 200, undefined, () => ++calls === 1);
+    expect(r.status).toBe("not_sent");
+    expect(r.attempts).toBe(1);
+    expect(r.retryReason).toBe("invalid");
+    expect(instances).toEqual([1]);
+  });
+});
+
