@@ -1,0 +1,789 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pastewise: your customer typed it once, Pastewise copies it across</title>
+<meta name="description" content="Copy a messy order message, press one shortcut, and the form's fields fill on your laptop. Gemini Nano on-device via Firebase AI Logic; code accepts a value only if it is in your text.">
+<meta name="theme-color" content="#F4DCD6">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://pastewise.edycu.dev/about/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pastewise">
+<meta property="og:title" content="Pastewise: your customer typed it once. Pastewise copies it across.">
+<meta property="og:description" content="Order messages fill the form on your laptop. Code shows a value only if it is in your text; the rest stays amber.">
+<meta property="og:url" content="https://pastewise.edycu.dev/about/">
+<meta property="og:image" content="https://pastewise.edycu.dev/og-image.png?v=dbb86ca7">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://pastewise.edycu.dev/og-image.png?v=dbb86ca7">
+<link rel="preload" href="/site/fonts/antonio-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/site/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
+<script>document.documentElement.classList.add("js")</script>
+<style>
+/* Shared by /about and /pitch: colour and type tokens, faces, and the two-sheet exhibit. */
+@font-face{font-family:"Antonio";src:url(/site/fonts/antonio-var.woff2) format("woff2");font-weight:600 700;font-display:swap}
+@font-face{font-family:"Archivo";src:url(/site/fonts/archivo-var.woff2) format("woff2");font-weight:400 600;font-display:swap}
+@font-face{font-family:"Archivo";src:url(/site/fonts/archivo-italic.woff2) format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:"Fragment Mono";src:url(/site/fonts/fragment-mono-400.woff2) format("woff2");font-weight:400;font-display:swap}
+:root{
+  --bg:#F4DCD6;--sheet:#FFFDF8;--ink:#1F2433;--muted:#6E5A55;
+  --before:#B86A00;--before-wash:#FBE6BE;--after:#2B3D9C;--rule:#C49C93;
+  --font-display:"Antonio","Arial Narrow","Roboto Condensed",sans-serif;
+  --font-body:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --font-data:"Fragment Mono",ui-monospace,"SF Mono",monospace;
+  --copy:color-mix(in srgb,var(--bg) 78%,var(--sheet));
+  --shade:color-mix(in srgb,var(--muted) 45%,transparent);
+  --ink-soft:color-mix(in srgb,var(--ink) 82%,var(--bg));
+}
+.cap{font:600 11px/1.2 var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--font-data);font-variant-numeric:tabular-nums}
+
+/* ── the desk: white top sheet over the pink copy ── */
+.pw-desk{position:relative;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:0;align-items:start}
+.pw-top{position:relative;z-index:2;background:var(--sheet);padding:18px 18px 16px;margin:22px -22px 0 0;transform:rotate(-1.2deg);
+  box-shadow:0 1px 0 var(--rule),0 22px 40px -26px var(--shade)}
+.pw-top::before{content:"";position:absolute;left:0;right:0;top:0;height:7px;
+  background:radial-gradient(circle at 5px 0,var(--copy) 2.2px,transparent 2.6px) 0 0/12px 7px repeat-x}
+.pw-top .cap{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px}
+.pw-paste{position:relative;font:400 14.5px/1.68 var(--font-body);color:var(--ink)}
+.pw-mirror,.pw-ta{margin:0;padding:0;border:0;font:inherit;letter-spacing:normal;white-space:pre-wrap;overflow-wrap:break-word;word-break:normal}
+.pw-mirror{color:var(--ink);pointer-events:none}
+.pw-mirror mark{background:none;color:inherit;border-bottom:2px solid var(--after);transition:border-color .18s}
+.pw-mirror mark.dim{border-bottom-color:transparent}
+.pw-mirror mark.hot{background:color-mix(in srgb,var(--after) 12%,transparent);border-bottom-width:3px}
+.pw-mirror mark.cand{border-bottom:2px dashed var(--before)}
+.pw-ta{position:absolute;inset:0;width:100%;height:100%;resize:none;background:transparent;color:transparent;caret-color:var(--ink);outline:none;overflow:hidden}
+.pw-ta:focus-visible{outline:2px solid var(--ink);outline-offset:6px}
+.pw-ta::selection{background:color-mix(in srgb,var(--ink) 22%,transparent);color:transparent}
+.pw-edit{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding-top:10px;border-top:1px dashed var(--rule)}
+.pw-edit .hint{font:400 italic 13px/1.4 var(--font-body);color:var(--muted)}
+.pw-btn{font:600 12px/1 var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:transparent;border:1px solid var(--ink);
+  padding:8px 11px;cursor:pointer;transition:background-color .15s,color .15s,transform .15s}
+.pw-btn:hover{background:var(--ink);color:var(--sheet)}
+.pw-btn:active{transform:translateY(1px)}
+.pw-btn:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.pw-copy{position:relative;z-index:1;background:var(--copy);border:1px solid var(--rule);padding:14px 16px 0 34px;transform:rotate(.6deg);
+  box-shadow:0 18px 36px -28px var(--shade)}
+.pw-copy .head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:6px 8px;border-bottom:2px solid var(--ink);padding-bottom:6px;margin-bottom:10px}
+.pw-copy .head b{font:700 15px/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;margin-right:auto}
+.pw-copy .no{position:absolute;right:16px;top:-19px;font:11px var(--font-data);color:var(--muted)}
+.pw-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.pw-grid .full{grid-column:1/-1}
+.pw-f{margin-bottom:6px;min-width:0}
+.pw-box{position:relative;display:flex;align-items:center;min-height:34px;margin-top:3px;padding:4px 9px;border:1px solid var(--rule);
+  background:color-mix(in srgb,var(--sheet) 35%,transparent);font:500 16.5px/1.25 var(--font-body);color:var(--after);overflow-wrap:anywhere;
+  transition:border-color .15s,background-color .15s,box-shadow .15s;cursor:default}
+.pw-box:hover,.pw-box:focus-visible,.pw-f.hot .pw-box{border-color:var(--after);box-shadow:inset 0 0 0 1px var(--after);outline:none}
+.pw-f.amber .pw-box{border:2px dashed var(--before);background:var(--before-wash);color:var(--ink)}
+.pw-f.amber .pw-box:hover,.pw-f.amber .pw-box:focus-visible,.pw-f.amber.hot .pw-box{box-shadow:inset 0 0 0 1px var(--before)}
+.pw-f.empty .pw-box{color:var(--muted)}
+.pw-why{min-height:17px;margin-top:3px;font:400 12.5px/1.35 var(--font-body);color:var(--after)}
+.pw-f.amber .pw-why{color:var(--before)}
+.pw-f.empty .pw-why{color:var(--muted)}
+.pw-why .said{color:var(--ink);font-style:italic}
+.pw-chip{display:inline-block;margin:3px 4px 0 0;padding:2px 6px;border:1px solid var(--before);background:var(--before-wash);
+  font:12px var(--font-data);color:var(--ink);white-space:nowrap}
+.pw-strip{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:nowrap;margin:6px -16px 0 -34px;padding:9px 16px 9px 34px;
+  border-top:1px dashed var(--rule);font:12px/1.4 var(--font-data);letter-spacing:.04em;color:var(--ink)}
+.pw-strip b{font-weight:400;color:var(--ink);background:var(--sheet);padding:0 5px;border:1px solid var(--ink)}
+.pw-stamp{font:700 12px/1 var(--font-display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink);border:2px solid var(--ink);
+  padding:5px 7px 4px;transform:rotate(-4deg);opacity:.85}
+.pw-badge{display:inline-flex;align-items:center;gap:6px;font:12px var(--font-data);color:var(--ink);border:1px solid var(--ink);padding:3px 7px;background:var(--sheet)}
+.pw-badge::before{content:"";width:7px;height:7px;background:var(--after)}
+.pw-margin{position:absolute;left:8px;top:52px;bottom:52px;width:16px;
+  background:radial-gradient(circle,var(--bg) 3.2px,var(--rule) 3.4px,var(--rule) 4px,transparent 4.4px) 0 0/16px 26px repeat-y}
+
+/* the press: carbon transfer darkens (180 ms) */
+@keyframes pw-press{from{opacity:.35;filter:blur(.6px)}to{opacity:1;filter:none}}
+.pw-desk.armed .pw-f .pw-v,.pw-desk.armed .pw-f .pw-why{opacity:0}
+.pw-desk.armed .pw-mirror mark{border-bottom-color:transparent}
+.pw-desk.armed .pw-mirror mark.on{border-bottom-color:var(--after)}
+.pw-desk.armed .pw-mirror mark.cand.on{border-bottom-color:var(--before)}
+.pw-desk .pw-f.pressed .pw-v{animation:pw-press .18s ease-out both}
+.pw-desk .pw-f.pressed .pw-why{opacity:1;transition:opacity .25s}
+.pw-desk.settled .pw-f .pw-v,.pw-desk.settled .pw-f .pw-why{opacity:1;animation:none}
+.pw-reading{position:absolute;left:34px;right:16px;top:40px;height:2px;background:var(--rule);opacity:0;transform-origin:left}
+.pw-desk.reading .pw-reading{opacity:1;animation:pw-read var(--read-ms,2000ms) linear both;background:var(--ink)}
+@keyframes pw-read{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+@media (prefers-reduced-motion:reduce){
+  .pw-desk .pw-f.pressed .pw-v{animation:none}
+  .pw-desk.reading .pw-reading{animation:none}
+}
+@media print{
+  .pw-desk.armed .pw-f .pw-v,.pw-desk.armed .pw-f .pw-why{opacity:1!important;transition:none!important}
+  .pw-desk.armed .pw-mirror mark{border-bottom-color:var(--after)!important}
+  .pw-reading,.pw-edit .pw-btn{display:none}
+}
+
+*{box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--font-body);font-feature-settings:"tnum" 0}
+::selection{background:color-mix(in srgb,var(--ink) 18%,transparent)}
+a{color:var(--ink);text-underline-offset:3px;text-decoration-thickness:1px;transition:color .15s,text-decoration-color .15s}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible,summary:focus-visible,button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--ink);color:var(--sheet);padding:8px 12px;z-index:9}
+.skip:focus{left:12px}
+.grain{position:relative;isolation:isolate}
+.grain::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .43 0 0 0 0 .35 0 0 0 0 .33 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E")}
+/* header */
+.top-bar{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:22px 0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font:700 21px/1 var(--font-display);letter-spacing:.06em}
+.brand img{width:30px;height:30px;transition:transform .2s}
+.brand span{border-bottom:2px solid transparent;transition:border-color .15s}
+.brand:hover span{border-bottom-color:currentColor}
+.brand:hover img{transform:rotate(-6deg)}
+.nav{display:flex;gap:22px;align-items:center}
+.nav a{font:600 13px/1 var(--font-display);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid transparent}
+.nav a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;font:600 14px/1 var(--font-display);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;
+  padding:13px 18px;border:1.5px solid var(--ink);color:var(--ink);background:transparent;transition:background-color .15s,color .15s,transform .15s,box-shadow .15s}
+.btn:hover{background:var(--ink);color:var(--sheet);transform:translateY(-1px);box-shadow:0 6px 0 -2px var(--rule)}
+.btn:active{transform:translateY(0);box-shadow:none}
+.btn.primary{background:var(--ink);color:var(--sheet)}
+.btn.primary:hover{background:var(--sheet);color:var(--ink)}
+.btn .g{font-family:var(--font-data);letter-spacing:0;font-weight:400}
+/* hero */
+.hero{position:relative;padding:26px 0 64px}
+.hero-grid{display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1.22fr);gap:44px;align-items:start}
+.eyebrow{font:600 12.5px/1.5 var(--font-display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 18px}
+.eyebrow span{white-space:nowrap}
+h1{font:700 clamp(42px,4.5vw,68px)/.95 var(--font-display);text-transform:uppercase;letter-spacing:.004em;margin:0 0 24px;text-wrap:balance}
+h1 em{font-style:normal;color:var(--after);text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.09em;text-decoration-color:var(--after);text-decoration-skip-ink:none}
+.lede{font:400 19px/1.6 var(--font-body);max-width:31em;margin:0 0 26px;color:var(--ink-soft)}
+.lede b{color:var(--ink);font-weight:600}
+.ctas{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 22px}
+.proof{display:flex;flex-wrap:wrap;gap:6px 16px;font:12.5px/1.5 var(--font-data);color:var(--ink);margin:0;padding:0;list-style:none}
+.proof li::before{content:"■ ";color:var(--after);font-size:9px;vertical-align:2px}
+.proof li.am::before{color:var(--before)}
+.exhibit-cap{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0 0 4px;font:12px/1.45 var(--font-data);color:var(--muted)}
+.exhibit-cap b{font-weight:400;color:var(--ink)}
+.pw-desk .live{display:none}
+.pw-desk.edited .live{display:inline}
+.pw-desk.edited .rec{display:none}
+@media (prefers-reduced-motion:no-preference){
+  .js .rise{animation:rise .7s cubic-bezier(.2,.7,.2,1) both;animation-delay:var(--d,0ms)}
+  .js h1 em{animation:ink .55s .62s ease-out both}
+  .js .settled-page .rise,.js .settled-page h1 em{animation:none}
+}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes ink{from{text-decoration-color:transparent}to{text-decoration-color:var(--after)}}
+/* bands */
+.sheet-band{background:var(--sheet);position:relative;padding:54px 0 50px}
+.sheet-band::before,.sheet-band::after{content:"";position:absolute;left:0;right:0;height:8px;background:radial-gradient(circle at 6px 4px,var(--bg) 2.6px,transparent 3px) 0 0/14px 8px repeat-x}
+.sheet-band::before{top:-4px}.sheet-band::after{bottom:-4px}
+.receipts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0}
+.receipt{padding:6px 26px 4px;border-left:1px solid var(--rule)}
+.receipt:first-child{border-left:0;padding-left:0}
+.receipt .fig{display:block;font:400 46px/1.05 var(--font-data);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+.receipt .fig.blue{color:var(--after)}
+.receipt p{margin:8px 0 8px;font-size:15px;line-height:1.45;color:var(--ink-soft)}
+.receipt code{font:11px/1.4 var(--font-data);color:var(--muted);overflow-wrap:anywhere}
+section{scroll-margin-top:20px}
+.sec{padding:92px 0}
+.sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:38px}
+.label{font:600 12.5px/1 var(--font-display);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px;display:flex;gap:10px;align-items:center}
+.label i{font-style:normal;border:1px solid currentColor;padding:3px 6px 2px}
+h2{font:700 clamp(36px,4.3vw,58px)/.98 var(--font-display);text-transform:uppercase;letter-spacing:.006em;margin:0;text-wrap:balance}
+.sec-head p{margin:0;font-size:17.5px;color:var(--ink-soft);max-width:34em}
+/* demo pair */
+.pair{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(0,1fr);gap:34px;align-items:start}
+.frame{background:var(--sheet);border:1px solid var(--rule);box-shadow:0 26px 50px -34px var(--shade)}
+.frame .bar{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--rule);font:12px var(--font-data);color:var(--muted)}
+.frame .bar span{flex:1;text-align:center;background:var(--copy);padding:3px 8px}
+.frame img{display:block;width:100%;height:auto}
+figcaption{font:12px/1.5 var(--font-data);color:var(--muted);margin-top:10px}
+.till{background:var(--sheet);padding:20px 22px 26px;font:13px/1.55 var(--font-data);color:var(--ink);box-shadow:0 26px 50px -34px var(--shade);position:relative}
+.till::after{content:"";position:absolute;left:0;right:0;bottom:-9px;height:10px;background:linear-gradient(135deg,var(--sheet) 50%,transparent 50%) 0 0/12px 10px repeat-x,linear-gradient(225deg,var(--sheet) 50%,transparent 50%) 0 0/12px 10px repeat-x}
+.till h3{font:700 15px/1.2 var(--font-display);letter-spacing:.12em;text-transform:uppercase;margin:0 0 2px;display:flex;justify-content:space-between}
+.till .meta{color:var(--muted);font-size:12px;margin:0 0 10px}
+.till ol{list-style:none;margin:0;padding:10px 0;border-top:1px dashed var(--rule);border-bottom:1px dashed var(--rule)}
+.till li{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:8px;padding:3px 0}
+.till li .n{text-align:right;white-space:nowrap}
+.till li.z .n{color:var(--after)}
+.till li.note{display:block;padding-left:70px;color:var(--muted);font-size:12px}
+.till .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:13px}
+.till .tot b{font:400 30px/1 var(--font-data);color:var(--after)}
+.till .fine{color:var(--muted);font-size:11.5px;margin:10px 0 0}
+.js [data-typer].armed li{opacity:0}
+.js [data-typer].armed li.on{opacity:1;transition:opacity .12s}
+/* split (dark band = the order book's board cover) */
+.ink-band{background:var(--ink);color:var(--sheet)}
+.ink-band h2,.ink-band .label{color:var(--sheet)}
+.ink-band .label{opacity:.78}
+.ink-band .sec-head p{color:color-mix(in srgb,var(--sheet) 80%,var(--ink))}
+.lanes{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);gap:0}
+.lane h3{font:700 22px/1.1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;margin:0 0 4px}
+.lane .sub{font:12.5px var(--font-data);color:color-mix(in srgb,var(--sheet) 70%,var(--ink));margin:0 0 20px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{position:relative;padding:0 0 22px 48px;counter-increment:s}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:32px;height:32px;display:grid;place-items:center;font:700 16px/1 var(--font-display);border:1.5px solid var(--sheet)}
+.steps b{display:block;font:600 17.5px/1.35 var(--font-body)}
+.steps span{display:block;font-size:15.5px;line-height:1.5;color:color-mix(in srgb,var(--sheet) 78%,var(--ink));margin-top:3px}
+.steps code,.consent code{font:12.5px var(--font-data);background:color-mix(in srgb,var(--sheet) 12%,var(--ink));padding:1px 5px;color:var(--sheet)}
+.perf{background:radial-gradient(circle,color-mix(in srgb,var(--sheet) 55%,var(--ink)) 2px,transparent 2.4px) 50% 0/10px 14px repeat-y;position:relative}
+.perf span{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-90deg);white-space:nowrap;font:600 11px var(--font-display);letter-spacing:.2em;background:var(--ink);padding:4px 10px;color:color-mix(in srgb,var(--sheet) 70%,var(--ink))}
+.lane.cloud .steps li::before{border-style:dashed}
+.consent{margin-top:28px;padding:18px 22px;border:1px dashed color-mix(in srgb,var(--sheet) 45%,var(--ink));font-size:15.5px;line-height:1.55;color:color-mix(in srgb,var(--sheet) 85%,var(--ink))}
+.consent b{color:var(--sheet)}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:16px}
+.card{background:var(--copy);border:1px solid var(--rule);padding:22px 22px 20px;position:relative;display:flex;flex-direction:column;gap:12px}
+.card h3{font:700 25px/1.05 var(--font-display);text-transform:uppercase;letter-spacing:.02em;margin:0}
+.card p{margin:0;font-size:15.5px;line-height:1.55;color:var(--ink-soft)}
+.ico{width:30px;height:30px;fill:none;stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.label .ico{width:24px;height:24px}
+.card .tag{align-self:flex-start;margin-top:auto;font:12px var(--font-data);border:1px solid var(--ink);padding:3px 7px;color:var(--ink);background:var(--sheet)}
+.card.a{grid-column:span 4;background:var(--sheet)}
+.card.b{grid-column:span 2;grid-row:span 2}
+.card.c{grid-column:span 2}.card.d{grid-column:span 2}.card.e{grid-column:span 6;flex-direction:row;align-items:center;gap:28px;flex-wrap:wrap}
+.card.e p{flex:1 1 320px}
+.card.e .tag{margin-top:0}
+.canary{font:14px/1.6 var(--font-data);background:var(--sheet);border:1px dashed var(--ink);padding:10px 14px;flex:0 1 auto}
+.a-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+.quote-line{font:16px/1.75 var(--font-body);background:var(--copy);padding:12px 14px;border-left:3px solid var(--ink)}
+.quote-line mark{background:none;border-bottom:2px dashed var(--before);color:inherit}
+.mini{display:grid;gap:10px}
+.mini .pw-f{margin:0}
+.mini .vs{font:12px var(--font-data);color:var(--muted)}
+.big-word{font:400 64px/1 var(--font-body);color:var(--before)}
+.digits{font:18px/1.6 var(--font-data)}
+.digits s{color:var(--before);text-decoration-thickness:2px}
+/* measured */
+.slip{background:var(--sheet);border:1px solid var(--rule);box-shadow:0 22px 44px -34px var(--shade)}
+.slip-row{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr) minmax(0,.8fr) 120px;gap:18px;align-items:center;padding:16px 24px;border-top:1px solid var(--rule)}
+.slip-row:first-child{border-top:0}
+.slip-row.head{font:600 11.5px/1 var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding-top:14px;padding-bottom:12px}
+.slip-row .k b{display:block;font:700 18px/1.2 var(--font-display);letter-spacing:.06em;text-transform:uppercase}
+.slip-row .k span{font-size:14px;color:var(--ink-soft)}
+.slip-row .v{font:400 30px/1 var(--font-data);font-variant-numeric:tabular-nums}
+.gauge{display:block;width:100%;max-width:200px;height:22px;margin-top:8px}
+.gauge .tr{stroke:var(--rule);stroke-width:6}
+.gauge .got{stroke:var(--ink);stroke-width:6}
+.gauge .aimt{stroke:var(--muted);stroke-width:2}
+.gauge text{font:10px var(--font-data);fill:var(--muted)}
+.slip-row .aim{font:15px var(--font-data);color:var(--muted)}
+.missed{justify-self:start;font:700 13px/1 var(--font-display);letter-spacing:.16em;border:2px solid var(--ink);padding:6px 8px 5px;transform:rotate(-3deg)}
+.okay{justify-self:start;font:13px var(--font-data);color:var(--after)}
+.measured-foot{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:16px}
+.measured-foot div{padding:16px 18px;border:1px solid var(--rule);font-size:15px;line-height:1.5;color:var(--ink-soft)}
+.measured-foot b{display:block;font:400 26px/1.1 var(--font-data);color:var(--ink);margin-bottom:6px}
+/* honest band */
+.honest{background:color-mix(in srgb,var(--bg) 82%,var(--muted))}
+.honest-grid{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:44px;align-items:start}
+.pull{font:700 clamp(40px,5vw,66px)/1 var(--font-display);text-transform:uppercase;margin:0}
+blockquote{margin:0}
+.attr{display:block;margin-top:14px;font:12.5px var(--font-data);color:var(--ink);font-style:normal}
+.small-q{padding:0 0 22px;margin:0 0 22px;border-bottom:1px solid color-mix(in srgb,var(--muted) 45%,transparent)}
+.small-q p{margin:0;font:400 italic 20px/1.5 var(--font-body)}
+.small-q:last-child{border-bottom:0;margin-bottom:0}
+/* faq */
+.faq{max-width:900px}
+details{border-top:1px solid var(--rule)}
+details:last-of-type{border-bottom:1px solid var(--rule)}
+summary{list-style:none;cursor:pointer;padding:20px 44px 20px 0;position:relative;font:600 19px/1.35 var(--font-body);transition:color .15s}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:6px;top:14px;font:400 28px/1 var(--font-data);transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+summary:hover{color:var(--after)}
+details p{margin:0 0 22px;max-width:46em;color:var(--ink-soft)}
+/* footer */
+footer{background:var(--ink);color:var(--sheet);padding:56px 0 40px}
+.foot{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(2,minmax(0,.7fr));gap:40px}
+.foot .brand{color:var(--sheet)}
+.foot p{color:color-mix(in srgb,var(--sheet) 78%,var(--ink));font-size:15px;max-width:30em}
+.foot h3{font:600 12.5px/1 var(--font-display);letter-spacing:.14em;text-transform:uppercase;margin:6px 0 14px;color:color-mix(in srgb,var(--sheet) 70%,var(--ink))}
+.foot ul{list-style:none;margin:0;padding:0}
+.foot li{margin:0 0 9px}
+.foot a{color:var(--sheet)}
+.stamp-line{margin-top:34px;padding-top:18px;border-top:1px solid color-mix(in srgb,var(--sheet) 25%,var(--ink));font:12px/1.6 var(--font-data);color:color-mix(in srgb,var(--sheet) 70%,var(--ink))}
+/* responsive */
+@media (max-width:1100px){
+  .hero-grid{grid-template-columns:minmax(0,1fr);gap:34px}
+    .pair,.honest-grid,.sec-head{grid-template-columns:minmax(0,1fr)}
+  .sec-head{gap:16px}
+  .nav .opt{display:none}
+}
+@media (max-width:860px){
+  .wrap{padding:0 22px}
+  .receipts{grid-template-columns:repeat(2,minmax(0,1fr));gap:26px 0}
+  .receipt:nth-child(3){border-left:0;padding-left:0}
+  .lanes{grid-template-columns:minmax(0,1fr)}
+  .perf{height:34px;background:radial-gradient(circle,color-mix(in srgb,var(--sheet) 55%,var(--ink)) 2px,transparent 2.4px) 0 50%/14px 10px repeat-x;margin:4px 0 24px}
+  .perf span{transform:translate(-50%,-50%)}
+  .bento{grid-template-columns:minmax(0,1fr)}
+  .card.a,.card.b,.card.c,.card.d,.card.e{grid-column:auto;grid-row:auto}
+  .a-row{grid-template-columns:minmax(0,1fr)}
+  .slip-row{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px}
+  .slip-row.head{display:none}
+  .slip-row .aim{grid-column:1}
+  .measured-foot{grid-template-columns:minmax(0,1fr)}
+  .foot{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .foot>div:first-child{grid-column:1/-1}
+  .nav a:not(.keep){display:none}
+  .sec{padding:68px 0}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .top-bar{padding:16px 0}
+  .brand span{display:none}
+  .btn{padding:11px 13px;font-size:13px}
+  .lede{font-size:17px}
+  .receipt{padding:0 0 0 14px}
+  .receipt .fig{font-size:34px}
+  .pw-desk{grid-template-columns:minmax(0,1fr)}
+  .pw-top{margin:0 6px 0 0;transform:rotate(-.8deg)}
+  .pw-copy{margin:-8px 0 0 6px;padding-left:30px;transform:rotate(.4deg)}
+  .pw-margin{left:6px;width:14px}
+  .pw-strip{margin-left:-30px;padding-left:30px}
+  .pw-reading{left:30px}
+  .pw-copy .no{display:none}
+  .pw-badge{font-size:11px;padding:2px 6px}
+  .till li{grid-template-columns:54px minmax(0,1fr) auto;font-size:12px}
+  .till li.note{padding-left:62px}
+  .big-word{font-size:48px}
+  .card h3{font-size:22px}
+}
+@media print{
+  .js .rise,.js h1 em{animation:none!important}
+  .top-bar .nav,.ctas{display:none}
+  details{break-inside:avoid}
+  .grain::after{display:none}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="wrap top-bar" aria-label="Site">
+  <a class="brand" href="/about/" aria-label="Pastewise, about"><img src="/icon.svg" alt="" width="30" height="30"><span>PASTEWISE</span></a>
+  <nav class="nav" aria-label="Sections">
+    <a class="opt" href="#watch">Watch it fill</a>
+    <a class="opt" href="#split">The split</a>
+    <a class="opt" href="#measured">Measured</a>
+    <a class="opt" href="#faq">FAQ</a>
+    <a class="keep" href="/pitch/">Pitch deck</a>
+    <a class="btn primary keep" href="/">Try it live <span aria-hidden="true">→</span></a>
+  </nav>
+</header>
+<main id="main">
+<section class="hero grain" aria-labelledby="h">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow rise" style="--d:0ms"><span>Build with Hybrid AI</span> · <span>Web (Chrome)</span> · <span>Gemini Nano via Firebase AI Logic</span></p>
+      <h1 id="h" class="rise" style="--d:90ms">Your customer typed it once. Pastewise <em>copies it across.</em></h1>
+      <p class="lede rise" style="--d:220ms">Orders arrive as chat messages and get typed again into a courier form. Copy the message, press one shortcut: Gemini Nano reads it <b>on your laptop</b>, and code shows a value only if it is <b>really in your text</b>. The rest stays amber.</p>
+      <div class="ctas rise" style="--d:320ms">
+        <a class="btn" href="https://github.com/edycutjong/pastewise"><span class="g" aria-hidden="true">&lt;/&gt;</span> Source</a>
+        <a class="btn" href="/pitch/">Pitch deck</a>
+        <a class="btn primary" href="/">Try it live <span aria-hidden="true">→</span></a>
+      </div>
+      <ul class="proof rise" style="--d:420ms" aria-label="Measured">
+        <li>0 paste words in any request · 4 hosted fills</li>
+        <li>2.0% wrong in name, phone, address, postal boxes</li>
+        <li>135/135 held-out fills on-device</li>
+      </ul>
+    </div>
+    <div class="exhibit rise" style="--d:160ms">
+<div class="pw-desk settled">
+<script type="application/json" class="pw-data">{"paste": "hiii 👋 it's Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:\nMrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.\nher old number 0813-5550-2290 is dead don't use it, new one is 0857 5550 8812.\nexpress pls, she needs them before Friday 🙏 leave at the guard post if nobody home", "today": "2026-11-22", "totalMs": 6063, "speed": 3, "spec": [{"key": "cnee_nm", "label": "CNEE", "kind": "text", "role": "name", "kindSource": "default", "maxLength": 40}, {"key": "cnee_tel", "label": "CNEE TEL", "kind": "phone", "role": "plain", "kindSource": "dom", "maxLength": 20}, {"key": "addr_1", "label": "ADDR 1", "kind": "text", "role": "address", "kindSource": "default", "maxLength": 60}, {"key": "dist_city", "label": "DIST/CITY", "kind": "text", "role": "plain", "kindSource": "default", "maxLength": 40}, {"key": "st_prov", "label": "ST/PROV", "kind": "text", "role": "plain", "kindSource": "default", "maxLength": 40}, {"key": "zip", "label": "ZIP", "kind": "text", "role": "plain", "kindSource": "default", "maxLength": 5}, {"key": "desc", "label": "DESC", "kind": "text", "role": "item", "kindSource": "default", "maxLength": 60}, {"key": "pcs", "label": "PCS", "kind": "int", "role": "plain", "kindSource": "dom", "min": 1, "max": 999}, {"key": "svc", "label": "SVC", "kind": "enum", "role": "plain", "kindSource": "dom", "options": [{"value": "STD", "text": "STD"}, {"value": "EXP", "text": "EXP"}, {"value": "SDD", "text": "SDD"}]}, {"key": "rmks", "label": "RMKS", "kind": "text", "role": "plain", "kindSource": "default", "maxLength": 80}], "fields": [{"key": "cnee_nm", "proposed": "Maya Kusuma", "recorded": {"state": "amber", "value": "Maya Kusuma"}}, {"key": "cnee_tel", "proposed": "085755508812", "recorded": {"state": "amber", "value": "085755508812"}}, {"key": "addr_1", "proposed": "Jl. Cempaka Putih Raya No. 41", "recorded": {"state": "found", "value": "Jl. Cempaka Putih Raya No. 41"}}, {"key": "dist_city", "proposed": "Jakarta Pusat", "recorded": {"state": "found", "value": "Jakarta Pusat"}}, {"key": "st_prov", "proposed": "", "recorded": {"state": "empty", "value": ""}}, {"key": "zip", "proposed": "10510", "recorded": {"state": "found", "value": "10510"}}, {"key": "desc", "proposed": "2 linen tablecloths (the sage ones)", "recorded": {"state": "found", "value": "linen tablecloths"}}, {"key": "pcs", "proposed": "2", "recorded": {"state": "found", "value": "2"}}, {"key": "svc", "proposed": "EXP", "recorded": {"state": "found", "value": "EXP"}}, {"key": "rmks", "proposed": "express pls, she needs them before Friday 🙏 leave at the guard post if nobody 홈", "recorded": {"state": "amber", "value": ""}}]}</script>
+<div class="pw-top"><div class="cap"><span>Top sheet · the message you copied</span><span>synthetic</span></div>
+<div class="pw-paste"><div class="pw-mirror" aria-hidden="true">hiii 👋 it&#x27;s <mark data-k="cnee_nm">Maya Kusuma</mark> again! can u send the <mark data-k="pcs">2</mark> <mark data-k="desc">linen tablecloths</mark> (the sage ones) to my mom this time:
+Mrs. Ratna Kusuma, <mark data-k="addr_1">Jl. Cempaka Putih Raya No. 41</mark>, <mark data-k="dist_city">Jakarta Pusat</mark> <mark data-k="zip">10510</mark>.
+her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dead don&#x27;t use it, new one is <mark data-k="cnee_tel" class="cand">0857 5550 8812</mark>.
+<mark data-k="svc">express</mark> pls, she needs them before Friday 🙏 leave at the guard post if nobody home
+</div><textarea class="pw-ta" spellcheck="false" aria-label="The message, editable: the gate re-checks every box as you type"></textarea></div><div class="pw-edit"><span class="hint">Edit the message: the gate re-checks every box as you type.</span><button class="pw-btn" type="button" data-replay>Replay</button></div></div>
+<div class="pw-copy"><div class="pw-margin" aria-hidden="true"></div><div class="pw-reading" aria-hidden="true"></div>
+<span class="no">Nº 0417-C</span><div class="head"><b>Consignment note</b><span class="pw-badge">on_device · recorded</span></div>
+<div class="pw-grid"><div class="pw-f amber" data-key="cnee_nm" data-cap="CNEE"><span class="cap">CNEE</span><div class="pw-box" tabindex="0"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm &mdash; the model suggested <span class="said">&ldquo;Maya Kusuma&rdquo;</span></div></div><div class="pw-f amber" data-key="cnee_tel" data-cap="CNEE TEL"><span class="cap">CNEE TEL</span><div class="pw-box" tabindex="0"><span class="pw-v">085755508812</span></div><div class="pw-why">two numbers in your text — pick one<br><span class="pw-chip">0813-5550-2290</span><span class="pw-chip">0857 5550 8812</span></div></div><div class="pw-f found full" data-key="addr_1" data-cap="ADDR 1"><span class="cap">ADDR 1</span><div class="pw-box" tabindex="0"><span class="pw-v">Jl. Cempaka Putih Raya No. 41</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="dist_city" data-cap="DIST/CITY"><span class="cap">DIST/CITY</span><div class="pw-box" tabindex="0"><span class="pw-v">Jakarta Pusat</span></div><div class="pw-why">found in your text</div></div><div class="pw-f empty" data-key="st_prov" data-cap="ST/PROV"><span class="cap">ST/PROV</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why"></div></div><div class="pw-f found" data-key="zip" data-cap="ZIP"><span class="cap">ZIP</span><div class="pw-box" tabindex="0"><span class="pw-v">10510</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="desc" data-cap="DESC"><span class="cap">DESC</span><div class="pw-box" tabindex="0"><span class="pw-v">linen tablecloths</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="pcs" data-cap="PCS"><span class="cap">PCS</span><div class="pw-box" tabindex="0"><span class="pw-v">2</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="svc" data-cap="SVC"><span class="cap">SVC</span><div class="pw-box" tabindex="0"><span class="pw-v">EXP</span></div><div class="pw-why">found in your text</div></div><div class="pw-f amber full" data-key="rmks" data-cap="RMKS"><span class="cap">RMKS</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why">not in your text &mdash; the model wrote <span class="said">&ldquo;… at the guard post if nobody 홈&rdquo;</span></div></div></div>
+<div class="pw-strip"><span>REQUESTS FROM THIS PAGE WHILE THE GATE RAN</span><b data-reqs>0</b></div></div>
+</div>
+      <p class="exhibit-cap"><span><b>Recorded on-device run</b> · 2026-11-22 · gate v4 · replayed at 3× speed · the gate is the shipped code, running in this page: <b data-selfcheck>10/10 boxes match the recording</b></span></p>
+    </div>
+  </div>
+</section>
+
+<section class="sheet-band" aria-label="Receipts">
+  <div class="wrap receipts">
+    <div class="receipt"><span class="fig blue" data-count="0">0</span><p>message words found in any request, 4 on-device fills, hosted page</p><code>evidence/network/2026-11-22-4b8f0b5-live.json</code></div>
+    <div class="receipt"><span class="fig" data-count="2.0" data-dec="1" data-suf="%">2.0%</span><p>wrong values shown in name, phone, address and postal boxes (held-out)</p><code>evidence/bench/report-holdout.json</code></div>
+    <div class="receipt"><span class="fig" data-count="135" data-suf="/135">135/135</span><p>held-out fills with valid JSON, every one on-device (45 pairs × 3)</p><code>evidence/bench/aggregates/2026-11-22-f00f35d-holdout-off.json</code></div>
+    <div class="receipt"><span class="fig" data-count="2.34" data-dec="2" data-suf=" s">2.34 s</span><p>warm median per fill, Nano on an M1 Max</p><code>evidence/bench/aggregates/2026-11-22-f00f35d-holdout-off.json</code></div>
+  </div>
+</section>
+
+<section class="sec" id="watch" aria-labelledby="h-watch">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="label"><i>A</i> Two records</p><h2 id="h-watch">Watch it fill. Then check what left.</h2></div>
+      <p>A real fill on the hosted page, beside the recorded network log of four fills there. Different runs, so each carries its own date.</p>
+    </div>
+    <div class="pair">
+      <figure style="margin:0">
+        <div class="frame"><div class="bar" aria-hidden="true"><span>pastewise.edycu.dev</span></div>
+          <img src="/site/img/app-c-s1.webp" width="1600" height="931" alt="The Pastewise app after a real on-device fill of the synthetic message S1: source words underlined in carbon blue on the white top sheet, the address, city, postal code, item, count and service pressed through in blue, the recipient name and the phone number amber.">
+        </div>
+        <figcaption>Hosted app · synthetic message S1 on form C · captured 2026-11-22 · inferenceSource <b style="font-weight:400;color:var(--ink)">on_device</b></figcaption>
+      </figure>
+      <div class="till" data-typer aria-label="Network receipt">
+        <h3><span>Network receipt</span><span>Nº 4b8f0b5</span></h3>
+        <p class="meta">pastewise.edycu.dev · 2026-11-22 · re-set from the recorded log</p>
+        <ol>
+<li><span>BOOT</span><span>page files, Remote Config, reCAPTCHA</span><span class="n">35 req</span></li>
+<li class="z"><span>FILL S1</span><span>consignment note · on_device</span><span class="n">0 req</span></li>
+<li class="z"><span>FILL S2</span><span>front desk · on_device</span><span class="n">0 req</span></li>
+<li class="z"><span>FILL S3</span><span>order · on_device</span><span class="n">0 req</span></li>
+<li class="z"><span>FILL S4</span><span>order · on_device</span><span class="n">0 req</span></li>
+<li class="z"><span>S5</span><span>2,001 chars · refused</span><span class="n">0 req</span></li>
+<li class="note">&ldquo;Nothing was sent.&rdquo;</li>
+<li><span>TEACH C</span><span>the empty form → gemini-3.5-flash-lite</span><span class="n">5 req</span></li>
+<li><span>CANARY</span><span>planted message words</span><span class="n">caught</span></li>
+        </ol>
+        <div class="tot"><span>PASTE WORDS FOUND IN ANY REQUEST</span><b>0</b></div>
+        <p class="fine">Request bodies are not stored, only host, path, size and hit counts. Blind spots: words under four letters and encoded text. <a href="/receipt/">Open the full receipt</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec ink-band" id="split" aria-labelledby="h-split">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="label">The hybrid split</p><h2 id="h-split">The message stays on the laptop. The cloud gets the empty form.</h2></div>
+      <p>Three Firebase AI Logic model instances: fill on the device, teach from the empty form, and a consent path that waits for your Yes.</p>
+    </div>
+    <div class="lanes">
+      <div class="lane">
+        <h3>On your laptop</h3><p class="sub">Gemini Nano · InferenceMode.ONLY_ON_DEVICE</p>
+        <ol class="steps">
+          <li><b>The live form becomes a JSON schema</b><span>Read from the page: labels, names, options, formats.</span></li>
+          <li><b>Nano answers inside that schema</b><span>Passed as <code>responseConstraint</code>: valid JSON in 135/135 held-out fills.</span></li>
+          <li><b>Code checks every value against your text</b><span>In the message, fits the box, one candidate. Gate v4.</span></li>
+          <li><b>Boxes press through or stay amber</b><span>Every fill shows its <code>inferenceSource</code>.</span></li>
+        </ol>
+      </div>
+      <div class="perf" aria-hidden="true"><span>Customer text stays left</span></div>
+      <div class="lane cloud">
+        <h3>In the cloud</h3><p class="sub">gemini-3.5-flash-lite · InferenceMode.ONLY_IN_CLOUD</p>
+        <ol class="steps">
+          <li><b>The empty form, never the message</b><span>You can read the payload before it is sent.</span></li>
+          <li><b>A teacher writes hints for cryptic boxes</b><span>CNEE became &ldquo;Enter the name of the consignee&rdquo;, returned through <code>responseSchema</code>.</span></li>
+          <li><b>Saved by form fingerprint</b><span>Firestore keys hints by structure, never content.</span></li>
+          <li><b>Guarded and tunable</b><span>App Check in front of AI Logic; Remote Config holds the 2,000-character cap, timeout and kill switch.</span></li>
+        </ol>
+      </div>
+    </div>
+    <p class="consent"><b>No Nano?</b> A consent sheet comes before that one message goes to the cloud (<code>PREFER_ON_DEVICE</code>). Recorded check: 0 AI requests before Yes; the sheet counted 682 bytes (2 × 341) and Chrome's wire log saw 2 requests.</p>
+  </div>
+</section>
+
+<section class="sec" id="gate" aria-labelledby="h-gate">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><h2 id="h-gate">Copied word for word, or not at all.</h2></div>
+      <p>The model proposes. Code decides, with rules you can read and tests that pin them.</p>
+    </div>
+    <div class="bento">
+      <article class="card a">
+        <p class="label" style="margin:0"><svg class="ico" viewBox="0 0 32 32" aria-hidden="true"><rect x="9" y="3" width="14" height="26" rx="2"/><path d="M13 7h6M14 25h4"/><path d="M12 12h3M17 12h3M12 16h3M17 16h3M12 20h3M17 20h3" stroke-dasharray="0"/></svg><i>B</i> Two numbers</p>
+        <h3>Two numbers in the message? You pick.</h3>
+        <p class="quote-line">her old number <mark>0813-5550-2290</mark> is dead don't use it, new one is <mark>0857 5550 8812</mark>.</p>
+        <div class="a-row"><div class="mini pw-desk settled">
+          <div class="pw-f amber" data-key="cnee_tel_demo"><span class="cap">CNEE TEL</span><div class="pw-box"><span class="pw-v">085755508812</span></div><div class="pw-why">two numbers in your text — pick one<br><span class="pw-chip">0813-5550-2290</span><span class="pw-chip">0857 5550 8812</span></div></div>
+        </div>
+        <p>The model chose the new number, correctly. The box stays amber anyway: with two numbers, a person decides.</p></div>
+        <span class="tag">two_candidates · tests/unit/gate.test.ts:64</span>
+      </article>
+      <article class="card b">
+        <svg class="ico" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="8" width="26" height="18"/><path d="M3 13h26M8 19h10M8 22h6"/><circle cx="16" cy="5" r="2"/></svg><h3>Names are always yours to confirm.</h3>
+        <div class="mini pw-desk settled">
+          <span class="vs">recorded run at ba8a64a · gate v2</span>
+          <div class="pw-f found"><span class="cap">CNEE</span><div class="pw-box"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">found in your text, but she is the sender</div></div>
+          <span class="vs">recorded run at ee635b4 · gate v4</span>
+          <div class="pw-f amber"><span class="cap">CNEE</span><div class="pw-box"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm</div></div>
+        </div>
+        <p>On the 180-pair bench the recipient box showed a wrong value 10.6% of the time on form A and 8.3% on form C, often the sender or a kinship word. So v4 never presses a recipient name through.</p>
+        <span class="tag">ALWAYS_CHECK_KEYS · src/gate/index.ts</span>
+      </article>
+      <article class="card c">
+        <svg class="ico" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 5l12 10M8 12v15h16V12"/><path d="M14 27v-7h4v7"/></svg><h3>Nano wrote &ldquo;홈&rdquo;.</h3>
+        <span class="big-word" lang="ko" aria-hidden="true">홈</span>
+        <p>The recorded run ended its remarks with &ldquo;…the guard post if nobody 홈&rdquo;, Hangul for home. Not in the message, so the box stayed amber.</p>
+        <span class="tag">not_in_text</span>
+      </article>
+      <article class="card d">
+        <svg class="ico" viewBox="0 0 32 32" aria-hidden="true"><path d="M3 22h26M3 22v-4M9 22v-3M15 22v-4M21 22v-3M27 22v-4"/><path d="M18 8l3 6 3-6" /></svg><h3>A dropped digit is not a match.</h3>
+        <p class="digits">081255507734 <span style="color:var(--after)">in the text</span><br><s>08125550773</s> <span style="color:var(--before)">not in the text</span></p>
+        <p>A near-miss is how a wrong phone number gets in, so it stays amber.</p>
+        <span class="tag">tests/unit/gate.test.ts:78</span>
+      </article>
+      <article class="card e">
+        <svg class="ico" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 3h18v26l-3-2-3 2-3-2-3 2-3-2-3 2z"/><path d="M11 9h10M11 13h10M11 17h6"/></svg><h3>The receipt can fail.</h3>
+        <p>Requests are searched for the message's words, raw, URL-encoded and JSON-escaped. A planted canary must be caught.</p>
+        <span class="canary">CANARY · S3 words planted in a request → caught: 14 words, 83 bytes</span>
+        <span class="tag">tests/unit/ledger.test.ts:25</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="sec sheet-band" id="measured" aria-labelledby="h-measured" style="padding:92px 0">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><p class="label"><i>C</i> Held-out slip</p><h2 id="h-measured">The numbers, including the three we missed.</h2></div>
+      <p>45 message–form pairs, written without sight of any bench result and hashed before the first run. Run once on the release, 3 repeats, synthetic data, one laptop.</p>
+    </div>
+    <div class="slip" role="table" aria-label="Held-out results against the bars we aimed for">
+      <div class="slip-row head" role="row"><span role="columnheader">Measure</span><span role="columnheader">Got</span><span role="columnheader">Aimed for</span><span role="columnheader">Verdict</span></div>
+      <div class="slip-row" role="row"><div class="k" role="cell"><b>Strict field accuracy</b><span>every box compared with one clerk's answer key</span></div><span class="v" role="cell">80.7%<svg class="gauge" viewBox="0 0 200 22" role="img" aria-label="80.7 percent against an aim of 90 percent"><line class="tr" x1="4" y1="8" x2="196" y2="8"/><line class="got" x1="4" y1="8" x2="158.9" y2="8"/><line class="aimt" x1="176.8" y1="1" x2="176.8" y2="15"/><text x="176.8" y="22" text-anchor="middle">aim</text></svg></span><span class="aim" role="cell">≥ 90%</span><span class="missed" role="cell">Missed</span></div>
+      <div class="slip-row" role="row"><div class="k" role="cell"><b>Wrong value shown as found</b><span>mostly free-text notes; 2.0% in name, phone, address, postal boxes</span></div><span class="v" role="cell">5.9%<svg class="gauge" viewBox="0 0 200 22" role="img" aria-label="5.9 percent against an aim of at most 3 percent"><line class="tr" x1="4" y1="8" x2="196" y2="8"/><line class="got" x1="4" y1="8" x2="117.3" y2="8"/><line class="aimt" x1="61.6" y1="1" x2="61.6" y2="15"/><text x="61.6" y="22" text-anchor="middle">aim</text></svg></span><span class="aim" role="cell">≤ 3%</span><span class="missed" role="cell">Missed</span></div>
+      <div class="slip-row" role="row"><div class="k" role="cell"><b>Warm median per fill</b><span>Nano on an M1 Max, mean of 3 repeats</span></div><span class="v" role="cell">2.34 s<svg class="gauge" viewBox="0 0 200 22" role="img" aria-label="2.34 seconds against an aim of at most 2 seconds"><line class="tr" x1="4" y1="8" x2="196" y2="8"/><line class="got" x1="4" y1="8" x2="153.8" y2="8"/><line class="aimt" x1="132.0" y1="1" x2="132.0" y2="15"/><text x="132.0" y="22" text-anchor="middle">aim</text></svg></span><span class="aim" role="cell">≤ 2 s</span><span class="missed" role="cell">Missed</span></div>
+      <div class="slip-row" role="row"><div class="k" role="cell"><b>Valid JSON, on-device</b><span>every batch reported <code>on_device</code></span></div><span class="v" role="cell">135/135</span><span class="aim" role="cell">all</span><span class="okay" role="cell">met</span></div>
+    </div>
+    <div class="measured-foot">
+      <div><b>17.7%</b>of boxes left amber: the cost, a second of your eyes each.</div>
+      <div><b>+0.1 pt</b>from the cloud teacher on form C (78.3% → 78.4%, bench). It adds little.</div>
+      <div><b>180 + 45</b>bench and held-out pairs, in the repo with hashes. <a href="/bench/">Tables on /bench</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec honest" aria-labelledby="h-honest">
+  <div class="wrap honest-grid">
+    <blockquote>
+      <p class="label" id="h-honest">Honest by design</p>
+      <p class="pull">&ldquo;We aimed for three bars and missed all three&rdquo;</p>
+      <cite class="attr">— README · Engineering Rigor</cite>
+    </blockquote>
+    <div>
+      <blockquote class="small-q"><p>&ldquo;the code gate checks that a value is <em>in the paste</em>, not that it is the <em>right</em> part&rdquo;</p><cite class="attr">— README · Honest limits 2</cite></blockquote>
+      <blockquote class="small-q"><p>&ldquo;The cloud teacher is a measured experiment, not a selling point, and it only ever sees the empty form.&rdquo;</p><cite class="attr">— README · Honest limits 3</cite></blockquote>
+      <p style="margin:0;font-size:15px"><a href="https://github.com/edycutjong/pastewise#honest-limits-8">All eight limits in the README</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="faq" aria-labelledby="h-faq">
+  <div class="wrap">
+    <div class="sec-head"><div><h2 id="h-faq">Questions a judge would ask</h2></div></div>
+    <div class="faq">
+      <details open><summary>Is the message really never sent?</summary><p>With Gemini Nano, fills run <code>ONLY_ON_DEVICE</code>. The hosted check saw 0 requests during 4 fills and 0 message words in any request; a planted canary was caught. The <a href="/receipt/">receipt page</a> shows the log. It covers this page's requests, not the whole browser.</p></details>
+      <details><summary>No Nano? Here is what you still get.</summary><p>A plain notice, a recorded run labelled as recorded, and a consent sheet showing the bytes before one message goes to the cloud. Nothing is sent before Yes; the fill is labelled <code>in_cloud</code>. The gate above works without Nano too.</p></details>
+      <details><summary>Then what does the cloud do?</summary><p>It reads the empty form and writes hints for cryptic boxes. Measured: +0.1 points on the hard form. Small, and we say so.</p></details>
+      <details><summary>Why do some boxes stay amber?</summary><p>Code could not accept them: not in your text, wrong format, two phone numbers, an assumed year, or a recipient name. Amber costs a second; a wrong blue box costs an error.</p></details>
+      <details><summary>Does it work on any website?</summary><p>No. It is a hosted web app with three forms; there is no extension, so it does not fill other sites.</p></details>
+      <details><summary>What is synthetic?</summary><p>Every message: invented people, phone numbers in the 5550 block. Nothing on the fill path is mocked.</p></details>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div><a class="brand" href="/about/"><img src="/icon.svg" alt="" width="30" height="30"><span>PASTEWISE</span></a>
+        <p>Order messages fill the form on your laptop. Built for Build with Hybrid AI on Devpost.</p></div>
+      <div><h3>Use it</h3><ul><li><a href="/">Try it live</a></li><li><a href="/receipt/">Network receipt</a></li><li><a href="/bench/">Bench numbers</a></li></ul></div>
+      <div><h3>Read it</h3><ul><li><a href="/pitch/">Pitch deck</a></li><li><a href="https://github.com/edycutjong/pastewise">Source code</a></li><li><a href="https://github.com/edycutjong/pastewise/blob/main/LICENSE">Apache-2.0</a></li></ul></div>
+    </div>
+    <p class="stamp-line">Built from evidence at 252d373 · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
+  </div>
+</footer>
+<script src="/site/gate.js"></script>
+<script>
+/* Shared by /about and /pitch. The desk re-checks the recorded model answers with the shipped gate (gate.js, built from src/gate).
+   The markup already holds the final state, so no-JS, print and screenshots see the finished copy; JS only replays and re-checks. */
+(function () {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+  const reduced = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function Desk(root) {
+    const data = JSON.parse($("script.pw-data", root).textContent);
+    const G = window.PastewiseGate;
+    const ta = $(".pw-ta", root);
+    const mirror = $(".pw-mirror", root);
+    const fields = Object.fromEntries($$(".pw-f", root).map((el) => [el.dataset.key, el]));
+    const proposed = Object.fromEntries(data.fields.map((f) => [f.key, f.proposed]));
+    let timers = [];
+    let current = data.paste;
+
+    function gate(paste) {
+      return G ? G.gateForm(paste, data.spec, proposed, data.today) : null;
+    }
+    function why(key, r) {
+      if (r.state === "found") return "found in your text";
+      if (r.state === "empty") return "";
+      let t = esc(G.REASON_TEXT[r.reason] || r.reason || "");
+      if (r.reason === "check_by_hand" && r.value) t += ` &mdash; the model suggested <span class="said">&ldquo;${esc(r.value)}&rdquo;</span>`;
+      if (r.reason === "not_in_text" && proposed[key]) t += ` &mdash; the model wrote <span class="said">&ldquo;${esc(clip(proposed[key]))}&rdquo;</span>`;
+      if (r.reason === "two_candidates" && r.candidates) t += "<br>" + r.candidates.map((c) => `<span class="pw-chip">${esc(c.display)}</span>`).join("");
+      return t;
+    }
+    function clip(s) {
+      const a = Array.from(s);
+      return a.length > 34 ? "…" + a.slice(-30).join("") : s;
+    }
+    function render(paste, results) {
+      const marks = [];
+      for (const [key, r] of Object.entries(results)) {
+        const el = fields[key];
+        if (!el) continue;
+        el.classList.remove("found", "amber", "empty");
+        el.classList.add(r.state);
+        $(".pw-v", el).textContent = r.state === "empty" ? "" : r.value || "";
+        $(".pw-why", el).innerHTML = why(key, r);
+        $(".pw-box", el).setAttribute("aria-label", `${el.dataset.cap}: ${r.state === "found" ? r.value + ", found in your text" : r.state === "amber" ? (r.value || "blank") + ", amber, " + (G.REASON_TEXT[r.reason] || r.reason) : "empty"}`);
+        if (r.state === "found" || r.reason === "check_by_hand") for (const s of r.spans || []) marks.push([s[0], s[1], key, ""]);
+        if (r.reason === "two_candidates") for (const c of r.candidates || []) if (c.span) marks.push([c.span[0], c.span[1], key, "cand"]);
+      }
+      marks.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
+      let out = "", at = 0;
+      for (const [s, e, key, cls] of marks) {
+        if (s < at) continue; // overlapping spans: keep the first
+        out += esc(paste.slice(at, s)) + `<mark data-k="${key}"${cls ? ` class="${cls}"` : ""}>${esc(paste.slice(s, e))}</mark>`;
+        at = e;
+      }
+      mirror.innerHTML = out + esc(paste.slice(at)) + "\n";
+    }
+    function hot(key, on) {
+      $$(`mark[data-k="${key}"]`, root).forEach((m) => m.classList.toggle("hot", on));
+      fields[key] && fields[key].classList.toggle("hot", on);
+    }
+    for (const [key, el] of Object.entries(fields)) {
+      const box = $(".pw-box", el);
+      box.addEventListener("mouseenter", () => hot(key, true));
+      box.addEventListener("mouseleave", () => hot(key, false));
+      box.addEventListener("focus", () => hot(key, true));
+      box.addEventListener("blur", () => hot(key, false));
+    }
+    mirror.addEventListener("mouseover", (e) => e.target.dataset && e.target.dataset.k && hot(e.target.dataset.k, true));
+    mirror.addEventListener("mouseout", (e) => e.target.dataset && e.target.dataset.k && hot(e.target.dataset.k, false));
+
+    // self-check: the shipped gate, run here on the recorded answers, must reproduce the recorded run
+    const check = $("[data-selfcheck]", root);
+    if (G) {
+      const r = gate(data.paste);
+      const n = data.fields.filter((f) => r[f.key] && r[f.key].state === f.recorded.state && (r[f.key].value || "") === (f.recorded.value || "")).length;
+      if (check) check.textContent = `${n}/${data.fields.length} boxes match the recording`;
+      render(data.paste, r);
+    } else if (check) check.textContent = "gate.js did not load: showing the recorded result";
+
+    // live edits: the model's answers stay fixed (recorded), the code gate re-checks them against your text
+    // live receipt: requests this page starts while the gate is working (a replay, or within 1 s of an edit)
+    let reqs = 0;
+    const windows = [];
+    const reqEl = $("[data-reqs]", root);
+    const busy = (ms) => windows.push([performance.now(), performance.now() + ms]);
+    try {
+      new PerformanceObserver((l) => {
+        for (const e of l.getEntries()) if (windows.some(([a, b]) => e.startTime >= a && e.startTime <= b)) reqs++;
+        if (reqEl) reqEl.textContent = String(reqs);
+      }).observe({ type: "resource" });
+    } catch (_) { /* no observer in this browser: the counter is not shown as measured */ if (reqEl) reqEl.textContent = "n/a"; }
+    if (ta && G) {
+      ta.value = data.paste;
+      ta.addEventListener("input", () => {
+        root.classList.add("edited");
+        busy(1000);
+        stop();
+        current = ta.value;
+        render(current, gate(current));
+        $$(".pw-f", root).forEach((f) => f.classList.add("pressed"));
+      });
+    }
+    function stop() {
+      timers.forEach(clearTimeout);
+      timers = [];
+      root.classList.remove("armed", "reading");
+      root.classList.add("settled");
+    }
+    function play() {
+      if (!G || reduced()) return stop();
+      stop();
+      if (ta && ta.value !== data.paste) {
+        ta.value = data.paste;
+        current = data.paste;
+      }
+      render(data.paste, gate(data.paste));
+      root.classList.remove("settled");
+      $$(".pw-f", root).forEach((f) => f.classList.remove("pressed"));
+      root.classList.add("armed");
+      const readMs = Math.round(data.totalMs / data.speed);
+      busy(readMs + 2000);
+      root.style.setProperty("--read-ms", readMs + "ms");
+      void root.offsetWidth;
+      root.classList.add("reading");
+      const order = $$(".pw-f", root);
+      timers.push(setTimeout(() => {
+        root.classList.remove("reading");
+        order.forEach((f, i) => timers.push(setTimeout(() => {
+          f.classList.add("pressed");
+          $$(`mark[data-k="${f.dataset.key}"]`, root).forEach((m) => m.classList.add("on"));
+        }, i * 110)));
+        timers.push(setTimeout(stop, order.length * 110 + 400));
+      }, readMs));
+    }
+    $$("[data-replay]", root).forEach((b) => b.addEventListener("click", play));
+    return { play, stop };
+  }
+
+  function countUps() {
+    const els = $$("[data-count]");
+    if (!els.length || reduced() || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver((ents) => {
+      for (const e of ents) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const el = e.target, to = parseFloat(el.dataset.count), dec = +(el.dataset.dec || 0), pre = el.dataset.pre || "", suf = el.dataset.suf || "";
+        const fin = el.textContent, t0 = performance.now(), dur = 900;
+        const step = (t) => {
+          const k = Math.min(1, (t - t0) / dur), v = to * (1 - Math.pow(1 - k, 3));
+          el.textContent = k < 1 ? pre + v.toFixed(dec) + suf : fin;
+          if (k < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      }
+    }, { threshold: 0.6 });
+    els.forEach((el) => io.observe(el));
+  }
+
+  function receipts() {
+    const els = $$("[data-typer]");
+    if (!els.length || reduced() || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver((ents) => {
+      for (const e of ents) {
+        if (!e.isIntersecting) continue;
+        io.unobserve(e.target);
+        const lines = $$("li", e.target);
+        e.target.classList.add("armed");
+        lines.forEach((li, i) => setTimeout(() => li.classList.add("on"), 140 + i * 130));
+        setTimeout(() => { e.target.classList.remove("armed"); lines.forEach((li) => li.classList.remove("on")); }, 140 + lines.length * 130 + 600);
+      }
+    }, { threshold: 0.4 });
+    els.forEach((el) => io.observe(el));
+  }
+
+  window.PWSite = { Desk, countUps, receipts };
+})();
+
+(function(){
+  var desk=document.querySelector(".hero .pw-desk"), d=PWSite.Desk(desk), played=false;
+  function go(){ if(!played){ played=true; setTimeout(d.play, 520); } }
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(e){ if(e[0].isIntersecting){ io.disconnect(); go(); } },{threshold:.35});
+    io.observe(desk);
+  } else go();
+  PWSite.countUps(); PWSite.receipts();
+  setTimeout(function(){ document.body.classList.add("settled-page"); }, 1600);
+})();
+</script>
+</body>
+</html>
