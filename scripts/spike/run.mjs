@@ -1,6 +1,6 @@
 // P1a spike driver: serves the static export, opens /spike/ in the installed Chrome
 // (profile with Gemini Nano downloaded), and proves each Firebase AI Logic call.
-// Usage: SETFILE=<set.json> OUT=<dir> PW_APPCHECK_DEBUG_TOKEN=<token> REPEATS=3 node scripts/spike/run.mjs
+// Usage: [BASE_URL=https://<deploy>] SETFILE=<set.json> OUT=<dir> PW_APPCHECK_DEBUG_TOKEN=<token> REPEATS=3 node scripts/spike/run.mjs
 import fs from "node:fs";
 import path from "node:path";
 import http from "node:http";
@@ -14,6 +14,7 @@ const SET = JSON.parse(fs.readFileSync(process.env.SETFILE, "utf8"));
 const REPEATS = Number(process.env.REPEATS ?? 3);
 const PROFILE = process.env.PW_CHROME_PROFILE ?? `${process.env.HOME}/.cache/shape-nano-chrome`;
 const PORT = 3102;
+const BASE = process.env.BASE_URL ?? `http://localhost:${PORT}`; // set BASE_URL to test a deployed build
 fs.mkdirSync(OUT, { recursive: true });
 
 // ---- prompt (same text as the on-device kill test, prompt v3) ----
@@ -58,7 +59,7 @@ const emptyFormText = (form) =>
 // ---- static server for out/ ----
 const OUTDIR = path.join(ROOT, "out");
 const TYPES = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json", ".ico": "image/x-icon", ".txt": "text/plain", ".svg": "image/svg+xml" };
-const srv = http
+const srv = process.env.BASE_URL ? { close() {} } : http
   .createServer((q, r) => {
     let p = decodeURIComponent(new URL(q.url, "http://x").pathname);
     if (p.endsWith("/")) p += "index.html";
@@ -98,6 +99,30 @@ if (process.env.PW_APPCHECK_DEBUG_TOKEN) {
   }, process.env.PW_APPCHECK_DEBUG_TOKEN);
 }
 
+// Record the options the SDK passes to LanguageModel.create / prompt (proves createOptions + responseConstraint pass through).
+await page.evaluateOnNewDocument(() => {
+  window.__pwCreateLog = [];
+  const wrap = () => {
+    const LM = globalThis.LanguageModel;
+    if (!LM || LM.__pwWrapped) return;
+    const create = LM.create.bind(LM);
+    LM.create = async (opts) => {
+      const { monitor, signal, ...rest } = opts ?? {};
+      window.__pwCreateLog.push({ create: rest });
+      const session = await create(opts);
+      const prompt = session.prompt.bind(session);
+      session.prompt = (input, po) => {
+        window.__pwCreateLog.push({ promptOptionKeys: Object.keys(po ?? {}), hasResponseConstraint: !!po?.responseConstraint });
+        return prompt(input, po);
+      };
+      return session;
+    };
+    LM.__pwWrapped = true;
+  };
+  wrap();
+  document.addEventListener("DOMContentLoaded", wrap);
+});
+
 // Network log: every request from every frame, tagged with the phase it happened in.
 let phase = "load";
 const net = [];
@@ -107,9 +132,9 @@ cdp.on("Network.requestWillBeSent", (e) =>
   net.push({ phase, url: e.request.url.split("?")[0], method: e.request.method, postBytes: e.request.postData ? Buffer.byteLength(e.request.postData) : 0 }),
 );
 const AI_HOSTS = /firebasevertexai\.googleapis\.com|generativelanguage\.googleapis\.com/;
-const netIn = (ph) => net.filter((n) => n.phase === ph && !n.url.startsWith(`http://localhost:${PORT}`) && !n.url.startsWith("data:"));
+const netIn = (ph) => net.filter((n) => n.phase === ph && !n.url.startsWith(BASE) && !n.url.startsWith("data:"));
 
-await page.goto(`http://localhost:${PORT}/spike/`, { waitUntil: "networkidle0" });
+await page.goto(`${BASE}/spike/`, { waitUntil: "networkidle0" });
 await page.waitForFunction(() => document.querySelector("#status")?.textContent === "ready", { timeout: 30000 });
 const S = {};
 S.userAgent = await page.evaluate(() => navigator.userAgent);
@@ -174,7 +199,12 @@ S.consent = await page.evaluate((p, s, m) => window.__pwSpike.consentFill(p, s, 
 S.consentNetwork = { aiEndpoint: netIn("consent").filter((n) => AI_HOSTS.test(n.url)).length };
 console.log("consent", S.consent.ms + "ms", S.consent.inferenceSource, S.consent.error ?? S.consent.text?.slice(0, 80));
 
-S.allExternalHosts = [...new Set(net.filter((n) => /^https?:/.test(n.url) && !n.url.startsWith(`http://localhost:${PORT}`)).map((n) => new URL(n.url).host))].sort();
+S.sdkPassThrough = await page.evaluate(() => {
+  const log = window.__pwCreateLog ?? [];
+  return { creates: log.filter((x) => x.create).length, uniqueCreateOptions: [...new Set(log.filter((x) => x.create).map((x) => JSON.stringify(x.create)))].map((x) => JSON.parse(x)), prompts: log.filter((x) => "hasResponseConstraint" in x).length, promptsWithResponseConstraint: log.filter((x) => x.hasResponseConstraint).length };
+});
+console.log("sdkPassThrough", JSON.stringify(S.sdkPassThrough));
+S.allExternalHosts = [...new Set(net.filter((n) => /^https?:/.test(n.url) && !n.url.startsWith(BASE)).map((n) => new URL(n.url).host))].sort();
 S.finishedAt = new Date().toISOString();
 fs.writeFileSync(path.join(OUT, "spike-summary.json"), JSON.stringify(S, null, 1));
 console.log("hosts", S.allExternalHosts.join(", "));
