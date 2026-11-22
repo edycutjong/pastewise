@@ -23,6 +23,7 @@ import ConsentSheet, { type ConsentState } from "./ConsentSheet";
 import FirstRunOverlay from "./FirstRunOverlay";
 import TeachDrawer, { type Taught } from "./TeachDrawer";
 import type { ReplayData } from "./Replay";
+import { SAMPLES } from "../forms/samples";
 import replayS1 from "../../evidence/replay/s1.json";
 import { FORMS, formById, type InputDef } from "@/forms/defs";
 import type { FormSpec } from "@/forms/types";
@@ -580,6 +581,24 @@ export default function FillApp() {
                 }
               }}
             />
+          </div>
+          <div className="samples" role="group" aria-label="Try a sample message">
+            <span className="cap">No message handy? Try one</span>
+            {SAMPLES.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className="linkish"
+                data-testid={`sample-${s.id}`}
+                onClick={() => {
+                  setActive(s.form);
+                  setText(s.paste);
+                  setNotice(null);
+                }}
+              >
+                {s.label}
+              </button>
+            ))}
           </div>
           <div className={`count${text.length > cap ? " over" : ""}`}>
             {fmt(text.length)} / {fmt(cap)} characters

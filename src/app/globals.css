@@ -149,3 +149,7 @@ button.primary:focus-visible, button.ghost:focus-visible, .linkish:focus-visible
 .teach-btn:hover { background: var(--ink); color: var(--sheet); }
 .teach-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (prefers-reduced-motion: reduce) { .bar-fill, button, .tab, a { transition: none !important; } }
+
+.samples { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-top: 10px; }
+.samples .cap { font-size: 12px; }
+.samples .linkish { font-size: 13px; }

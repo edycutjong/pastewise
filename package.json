@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "type": "module",
   "scripts": {
     "dev": "next dev -p 3102",
@@ -13,7 +15,12 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "e2e": "playwright test",
-    "spike": "node scripts/spike/run.mjs"
+    "spike": "node scripts/spike/run.mjs",
+    "lint:fix": "eslint --fix",
+    "test:coverage": "vitest run --coverage",
+    "e2e:live": "playwright test -c playwright.live.config.ts",
+    "lighthouse": "lhci autorun",
+    "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build && npm run e2e"
   },
   "dependencies": {
     "firebase": "^13.4.0",
@@ -31,6 +38,8 @@
     "happy-dom": "^21.0.4",
     "puppeteer-core": "^25.18.1",
     "typescript": "^6.0.3",
-    "vitest": "^5.1.1"
+    "vitest": "^5.1.1",
+    "@vitest/coverage-v8": "^5.1.1",
+    "@lhci/cli": "^0.15.1"
   }
 }

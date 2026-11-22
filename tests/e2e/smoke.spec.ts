@@ -32,3 +32,11 @@ test("fill screen: the three sample forms are real labelled forms", async ({ pag
   await page.getByRole("tab", { name: "B · FRONT DESK" }).click();
   await expect(page.getByLabel("Check-in date")).toHaveAttribute("type", "date");
 });
+
+test("samples: one click loads a synthetic message and switches to its form", async ({ page }) => {
+  await page.goto("/");
+  await page.getByTestId("sample-S2").click();
+  await expect(page.locator("#paste")).toHaveValue(/double room for 3 nights/);
+  await expect(page.getByRole("tab", { name: "B · FRONT DESK" })).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByTestId("ledger-bytes")).toHaveText("0 bytes found");
+});

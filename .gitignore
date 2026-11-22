@@ -44,3 +44,6 @@ PRODUCT.md
 __pycache__/
 npm-debug.log*
 .vercel
+
+# lighthouse
+/.lighthouseci/

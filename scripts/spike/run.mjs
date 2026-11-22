@@ -107,6 +107,7 @@ await page.evaluateOnNewDocument(() => {
     if (!LM || LM.__pwWrapped) return;
     const create = LM.create.bind(LM);
     LM.create = async (opts) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars -- stripped so the log shows only the options that matter
       const { monitor, signal, ...rest } = opts ?? {};
       window.__pwCreateLog.push({ create: rest });
       const session = await create(opts);
