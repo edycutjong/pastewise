@@ -5,7 +5,7 @@
 import { digits, type Span } from "./normalize";
 import { amber, empty, found, type GateResult } from "./types";
 
-export type PhoneRun = { digits: string; display: string; span: Span };
+export type PhoneRun = { digits: string; display: string; span: Span; alts: { digits: string; span: Span }[] };
 
 const RUN = /\+?\d(?:[ \t\-.()]{0,2}\d)*/g;
 
@@ -15,23 +15,53 @@ export const normPhone = (d: string, raw = "") =>
 
 const qualifies = (raw: string, d: string) => d.length >= 9 && d.length <= 15 && (d.startsWith("0") || raw.startsWith("+"));
 
+type Group = { text: string; start: number; end: number; nd: number };
+
+/**
+ * Phone-like runs. A raw run of digits/separators is split into space-separated groups, then:
+ *  - a group starting with 0 or + after >= 9 digits starts a NEW candidate ("0812-… 0813-…" = two phones);
+ *  - leading groups are dropped until the rest is phone-like ("No. 12 0812 5550 7734", "50241 0812 …");
+ *  - a short trailing group ("0812 5550 7734 12") is kept as an alternative reading, never a separate phone.
+ */
 export function phoneRuns(paste: string): PhoneRun[] {
   const out: PhoneRun[] = [];
   const seen = new Set<string>();
   for (const m of paste.matchAll(RUN)) {
-    // a run may have swallowed a short number in front ("No. 12 0812 5550 7734", "50241 0812…"):
-    // try the run, then the run without its leading space-separated groups, and keep the first phone-like one
-    const text = m[0];
-    const starts = [0, ...[...text.matchAll(/[ \t]+(?=[+\d])/g)].map((g) => g.index! + g[0].length)];
-    for (const st of starts) {
-      const raw = text.slice(st).trim();
-      const d = normPhone(digits(raw), raw);
-      if (!qualifies(raw, d)) continue;
-      if (!seen.has(d)) {
-        seen.add(d);
-        out.push({ digits: d, display: raw, span: [m.index! + st, m.index! + text.length] });
+    const groups: Group[] = [];
+    for (const g of m[0].matchAll(/[^ \t]+/g)) {
+      const start = m.index! + g.index!;
+      groups.push({ text: g[0], start, end: start + g[0].length, nd: digits(g[0]).length });
+    }
+    const chunks: Group[][] = [];
+    let cur: Group[] = [];
+    for (const g of groups) {
+      const curDigits = cur.reduce((n, x) => n + x.nd, 0);
+      if (curDigits >= 9 && /^[0+]/.test(g.text)) {
+        chunks.push(cur);
+        cur = [];
       }
-      break;
+      cur.push(g);
+    }
+    if (cur.length) chunks.push(cur);
+    for (const chunk of chunks) {
+      for (let st = 0; st < chunk.length; st++) {
+        const part = chunk.slice(st);
+        const raw = paste.slice(part[0].start, part[part.length - 1].end);
+        const d = normPhone(digits(raw), raw);
+        if (!qualifies(raw, d)) continue;
+        if (!seen.has(d)) {
+          seen.add(d);
+          const alts: PhoneRun["alts"] = [];
+          const last = part[part.length - 1];
+          if (part.length > 1 && last.nd <= 3) {
+            const rawT = paste.slice(part[0].start, part[part.length - 2].end);
+            const dT = normPhone(digits(rawT), rawT);
+            if (qualifies(rawT, dT)) alts.push({ digits: dT, span: [part[0].start, part[part.length - 2].end] });
+          }
+          out.push({ digits: d, display: raw, span: [part[0].start, last.end], alts });
+        }
+        break;
+      }
     }
   }
   return out;
@@ -40,7 +70,9 @@ export function phoneRuns(paste: string): PhoneRun[] {
 export function gatePhone(paste: string, proposed: string): GateResult {
   const runs = phoneRuns(paste);
   const d = normPhone(digits(proposed), proposed);
-  const hit = runs.find((r) => r.digits === d);
+  const exact = runs.find((r) => r.digits === d);
+  const alt = exact ? undefined : runs.flatMap((r) => r.alts).find((a) => a.digits === d);
+  const hit = exact ?? (alt ? { digits: alt.digits, span: alt.span } : undefined);
   if (runs.length >= 2) {
     return amber("two_candidates", hit ? hit.digits : "", proposed, {
       candidates: runs.map((r) => ({ value: r.digits, display: r.display, span: r.span })),

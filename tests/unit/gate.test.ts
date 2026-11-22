@@ -70,6 +70,15 @@ describe("phone", () => {
     expect(phoneRuns("Semarang 50241 0812 5550 7734").map((r) => [r.digits, r.display])).toEqual([["081255507734", "0812 5550 7734"]]);
     expect(g("send 2 0812 5550 7734", f("phone", "phone"), "0812 5550 7734").state).toBe("found");
   });
+  it("two phones separated by one space stay two candidates", () => {
+    expect(phoneRuns("call 0812-5550-7734 0813-5550-1111").map((r) => r.digits)).toEqual(["081255507734", "081355501111"]);
+    expect(g("call 0812-5550-7734 0813-5550-1111", f("phone", "phone"), "0813-5550-1111").reason).toBe("two_candidates");
+  });
+  it("a short trailing number is an alternative reading, not a second phone", () => {
+    expect(phoneRuns("0812 5550 7734 12 pcs")).toHaveLength(1);
+    expect(g("0812 5550 7734 12 pcs", f("phone", "phone"), "081255507734")).toMatchObject({ state: "found", value: "081255507734" });
+    expect(g("0812 5550 7734 12 pcs", f("phone", "phone"), "08125550773412").state).toBe("found");
+  });
   it("62 -> 0 only for +62 or a bare 628… mobile; a 62… order ref stays as it is", () => {
     expect(phoneRuns("ref 6212345678").map((r) => r.digits)).toEqual([]);
     expect(phoneRuns("wa 6281255507734")[0].digits).toBe("081255507734");

@@ -242,6 +242,7 @@ export default function FillApp() {
     const t0 = clock();
     // the run counts only while it is still this form's latest run, the message is unchanged and its tab is still open
     const live = () => runIdRef.current[formId] === runId && textRef.current === paste && activeRef.current === formId;
+    let dropped = false; // any batch that landed while the run was not live makes the whole run discarded
     let results: BatchResult[];
     try {
       results = await fillForm(s, paste, {
@@ -256,6 +257,7 @@ export default function FillApp() {
       },
       onBatch: (b) => {
         if (live()) applyBatch(formId, runId, s, b, today);
+        else dropped = true;
       },
     });
     } catch (e) {
@@ -268,7 +270,7 @@ export default function FillApp() {
     }
     const totalMs = Math.round(clock() - t0);
     filledOnce.current = true;
-    const discarded = !live();
+    const discarded = dropped || !live();
     if (discarded) setNotice("The message or the form changed while it was being read, so that result was dropped. Press Fill again.");
     setRuns((prev) => {
       const r = prev[formId];
