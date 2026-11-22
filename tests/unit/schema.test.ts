@@ -57,6 +57,12 @@ describe("readForm (live DOM -> FieldSpec)", () => {
     const a = readForm(render("A"), "A", "Shipping / order form");
     expect(a.fields.find((f) => f.key === "postal_code")).toMatchObject({ pattern: "\\d{5}", maxLength: 5 });
   });
+  it("keys stay plain and unique: empty names, prototype names and a second control with the same name are skipped", () => {
+    document.body.innerHTML = `<form id="g"><input name="city"><input name="city"><input name=" "><input name="__proto__"><input name="constructor"><input name="zip"></form>`;
+    const s = readForm(document.getElementById("g") as HTMLFormElement, "G", "Generic");
+    expect(s.fields.map((f) => f.key)).toEqual(["city", "zip"]);
+    expect(Object.keys(toJsonSchema(s.fields).properties)).toEqual(["city", "zip"]);
+  });
   it("skips hidden inputs and buttons; reads captions from label[for]", () => {
     const s = readForm(render("B"), "B", "Hotel");
     expect(s.fields.map((f) => f.key)).not.toContain("csrf");

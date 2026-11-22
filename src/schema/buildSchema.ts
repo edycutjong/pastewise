@@ -93,6 +93,8 @@ export function fieldFromControl(el: El, root: ParentNode, hint?: Hint | null): 
   return spec;
 }
 
+const RESERVED_KEYS = new Set(["__proto__", "constructor", "prototype"]);
+
 /** Reads every named control of a live form, in DOM order. */
 export function readForm(form: HTMLFormElement, id: string, title: string, hints: Hint[] = []): FormSpec {
   const byKey = new Map<string, Hint>();
@@ -105,7 +107,16 @@ export function readForm(form: HTMLFormElement, id: string, title: string, hints
       (el.getAttribute("type") ?? "").toLowerCase(),
     ),
   );
-  return { id, title, fields: controls.map((el) => fieldFromControl(el, form, byKey.get(el.name))) };
+  // a key must be usable as a plain JSON-schema / object key: no empty names, no prototype names, and one field per name
+  // (a second control with the same name is skipped, so two boxes never collapse into one schema key)
+  const seen = new Set<string>();
+  const usable = controls.filter((el) => {
+    const k = el.name;
+    if (!k.trim() || RESERVED_KEYS.has(k) || seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  return { id, title, fields: usable.map((el) => fieldFromControl(el, form, byKey.get(el.name))) };
 }
 
 export function toJsonSchema(fields: FieldSpec[]): JsonSchema {
