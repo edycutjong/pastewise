@@ -85,8 +85,10 @@ export function fieldFromControl(el: El, root: ParentNode, hint?: Hint | null): 
     const raw = el.getAttribute(a);
     if (raw !== null && raw.trim() !== "" && Number.isFinite(Number(raw))) spec[a] = Number(raw);
   }
+  // pattern only constrains these input types in the browser (not textarea, select, number, date)
   const pat = el.getAttribute("pattern");
-  if (pat) spec.pattern = pat;
+  const ptype = (el.getAttribute("type") ?? "text").toLowerCase();
+  if (pat && el.tagName.toLowerCase() === "input" && ["text", "tel", "email", "search", "url", "password"].includes(ptype)) spec.pattern = pat;
   const ph = el.getAttribute("placeholder");
   if (ph) spec.placeholder = ph;
   if (hint) spec.hint = hint.meaning;

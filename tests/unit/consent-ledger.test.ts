@@ -20,7 +20,7 @@ describe("consent total, attributed by content", () => {
   it("the same message tracked twice (stalled on-device run, then the consent run): the request belongs to the newer run", async () => {
     trackRun("on-device-run", MSG, []);
     trackRun("consent-run", MSG, []);
-    markConsentRun("consent-run", BYTES);
+    markConsentRun("consent-run", MSG);
     expect(ledger.consentBytes()).toBe(0); // nothing has left yet
     await window.fetch(AI, { method: "POST", body: body(`Fill the form from this message:\n${MSG}`) });
     expect(ledger.records().at(-1)?.runId).toBe("consent-run");
@@ -36,10 +36,21 @@ describe("consent total, attributed by content", () => {
     expect(ledger.consentBytes()).toBe(2 * BYTES);
     expect(ledger.version()).not.toBe(v);
   });
+  it("a short consented message with no matchable tokens still counts; a request sharing one word with it does not", async () => {
+    const SHORT = "Ali 3 pcs";
+    trackRun("short-run", SHORT, []);
+    markConsentRun("short-run", SHORT);
+    const before = ledger.consentBytes();
+    await window.fetch(AI, { method: "POST", body: body(`Fill the form from this message:\n${SHORT}`) });
+    expect(ledger.consentBytes()).toBe(before + new TextEncoder().encode(SHORT).length);
+    await window.fetch(AI, { method: "POST", body: body("Ali asked about the Semarang depot") });
+    expect(ledger.consentBytes()).toBe(before + new TextEncoder().encode(SHORT).length);
+  });
   it("a non-AI request carrying the message is not counted as sent with your Yes (it shows in the paste-bytes counter instead)", async () => {
+    const before = ledger.consentBytes();
     await window.fetch("/__egress_canary?m=" + encodeURIComponent(MSG));
-    expect(ledger.consentBytes()).toBe(2 * BYTES);
+    expect(ledger.consentBytes()).toBe(before);
     expect(ledger.records().at(-1)?.pasteBytesFound).toBeGreaterThan(0);
-    expect(sent.length).toBe(4);
+    expect(sent.length).toBe(6);
   });
 });

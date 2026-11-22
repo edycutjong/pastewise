@@ -420,7 +420,7 @@ export default function FillApp() {
       trackRun(runId, paste, vocabOf(s));
       // the ledger counts this message once per AI Logic request that actually carries it (a retry sends it again; a late request
       // still counts; nothing counts if no request went out)
-      markConsentRun(runId, new TextEncoder().encode(paste).length);
+      markConsentRun(runId, paste);
       setRuns((prev) => ({ ...prev, [formId]: { runId, paste, boxes: {}, batches: [], ms: 0, done: false } }));
       setViaCloud(true);
       setPhase("preparing");

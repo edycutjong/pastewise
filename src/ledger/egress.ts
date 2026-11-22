@@ -16,6 +16,7 @@ export type LedgerRecord = {
   hits: number; // distinct paste tokens found (the tokens themselves are never stored)
   runId: string | null;
   unreadable?: boolean; // body type the ledger cannot read (stream): counted as a blind spot
+  consentRunId?: string; // an AI Logic request carrying a message sent after an explicit Yes
 };
 
 type Run = { runId: string; tokens: string[] };
@@ -23,14 +24,25 @@ const runs: Run[] = [];
 const records: LedgerRecord[] = [];
 const listeners = new Set<() => void>();
 let installed = false;
-/** Runs sent after an explicit Yes on the consent sheet -> that message's byte length. The "sent with your Yes" total is derived
- *  from the records themselves: every AI Logic request whose body carries that run's message counts once, including a late
- *  request that lands after the run has returned; a request without the message (e.g. the empty-form teacher) never counts. */
-const consentRuns = new Map<string, number>();
+/** Runs sent after an explicit Yes on the consent sheet. The "sent with your Yes" total is derived from the records: an AI Logic
+ *  request counts once (that message's byte length) when its URL or body contains the whole consented message, raw or as the
+ *  JSON-escaped string the SDK sends, whenever it lands (a late request after the run returned still counts). Exact content, not
+ *  token overlap, so a short message with no matchable tokens still counts and a request sharing one word with it does not.
+ *  The message is held in this tab's memory only, to recognise it; it is never stored or sent anywhere by the ledger. */
+const consentRuns = new Map<string, { bytes: number; needles: string[] }>();
 
-export function markConsentRun(runId: string, messageBytes: number) {
-  consentRuns.set(runId, messageBytes);
+export function markConsentRun(runId: string, message: string) {
+  const json = JSON.stringify(message).slice(1, -1);
+  consentRuns.set(runId, { bytes: new TextEncoder().encode(message).length, needles: [...new Set([message, json])] });
   listeners.forEach((l) => l());
+}
+
+/** Newest consent run whose whole message appears in this AI Logic request, if any. */
+function consentRunFor(purpose: string, text: string): string | undefined {
+  if (purpose !== "AI Logic (cloud model)") return undefined;
+  let hit: string | undefined;
+  for (const [runId, c] of consentRuns) if (c.needles.some((n) => n && text.includes(n))) hit = runId;
+  return hit;
 }
 
 export function purposeOf(host: string): string {
@@ -63,16 +75,18 @@ function record(api: LedgerRecord["api"], url: string, body: string, unreadable 
     // ties go to the NEWER run: the same message re-sent (e.g. "use the cloud instead" after a stalled on-device run) belongs to the latest run
     if (f.bytes > 0 && f.bytes >= best.bytes) best = { bytes: f.bytes, hits: f.hits.length, runId: r.runId };
   }
+  const purpose = purposeOf(host);
   records.push({
     t: Math.round(performance.now()),
     api,
     host,
-    purpose: purposeOf(host),
+    purpose,
     size: new TextEncoder().encode(text).length - 1,
     pasteBytesFound: best.bytes,
     hits: best.hits,
     runId: best.runId,
     unreadable: unreadable || undefined,
+    consentRunId: consentRunFor(purpose, text),
   });
   listeners.forEach((l) => l());
 }
@@ -138,8 +152,7 @@ export function installLedger() {
 export const ledger = {
   records: () => records.slice(),
   totalPasteBytes: () => records.reduce((n, r) => n + r.pasteBytesFound, 0),
-  consentBytes: () =>
-    records.reduce((n, r) => n + (r.runId && r.purpose === "AI Logic (cloud model)" && consentRuns.has(r.runId) ? consentRuns.get(r.runId)! : 0), 0),
+  consentBytes: () => records.reduce((n, r) => n + (r.consentRunId ? (consentRuns.get(r.consentRunId)?.bytes ?? 0) : 0), 0),
   /** cheap snapshot key for useSyncExternalStore */
   version: () => `${records.length}:${records.reduce((n, r) => n + r.pasteBytesFound, 0)}:${consentRuns.size}`,
   subscribe(fn: () => void) {

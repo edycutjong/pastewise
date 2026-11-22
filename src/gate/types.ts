@@ -3,6 +3,7 @@ import type { Span } from "./normalize";
 export type Reason =
   | "not_in_text" // the value is not in the message
   | "format" // the value is in the wrong shape for this box
+  | "too_long" // the value is in the message but longer than the box allows
   | "two_candidates" // two or more phone numbers in the message
   | "year_assumed" // the message gives day + month only
   | "more_than_one_name"

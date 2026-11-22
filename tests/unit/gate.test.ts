@@ -53,7 +53,7 @@ describe("the box's own limits (maxlength, min/max, pattern)", () => {
     expect(g("Jakarta 10510", f("postal_code", "postal", "plain", { pattern: "\\d{5}", maxLength: 5 }), "10510").state).toBe("found");
   });
   it("a value longer than the box's maxlength stays amber", () => {
-    expect(g(S3, f("city", "text", "plain", { maxLength: 5 }), "Semarang").reason).toBe("format");
+    expect(g(S3, f("city", "text", "plain", { maxLength: 5 }), "Semarang").reason).toBe("too_long");
   });
   it("an unparsable pattern is ignored, as the browser ignores it", () => {
     expect(g("Jakarta 10510", f("postal_code", "postal", "plain", { pattern: "(" }), "10510").state).toBe("found");

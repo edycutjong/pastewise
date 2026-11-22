@@ -63,6 +63,11 @@ describe("readForm (live DOM -> FieldSpec)", () => {
     expect(s.fields.map((f) => f.key)).toEqual(["city", "zip"]);
     expect(Object.keys(toJsonSchema(s.fields).properties)).toEqual(["city", "zip"]);
   });
+  it("pattern is read only where the browser applies it (not on textarea / number)", () => {
+    document.body.innerHTML = `<form id="p"><textarea name="n" pattern="x+"></textarea><input name="q" type="number" pattern="1"><input name="t" pattern="\\d{5}"></form>`;
+    const s = readForm(document.getElementById("p") as HTMLFormElement, "P", "Pattern");
+    expect(s.fields.map((f) => [f.key, f.pattern])).toEqual([["n", undefined], ["q", undefined], ["t", "\\d{5}"]]);
+  });
   it("skips hidden inputs and buttons; reads captions from label[for]", () => {
     const s = readForm(render("B"), "B", "Hotel");
     expect(s.fields.map((f) => f.key)).not.toContain("csrf");
