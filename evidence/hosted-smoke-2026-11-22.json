@@ -1,16 +1,18 @@
 {
  "label": "synthetic S1 only",
  "base": "https://pastewise.edycu.dev/",
- "date": "2026-11-22T12:06:24.850Z",
- "commit": "d262b32",
+ "date": "2026-11-22T12:30:24.434Z",
+ "commit": "53d956f",
  "availability": "available",
+ "savedHints": "Hints on (saved copy)",
+ "fillHintsUsed": 0,
  "fill": {
   "done": true,
   "error": null,
   "sources": [
    "on_device"
   ],
-  "totalMs": 5244,
+  "totalMs": 7030,
   "states": {
    "cnee_nm": "found",
    "cnee_tel": "amber",
@@ -21,7 +23,7 @@
    "desc": "found",
    "pcs": "found",
    "svc": "found",
-   "rmks": "found"
+   "rmks": "amber"
   }
  },
  "ledgerAfterFill": [
@@ -44,15 +46,21 @@
    "hits": 0
   },
   {
-   "host": "pastewise.edycu.dev",
-   "purpose": "this site",
-   "size": 74,
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 1789,
    "hits": 0
   },
   {
    "host": "pastewise.edycu.dev",
    "purpose": "this site",
    "size": 72,
+   "hits": 0
+  },
+  {
+   "host": "pastewise.edycu.dev",
+   "purpose": "this site",
+   "size": 74,
    "hits": 0
   },
   {
@@ -70,22 +78,84 @@
   {
    "host": "pastewise.edycu.dev",
    "purpose": "this site",
-   "size": 69,
+   "size": 85,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 292,
    "hits": 0
   },
   {
    "host": "pastewise.edycu.dev",
    "purpose": "this site",
-   "size": 85,
+   "size": 69,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 292,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 292,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 415,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 292,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 631,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 292,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 293,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 416,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 293,
    "hits": 0
   }
  ],
  "teacher": {
   "hints": 10,
   "inferenceSource": "in_cloud",
-  "ms": 4107
+  "ms": 3282
  },
  "cspViolationsInPage": [],
  "pageErrors": [],
- "failedRequests": []
+ "failedRequests": [
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?gsessionid=REYRVwDMwpM net::ERR_ABORTED"
+ ]
 }

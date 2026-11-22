@@ -15,7 +15,7 @@ import { fillForm, type BatchResult } from "@/ai/fill";
 import { PROMPT_VERSION } from "@/ai/prompt";
 import { teachForm, teacherPayload, type TeachResult } from "@/ai/teacher";
 import type { Consent } from "@/ai/fill";
-import { rcNumber, rcString, cloudKillSwitch } from "@/lib/rc";
+import { rcNumber, rcString, cloudKillSwitch, rcSnapshot } from "@/lib/rc";
 import { formFingerprint } from "@/hints/fingerprint";
 import { readSaved } from "@/hints/store";
 import ConsentSheet, { type ConsentState } from "./ConsentSheet";
@@ -192,6 +192,7 @@ export default function FillApp() {
       scan: (t: string, tokens: string[]) => tokensFound(t, tokens),
       ledger: () => ledger.records(),
       versions: { prompt: PROMPT_VERSION, gate: GATE_VERSION },
+      rc: rcSnapshot,
     };
     (window as unknown as { __pastewise: typeof api }).__pastewise = api;
   }, [spec]);
@@ -256,6 +257,7 @@ export default function FillApp() {
 
   function openConsent(formId: string, paste: string, availability: string) {
     consentForm.current = formId;
+    setKill(cloudKillSwitch()); // read at the moment of asking, not only at page load
     setAvail(availability);
     setConsent({ open: true, state: "ask", message: paste });
   }

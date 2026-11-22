@@ -28,3 +28,17 @@ export function cloudKillSwitch(): boolean {
     return RC_DEFAULTS.cloud_kill_switch;
   }
 }
+
+/** Every Remote Config value the page uses, with where it came from (remote | default | static). For the bench scripts and /receipt-style checks. */
+export function rcSnapshot(): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const k of Object.keys(RC_DEFAULTS)) {
+    try {
+      const v = getValue(firebase().rc, k);
+      out[k] = `${v.asString()} (${v.getSource()})`;
+    } catch {
+      out[k] = `${String((RC_DEFAULTS as Record<string, unknown>)[k])} (default)`;
+    }
+  }
+  return out;
+}
