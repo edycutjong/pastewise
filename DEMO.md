@@ -9,7 +9,7 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 
 | Step | What you should see |
 |---|---|
-| Paste the synthetic message **S1** (from [`fixtures/demo/S1.json`](fixtures/demo/S1.json), field `paste`) and press **Fill this message** | Boxes fill in carbon blue; each value's source words are underlined in the message |
+| Under the paste box, click the sample **Gift order with two phone numbers** (message **S1**, [`fixtures/demo/S1.json`](fixtures/demo/S1.json); the click also switches to form **C · CONSIGNMENT NOTE**), then press **Fill this message**. Pasting S1 by hand? Pick tab C first | Boxes fill in carbon blue; each value's source words are underlined in the message |
 | Look at the **CNEE TEL** box | It stays **amber**: the message holds two phone numbers (an old dead one and a new one), and the code refuses to guess |
 | Look at the badge on the fill | `ON_DEVICE` on a Chrome with Gemini Nano. This is the `inferenceSource` Firebase AI Logic reports |
 | Open the **Teach** drawer | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload, and after a fresh cloud call its `IN_CLOUD` source (otherwise it says it is showing a saved copy) |

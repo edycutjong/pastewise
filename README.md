@@ -1,7 +1,7 @@
 <div align="center">
   <img src="docs/assets/icon.svg" alt="Pastewise icon" width="144">
   <h1>Pastewise ✍️</h1>
-  <p><em>Copy a messy order message, press one shortcut, and the form's fields fill on your laptop.</em></p>
+  <p><em>Orders arrive as chat messages and get typed again into a form. Copy the message, press one shortcut, and the fields fill on your laptop; code keeps only what is really in your text.</em></p>
   <img src="docs/assets/readme-hero-animated.svg" alt="Pastewise: boxes press through in carbon blue; one phone number stays amber. Text from your paste sent to the cloud: 0 bytes found." width="100%">
 
   <br/>
@@ -44,7 +44,7 @@ Pastewise never presses Submit. You always see the form before it goes anywhere.
 People who take orders in chat re-type each message into a courier portal, a booking form or a stock sheet. Browser autofill is mainly built around saved profiles, not around a message you just copied, which holds someone else's name, phone number and address. Sending that message to a cloud model to read it means sending a customer's private details to a third party.
 
 ### The Solution
-The message is read by the model on the laptop. The model is not trusted: a value is accepted by **code**, not by a model's "confidence". The cloud is used for what it is better at and what carries no customer data: it sees only the **empty form** (labels, names, options) and writes hints for cryptic boxes such as "CNEE" or "form teacher".
+The message is read by the model on the laptop. The model is not trusted: a value is accepted by **code**, not by a model's "confidence". The cloud is used for what it is better at and what carries no customer data: the "form teacher" sees only the **empty form** (labels, names, options) and writes hints for cryptic boxes such as "CNEE" or "RMKS". On a laptop without Nano, the message itself goes to the cloud only after you press **Yes**, and the screen shows the bytes sent.
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -83,7 +83,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 
 **Held-out set, run once on the release (gate v4, commit `f00f35d`).** 45 message-form pairs (15 orders on forms A and C, 15 bookings on form B) written without sight of any bench result and hashed before any run on it (SHA-256 `57077867…`), with traps the bench does not have (its gold checker rejects them there): relative dates ("this Friday"), two dates in one booking, RT/RW address parts, and forwarded From:/To: header blocks. [`sets/holdout.json`](sets/holdout.json) is in the repo and re-runnable.
 
-| Held-out (mean of 3, range) | Teacher hints off | Hints on (frozen cloud hints) |
+| Held-out (mean of 3, range) | Teacher hints off | Hints on (frozen cloud hints; recorded with uncommitted changes in `src/`, marked "dirty" on /bench) |
 |---|---|---|
 | Strict field accuracy | 80.7% (80.3–81.5) | 81.5% (80.0–82.6) |
 | Wrong value shown as found, all boxes | 5.9% (5.1–6.4) | 5.3% (5.1–5.4) |
