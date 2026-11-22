@@ -206,7 +206,7 @@ test("consent Yes that fails: the sheet says so, a new Yes is needed, and declin
   await expect(page.getByRole("button", { name: /Fill this message/ })).toBeEnabled();
 });
 
-test("after a fill, 'Copy the boxes as one row' puts captions + values on the clipboard and says how many are still amber", async ({ page, context }) => {
+test("after a fill, 'Copy for a spreadsheet' puts a header row + values on the clipboard and names the boxes still amber", async ({ page, context }) => {
   await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   // the model answers with the sender's name and no phone; the gate keeps the name amber (always) and the phone stays empty
   const answer = { name: "Tia Ramadhani", phone: "", street: "Jl. Kopo 9", city: "Bandung", province: "Jawa Barat", postal_code: "40222", item: "notebooks", quantity: "2", notes: "" };
@@ -230,7 +230,7 @@ test("after a fill, 'Copy the boxes as one row' puts captions + values on the cl
   await sheet.getByTestId("consent-send").click();
   await expect(sheet).toBeHidden({ timeout: 15000 });
   await page.getByTestId("copy-row").click();
-  await expect(page.getByTestId("copy-status")).toContainText("still amber");
+  await expect(page.getByTestId("copy-status")).toContainText("Still amber, copied as it stands: Recipient name");
   const clip = await page.evaluate(() => navigator.clipboard.readText());
   const [head, row] = clip.split("\n");
   expect(head.split("\t")[0]).toBe("Recipient name");

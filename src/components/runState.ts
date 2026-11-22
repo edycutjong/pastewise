@@ -24,18 +24,20 @@ export function mergeBatch(run: FormRun | undefined, runId: string, fields: Fiel
 
 /** Summary counts; a box the person edited is counted as edited, never as found or to-check. */
 /**
- * The boxes as they stand, for pasting into a sheet or the real portal: a caption row and a value row, tab-separated.
- * Amber boxes are copied as they are (often empty) and counted, so the person is told how many still need a look.
- * Pastewise never submits anything; this only hands the values to the clipboard.
+ * The boxes as they stand, for pasting into a spreadsheet: a header row of captions and a row of values, tab-separated.
+ * Amber boxes the person has not touched are copied as they stand (a name suggestion, or empty) and named by caption,
+ * so the status line can say which columns still need a look. Pastewise never submits anything; this only writes the clipboard.
  */
 export function rowForCopy(run: FormRun | undefined, columns: { name: string; caption: string }[]) {
   const cell = (v: string) => v.replace(/[\t\r\n]+/g, " ").trim();
   const values = columns.map((c) => cell(run?.boxes[c.name]?.value ?? ""));
-  const toCheck = columns.filter((c) => {
-    const b = run?.boxes[c.name];
-    return !!b && !b.edited && (!!b.failed || b.gate?.state === "amber");
-  }).length;
-  return { tsv: `${columns.map((c) => cell(c.caption)).join("\t")}\n${values.join("\t")}`, filled: values.filter(Boolean).length, toCheck };
+  const amber = columns
+    .filter((c) => {
+      const b = run?.boxes[c.name];
+      return !!b && !b.edited && (!!b.failed || b.gate?.state === "amber");
+    })
+    .map((c) => c.caption);
+  return { tsv: `${columns.map((c) => cell(c.caption)).join("\t")}\n${values.join("\t")}`, filled: values.filter(Boolean).length, amber };
 }
 
 export function countBoxes(run: FormRun | undefined, keys: string[]) {

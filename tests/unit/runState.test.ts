@@ -68,7 +68,7 @@ describe("countBoxes / boxClass / stateNote", () => {
   });
 });
 
-describe("rowForCopy (copy the boxes as one row)", () => {
+describe("rowForCopy (copy for a spreadsheet)", () => {
   const cols = [
     { name: "name", caption: "Recipient name" },
     { name: "phone", caption: "Phone" },
@@ -94,16 +94,16 @@ describe("rowForCopy (copy the boxes as one row)", () => {
     expect(r.tsv).toBe("Recipient name\tPhone\tDelivery notes\tCity\nMaya Kusuma\t\tleave at the guard post please\tJakarta Pusat");
   });
 
-  it("counts the amber boxes the person has not touched, and the filled boxes", () => {
+  it("names the amber boxes the person has not touched, by caption, and counts the values", () => {
     const r = rowForCopy(run, cols);
-    expect(r.toCheck).toBe(2);
+    expect(r.amber).toEqual(["Recipient name", "Phone"]);
     expect(r.filled).toBe(3);
   });
 
   it("no run: empty values, nothing to check", () => {
     const r = rowForCopy(undefined, cols);
     expect(r.tsv.split("\n")[1]).toBe("\t\t\t");
-    expect(r.toCheck).toBe(0);
+    expect(r.amber).toEqual([]);
     expect(r.filled).toBe(0);
   });
 });

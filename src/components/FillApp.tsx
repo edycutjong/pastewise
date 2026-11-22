@@ -509,16 +509,17 @@ export default function FillApp() {
     });
   }
 
-  /** Hands the boxes to the clipboard as one tab-separated row (captions first). Nothing is submitted and nothing is sent. */
+  /** Hands the boxes to the clipboard for a spreadsheet: a header row and a values row. Nothing is submitted and nothing is sent. */
   async function copyBoxes() {
     const run = runs[active];
     if (!run) return;
     const r = rowForCopy(run, formById(active).inputs);
     try {
       await navigator.clipboard.writeText(r.tsv);
-      const msg = r.toCheck
-        ? `Copied ${r.filled} filled box${r.filled === 1 ? "" : "es"} as one row. ${r.toCheck} still amber: check ${r.toCheck === 1 ? "it" : "them"} where you paste.`
-        : `Copied ${r.filled} filled box${r.filled === 1 ? "" : "es"} as one row, tab-separated: paste into a sheet or your form.`;
+      const head = `Copied a header row and ${r.filled} value${r.filled === 1 ? "" : "s"} for a spreadsheet (tab-separated).`;
+      const msg = r.amber.length
+        ? `${head} Still amber, copied as ${r.amber.length === 1 ? "it stands" : "they stand"}: ${r.amber.join(", ")}. Check ${r.amber.length === 1 ? "it" : "them"} before you rely on the row.`
+        : head;
       setCopied({ runId: run.runId, form: active, msg });
     } catch {
       setCopied({ runId: run.runId, form: active, msg: "This browser blocked the clipboard, so nothing was copied." });
@@ -711,7 +712,7 @@ export default function FillApp() {
             )}
             {cur?.done && !stale && !cur.discarded && (
               <button type="button" className="linkish" onClick={copyBoxes} data-testid="copy-row">
-                Copy the boxes as one row
+                Copy for a spreadsheet
               </button>
             )}
             {copied && cur && copied.form === active && copied.runId === cur.runId && !stale && (
