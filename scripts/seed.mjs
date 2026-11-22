@@ -96,6 +96,7 @@ if (process.argv.includes("--measure")) {
       await page.evaluate((h) => window.__pastewise.setHints("C", h), arm === "off" ? [] : hintsDoc.hints);
       const counts = Object.fromEntries(Object.keys(s1.gold).map((k) => [k, { correct: 0, found: 0, amber: 0, empty: 0 }]));
       const sources = [];
+      const shownByField = Object.fromEntries(Object.keys(s1.gold).map((k) => [k, {}])); // value shown -> count (state-tagged)
       for (let r = 0; r < N; r++) {
         const rec = await fillOnce(page, "C", s1.paste);
         sources.push(...rec.batches.map((b) => b.inferenceSource));
@@ -103,11 +104,13 @@ if (process.argv.includes("--measure")) {
           const c = counts[k];
           c[v.state === "found" ? "found" : v.state === "amber" ? "amber" : "empty"]++;
           const shown = v.state === "found" ? v.value : "";
+          const tag = `${v.state}:${v.state === "found" ? v.value : v.proposed}`;
+          shownByField[k][tag] = (shownByField[k][tag] ?? 0) + 1;
           const norm = (s) => String(s).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
           if (norm(shown) === norm(s1.gold[k]) && (shown || !s1.gold[k])) c.correct++;
         }
       }
-      out[arm] = { runs: N, onDevice: `${sources.filter((s) => s === "on_device").length}/${sources.length}`, perField: counts };
+      out[arm] = { runs: N, onDevice: `${sources.filter((s) => s === "on_device").length}/${sources.length}`, perField: counts, values: shownByField };
       console.log(arm, JSON.stringify(out[arm]));
     }
     const sha = execSync("git rev-parse --short HEAD", { cwd: ROOT }).toString().trim();

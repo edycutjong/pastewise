@@ -2,7 +2,7 @@
  "label": "SYNTHETIC — invented details, no real person; phone numbers use the 5550 block (never dial them)",
  "paste": "fixtures/demo/S1.json",
  "form": "C",
- "commit": "c67d663",
+ "commit": "ab0ce2f",
  "date": "2026-11-22",
  "hintsFile": "evidence/bench/hints-C-2026-11-22.json",
  "definition": "correct = the box shows the gold value as found in your text (an empty gold counts when the box is not found)",
@@ -11,7 +11,7 @@
   "onDevice": "10/10",
   "perField": {
    "cnee_nm": {
-    "correct": 0,
+    "correct": 1,
     "found": 10,
     "amber": 0,
     "empty": 0
@@ -23,7 +23,7 @@
     "empty": 0
    },
    "addr_1": {
-    "correct": 9,
+    "correct": 10,
     "found": 10,
     "amber": 0,
     "empty": 0
@@ -66,9 +66,45 @@
    },
    "rmks": {
     "correct": 5,
-    "found": 9,
-    "amber": 1,
+    "found": 8,
+    "amber": 2,
     "empty": 0
+   }
+  },
+  "values": {
+   "cnee_nm": {
+    "found:Maya Kusuma": 9,
+    "found:Ratna Kusuma": 1
+   },
+   "cnee_tel": {
+    "amber:085755508812": 10
+   },
+   "addr_1": {
+    "found:Jl. Cempaka Putih Raya No. 41": 10
+   },
+   "dist_city": {
+    "found:Jakarta Pusat": 10
+   },
+   "st_prov": {
+    "empty:": 10
+   },
+   "zip": {
+    "found:10510": 10
+   },
+   "desc": {
+    "found:linen tablecloths": 10
+   },
+   "pcs": {
+    "found:2": 10
+   },
+   "svc": {
+    "found:EXP": 10
+   },
+   "rmks": {
+    "amber:express pls, she needs them before Friday 🙏 leave at the guard post if nobody홈": 1,
+    "found:leave at the guard post if nobody home": 5,
+    "amber:express pls, she needs them before Friday 🙏 leave at the guard post if nobody 홈e": 1,
+    "found:express pls, she needs them before Friday 🙏 leave at the guard post if nobody": 3
    }
   }
  },
@@ -77,7 +113,7 @@
   "onDevice": "10/10",
   "perField": {
    "cnee_nm": {
-    "correct": 10,
+    "correct": 8,
     "found": 10,
     "amber": 0,
     "empty": 0
@@ -89,7 +125,7 @@
     "empty": 0
    },
    "addr_1": {
-    "correct": 10,
+    "correct": 8,
     "found": 10,
     "amber": 0,
     "empty": 0
@@ -131,10 +167,45 @@
     "empty": 0
    },
    "rmks": {
-    "correct": 8,
-    "found": 8,
-    "amber": 2,
+    "correct": 10,
+    "found": 10,
+    "amber": 0,
     "empty": 0
+   }
+  },
+  "values": {
+   "cnee_nm": {
+    "found:Ratna Kusuma": 8,
+    "found:Maya Kusuma": 2
+   },
+   "cnee_tel": {
+    "amber:085755508812": 10
+   },
+   "addr_1": {
+    "found:Jl. Cempaka Putih Raya No. 41": 8,
+    "found:Mrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41": 2
+   },
+   "dist_city": {
+    "found:Jakarta Pusat": 10
+   },
+   "st_prov": {
+    "empty:": 9,
+    "found:Jakarta": 1
+   },
+   "zip": {
+    "found:10510": 10
+   },
+   "desc": {
+    "found:linen tablecloths": 10
+   },
+   "pcs": {
+    "found:2": 10
+   },
+   "svc": {
+    "found:EXP": 10
+   },
+   "rmks": {
+    "found:leave at the guard post if nobody home": 10
    }
   }
  }
