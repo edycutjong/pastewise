@@ -19,9 +19,12 @@ export const hasMultipleNames = (v: string) => /\s(?:and|dan|&)\s|\s&|&\s/i.test
 export function stripQuantity(v: string): string {
   return v
     .trim()
+    .split(/(?<=[.!?])\s+/)[0] // an item is one phrase: drop a following sentence
+    .replace(/[.!?]+$/, "")
     .replace(new RegExp(`^(?:x\\s*)?(?:\\d{1,3}|${NUMW})\\s*${UNIT}?\\s+`, "i"), "")
     .replace(new RegExp(`\\s*(?:,\\s*)?(?:x\\s*\\d{1,3}|\\d{1,3}\\s*${UNIT})$`, "i"), "")
     .replace(/\s*\([^()]*\)?\s*$/, "") // trailing aside: "linen tablecloths (the sage ones)"
+    .replace(/^(?:box|boxes|pack|packs|packet|packets|unit|units|piece|pieces)\s+of\s+/i, "") // "4 box of batik scarves"
     .trim();
 }
 

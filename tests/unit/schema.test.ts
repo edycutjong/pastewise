@@ -102,7 +102,8 @@ describe("JSON schema, batches, answer check", () => {
   it("rejects malformed answers (missing key, extra key, non-string, bad enum, not JSON)", () => {
     const ok = Object.fromEntries(s.fields.map((f) => [f.key, ""]));
     expect(checkAnswer(JSON.stringify(ok), schema)).not.toBeNull();
-    const { zip: _zip, ...missing } = ok;
+    const missing: Record<string, string> = { ...ok };
+    delete missing.zip;
     expect(checkAnswer(JSON.stringify(missing), schema)).toBeNull();
     expect(checkAnswer(JSON.stringify({ ...ok, extra: "" }), schema)).toBeNull();
     expect(checkAnswer(JSON.stringify({ ...ok, pcs: 2 }), schema)).toBeNull();

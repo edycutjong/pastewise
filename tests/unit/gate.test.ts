@@ -127,6 +127,9 @@ describe("text + cleanup", () => {
     expect(stripQuantity("linen tablecloths x2")).toBe("linen tablecloths");
     expect(stripQuantity("two linen tablecloths")).toBe("linen tablecloths");
     expect(stripQuantity("linen tablecloths (the sage ones)")).toBe("linen tablecloths");
+    expect(stripQuantity("4 box of batik scarves")).toBe("batik scarves");
+    expect(stripQuantity("wooden tray. Fragile, keep upright")).toBe("wooden tray");
+    expect(stripQuantity("3 pairs of socks")).toBe("pairs of socks");
   });
   it("P0c class: city appended to the street is stripped", () => {
     expect(stripAddressTail("Jl. Diponegoro 88, Semarang")).toBe("Jl. Diponegoro 88");
