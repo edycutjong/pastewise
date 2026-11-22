@@ -126,6 +126,7 @@ describe("text + cleanup", () => {
     expect(g(S3, f("item", "text", "item"), "1 ceramic mug set")).toMatchObject({ state: "found", value: "ceramic mug set" });
     expect(stripQuantity("linen tablecloths x2")).toBe("linen tablecloths");
     expect(stripQuantity("two linen tablecloths")).toBe("linen tablecloths");
+    expect(stripQuantity("linen tablecloths (the sage ones)")).toBe("linen tablecloths");
   });
   it("P0c class: city appended to the street is stripped", () => {
     expect(stripAddressTail("Jl. Diponegoro 88, Semarang")).toBe("Jl. Diponegoro 88");

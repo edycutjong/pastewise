@@ -21,6 +21,7 @@ export function stripQuantity(v: string): string {
     .trim()
     .replace(new RegExp(`^(?:x\\s*)?(?:\\d{1,3}|${NUMW})\\s*${UNIT}?\\s+`, "i"), "")
     .replace(new RegExp(`\\s*(?:,\\s*)?(?:x\\s*\\d{1,3}|\\d{1,3}\\s*${UNIT})$`, "i"), "")
+    .replace(/\s*\([^()]*\)?\s*$/, "") // trailing aside: "linen tablecloths (the sage ones)"
     .trim();
 }
 

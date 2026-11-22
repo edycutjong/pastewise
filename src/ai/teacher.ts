@@ -1,0 +1,43 @@
+"use client";
+// teachForm: the cloud half. It sends ONLY the empty form's structure
+// (title, keys, captions, select options) to an ONLY_IN_CLOUD model and gets
+// plain-words hints back. No paste text is ever part of this payload; the
+// egress ledger checks that on every request. The Teach drawer is the UI.
+import type { FormSpec } from "@/forms/types";
+import { sanitizeHint, type Hint } from "@/schema/buildSchema";
+import { teacherModel } from "./models";
+
+export type TeacherPayload = { title: string; fields: { key: string; caption: string; options?: string[] }[] };
+
+export function teacherPayload(form: FormSpec): TeacherPayload {
+  return {
+    title: form.title,
+    fields: form.fields.map((f) => ({ key: f.key, caption: f.label, ...(f.options ? { options: f.options.map((o) => o.value) } : {}) })),
+  };
+}
+
+export const TEACHER_INSTRUCTION =
+  "You explain the boxes of an EMPTY web form. For each field key, say in plain words (under 80 characters, letters, digits and " +
+  "basic punctuation only) what a person should type there, and pick the expected kind. Only the form structure is given; there is " +
+  "no customer data.";
+
+export function teacherPrompt(p: TeacherPayload): string {
+  return `${TEACHER_INSTRUCTION}\n\n${JSON.stringify(p, null, 1)}`;
+}
+
+export type TeachResult = { hints: Hint[]; dropped: number; inferenceSource?: string; ms: number; payload: TeacherPayload };
+
+export async function teachForm(form: FormSpec, modelName: string, timeoutMs = 20000): Promise<TeachResult> {
+  const payload = teacherPayload(form);
+  const t0 = performance.now();
+  const call = teacherModel(modelName).generateContent(teacherPrompt(payload));
+  const r = await Promise.race([
+    call,
+    new Promise<never>((_, rej) => setTimeout(() => rej(new Error(`teacher: no answer within ${timeoutMs} ms`)), timeoutMs)),
+  ]);
+  const parsed = JSON.parse(r.response.text()) as { hints?: Partial<Hint>[] };
+  const keys = new Set(form.fields.map((f) => f.key));
+  const raw = parsed.hints ?? [];
+  const hints = raw.map(sanitizeHint).filter((h): h is Hint => !!h && keys.has(h.key));
+  return { hints, dropped: raw.length - hints.length, inferenceSource: r.response.inferenceSource, ms: Math.round(performance.now() - t0), payload };
+}
