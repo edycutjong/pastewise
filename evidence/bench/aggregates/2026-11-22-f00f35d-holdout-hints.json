@@ -1,0 +1,115 @@
+{
+ "set": "holdout",
+ "setSha256": "570778671fa2ce0fc1c6837a8ad7feed65d8a4b614c25a892bc890dd8715a35e",
+ "pastes": 45,
+ "forms": [
+  "A",
+  "C",
+  "B"
+ ],
+ "arm": "hints",
+ "hintsSource": "file:evidence/bench/hints-bench-combined-2026-11-22.json",
+ "hintsSha": "17966df98380de65",
+ "repeats": 3,
+ "date": "2026-11-22",
+ "commit": "f00f35d",
+ "srcDirty": true,
+ "promptVersion": "p0c-v3",
+ "gateVersion": "4",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": false,
+ "loadAvgAtStart": [
+  5.9,
+  5.2,
+  7.8
+ ],
+ "loadAvgAtEnd": [
+  5.6,
+  5.5,
+  7.1
+ ],
+ "rerunReason": null,
+ "path": "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
+ "metrics": {
+  "rawAccuracyStrict": {
+   "mean": 81.45,
+   "min": 80,
+   "max": 82.56
+  },
+  "rawAccuracyP0c": {
+   "mean": 82.91,
+   "min": 81.54,
+   "max": 83.85
+  },
+  "acceptedWrongPct": {
+   "mean": 5.3,
+   "min": 5.13,
+   "max": 5.38
+  },
+  "coverage": {
+   "mean": 83.83,
+   "min": 83.53,
+   "max": 84.13
+  },
+  "usefulCoverage": {
+   "mean": 78.74,
+   "min": 78.44,
+   "max": 79.04
+  },
+  "amberPct": {
+   "mean": 17.27,
+   "min": 16.92,
+   "max": 17.44
+  },
+  "warmP50": {
+   "mean": 2400.67,
+   "min": 2379,
+   "max": 2427
+  },
+  "warmP95": {
+   "mean": 2927.67,
+   "min": 2903,
+   "max": 2971
+  }
+ },
+ "perRepeat": [
+  {
+   "jsonValid": "45/45",
+   "onDeviceBatches": "45/45",
+   "stalls": 0,
+   "rawAccuracyStrict": 82.56,
+   "acceptedWrongPct": 5.38,
+   "acceptedWrongCount": 21,
+   "coverage": 83.53,
+   "usefulCoverage": 78.44,
+   "warmP50": 2427,
+   "warmP95": 2903
+  },
+  {
+   "jsonValid": "45/45",
+   "onDeviceBatches": "45/45",
+   "stalls": 0,
+   "rawAccuracyStrict": 81.79,
+   "acceptedWrongPct": 5.13,
+   "acceptedWrongCount": 20,
+   "coverage": 83.83,
+   "usefulCoverage": 78.74,
+   "warmP50": 2379,
+   "warmP95": 2971
+  },
+  {
+   "jsonValid": "45/45",
+   "onDeviceBatches": "45/45",
+   "stalls": 0,
+   "rawAccuracyStrict": 80,
+   "acceptedWrongPct": 5.38,
+   "acceptedWrongCount": 21,
+   "coverage": 84.13,
+   "usefulCoverage": 79.04,
+   "warmP50": 2396,
+   "warmP95": 2909
+  }
+ ],
+ "rawRowsInRepo": true
+}

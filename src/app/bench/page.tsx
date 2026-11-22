@@ -31,6 +31,8 @@ const ABOUT: Record<string, string> = {
   "continuity-20": "The 20 order and booking messages from the kill test, on the plain order form (A) and the hotel form (B). The messages themselves are not published; the file hash below identifies them. The prompt and the gate were shaped by this set's failures, so it is a continuity check, not a held-out measure.",
   "form-c-mid": "10 order messages for the legacy consignment-note form (C), whose boxes have cryptic names like CNEE and ZIP. Used while building, so not a held-out set.",
   dev: "The tuning set used while building.",
+  bench: "60 order messages (each run on the plain order form A and on the legacy consignment-note form C) and 60 hotel-booking messages (form B): 180 message-form pairs, written before any run and used to decide what the gate must never show as found. Not a held-out set. The first rows were measured with gate v3; gate v4 then made recipient-name boxes always amber (see the per-form table).",
+  holdout: "45 message-form pairs (15 orders on forms A and C, 15 bookings on form B) written without sight of any bench result and hashed before the first run, with traps the bench does not contain: two dates, relative dates, number words, RT/RW address parts, forwarded headers. Run once per prompt and gate version, on the frozen release.",
 };
 
 function load(): Agg[] {
@@ -45,13 +47,29 @@ function load(): Agg[] {
 
 const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.toFixed(1)})`;
 const secs = (r: Range) => `${(r.mean / 1000).toFixed(1)} s${r.max - r.min > 1000 ? ` (${(r.min / 1000).toFixed(1)}–${(r.max / 1000).toFixed(1)})` : ""}`;
-const sameRun = (a: Agg, b: Agg) => a.set === b.set && a.commit === b.commit && a.setSha256 === b.setSha256 && !a.stalledRun && !b.stalledRun;
+// Same set file, same prompt and gate, not a stalled run. (Two commits can differ by tests and scripts only; the aggregate records the commit.)
+const sameRun = (a: Agg, b: Agg) =>
+  a.set === b.set && a.setSha256 === b.setSha256 && a.promptVersion === b.promptVersion && a.gateVersion === b.gateVersion && !a.stalledRun && !b.stalledRun;
+
+type FormStats = { strictAccuracy: number; wrongShown: number; criticalWrongShown: number; amber: number; amberButRight: number; warmP50: number; warmP95: number; pastes: number; jsonValid: string };
+type Report = { set: string; gateView: string; arms: Record<string, { repeats: number; byForm: Record<string, FormStats> }>; file: string };
+
+function loadReports(): Report[] {
+  const dir = path.join(process.cwd(), "evidence/bench");
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => /^report-.*\.json$/.test(f))
+    .sort()
+    .map((f) => ({ ...(JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as Report), file: f }));
+}
 
 export const metadata = { title: "Bench — Pastewise" };
 
 export default function Bench() {
   const all = load();
   const sets = [...new Set(all.map((a) => a.set))];
+  const reports = loadReports();
   return (
     <>
       <header className="top">
@@ -142,12 +160,55 @@ export default function Bench() {
             </section>
           );
         })}
+        {reports.map((r) => (
+          <section key={r.file} className="sheet" aria-label={`Per form ${r.file}`}>
+            <h2 className="cap">
+              By form · set {r.set} · {r.gateView}
+            </h2>
+            <table className="data">
+              <thead>
+                <tr>
+                  <th>Form</th>
+                  <th>Teacher hints</th>
+                  <th>Right value in the box (strict)</th>
+                  <th>Wrong value shown as found</th>
+                  <th>…of which name, phone, address, postal code</th>
+                  <th>Left amber</th>
+                  <th>Warm p50 / p95</th>
+                  <th>JSON valid</th>
+                </tr>
+              </thead>
+              <tbody>
+                {Object.entries(r.arms).flatMap(([arm, a]) =>
+                  Object.entries(a.byForm).map(([form, v]) => (
+                    <tr key={`${arm}-${form}`}>
+                      <td>{form}</td>
+                      <td>{arm === "off" ? "off" : "on"}</td>
+                      <td>{v.strictAccuracy.toFixed(1)}%</td>
+                      <td>{v.wrongShown.toFixed(1)}%</td>
+                      <td>{v.criticalWrongShown.toFixed(1)}%</td>
+                      <td>{v.amber.toFixed(1)}%</td>
+                      <td>
+                        {(v.warmP50 / 1000).toFixed(1)} s / {(v.warmP95 / 1000).toFixed(1)} s
+                      </td>
+                      <td>{v.jsonValid}</td>
+                    </tr>
+                  )),
+                )}
+              </tbody>
+            </table>
+            <p className="fine">
+              Pooled over {Object.values(r.arms)[0]?.repeats} repeats. From <span className="mono">evidence/bench/{r.file}</span>, computed by{" "}
+              <span className="mono">scripts/bench_report.mjs</span> from the raw run rows.
+            </p>
+          </section>
+        ))}
         <section className="sheet" aria-label="How to read this">
           <h2 className="cap">How to read this</h2>
           <p>
             “Wrong value shown as found” counts values that the code accepted (they appear in the message and pass the field&apos;s format check) but
             that are not the right value for that box. The code checks presence and format, not truth, so this number is never zero and the boxes stay
-            editable. These sets were used while building; the held-out set is reported only once the code is frozen.
+            editable. Names are never shown as found: after the bench, the recipient-name boxes became always amber (gate v4). Only the held-out set was measured on that frozen release; the bench and earlier sets were used while building. The bars set before the held-out run were missed, and the numbers above say by how much.
           </p>
         </section>
       </main>

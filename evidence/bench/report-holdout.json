@@ -1,0 +1,492 @@
+{
+ "set": "holdout",
+ "gateView": "gate v4, as recorded (the release)",
+ "arms": {
+  "hints": {
+   "repeats": 3,
+   "meta": {
+    "commit": "f00f35d",
+    "setSha256": "570778671fa2ce0fc1c6837a8ad7feed65d8a4b614c25a892bc890dd8715a35e",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "4",
+    "hintsSha": "17966df98380de65",
+    "loadAvgAtStart": [
+     [
+      5.9,
+      5.2,
+      7.8
+     ],
+     [
+      5.9,
+      5.2,
+      7.8
+     ],
+     [
+      5.9,
+      5.2,
+      7.8
+     ]
+    ]
+   },
+   "all": {
+    "fieldsPerRepeat": 390,
+    "strictAccuracy": 81.45,
+    "wrongShown": 5.3,
+    "amber": 17.26,
+    "amberButRight": 8.55,
+    "rightValueShown": 78.74,
+    "criticalWrongShown": 1.33,
+    "warmP50": 2393,
+    "warmP95": 2971
+   },
+   "byForm": {
+    "A": {
+     "fieldsPerRepeat": 135,
+     "strictAccuracy": 85.19,
+     "wrongShown": 5.68,
+     "amber": 16.3,
+     "amberButRight": 9.88,
+     "rightValueShown": 77.6,
+     "criticalWrongShown": 1.67,
+     "pastes": 15,
+     "jsonValid": "45/45",
+     "warmP50": 2371,
+     "warmP95": 2897
+    },
+    "B": {
+     "fieldsPerRepeat": 105,
+     "strictAccuracy": 81.59,
+     "wrongShown": 5.71,
+     "amber": 16.19,
+     "amberButRight": 7.62,
+     "rightValueShown": 79.4,
+     "criticalWrongShown": 1.11,
+     "pastes": 15,
+     "jsonValid": "45/45",
+     "warmP50": 2149,
+     "warmP95": 2546
+    },
+    "C": {
+     "fieldsPerRepeat": 150,
+     "strictAccuracy": 78,
+     "wrongShown": 4.67,
+     "amber": 18.89,
+     "amberButRight": 8,
+     "rightValueShown": 79.4,
+     "criticalWrongShown": 1.11,
+     "pastes": 15,
+     "jsonValid": "45/45",
+     "warmP50": 2684,
+     "warmP95": 3129
+    }
+   },
+   "fieldTable": {
+    "A.name": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 62.22,
+     "amber": 100
+    },
+    "A.phone": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 86.67,
+     "amber": 26.67
+    },
+    "A.street": {
+     "critical": true,
+     "wrongShown": 6.67,
+     "strict": 88.89,
+     "amber": 0
+    },
+    "A.city": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "A.province": {
+     "critical": false,
+     "wrongShown": 2.22,
+     "strict": 97.78,
+     "amber": 0
+    },
+    "A.postal_code": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "A.item": {
+     "critical": false,
+     "wrongShown": 8.89,
+     "strict": 64.44,
+     "amber": 0
+    },
+    "A.quantity": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 6.67
+    },
+    "A.notes": {
+     "critical": false,
+     "wrongShown": 33.33,
+     "strict": 66.67,
+     "amber": 13.33
+    },
+    "B.guest_name": {
+     "critical": true,
+     "wrongShown": 2.22,
+     "strict": 77.78,
+     "amber": 0
+    },
+    "B.phone": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 86.67,
+     "amber": 20
+    },
+    "B.email": {
+     "critical": false,
+     "wrongShown": 4.44,
+     "strict": 93.33,
+     "amber": 0
+    },
+    "B.room_type": {
+     "critical": false,
+     "wrongShown": 6.67,
+     "strict": 91.11,
+     "amber": 2.22
+    },
+    "B.check_in": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 68.89,
+     "amber": 77.78
+    },
+    "B.nights": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "B.requests": {
+     "critical": false,
+     "wrongShown": 26.67,
+     "strict": 53.33,
+     "amber": 13.33
+    },
+    "C.cnee_nm": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 60,
+     "amber": 100
+    },
+    "C.cnee_tel": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 86.67,
+     "amber": 26.67
+    },
+    "C.addr_1": {
+     "critical": true,
+     "wrongShown": 4.44,
+     "strict": 88.89,
+     "amber": 2.22
+    },
+    "C.dist_city": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "C.st_prov": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "C.zip": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "C.desc": {
+     "critical": false,
+     "wrongShown": 8.89,
+     "strict": 24.44,
+     "amber": 0
+    },
+    "C.pcs": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 95.56,
+     "amber": 11.11
+    },
+    "C.svc": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 64.44,
+     "amber": 35.56
+    },
+    "C.rmks": {
+     "critical": false,
+     "wrongShown": 33.33,
+     "strict": 60,
+     "amber": 13.33
+    }
+   },
+   "onDeviceAll": true
+  },
+  "off": {
+   "repeats": 3,
+   "meta": {
+    "commit": "f00f35d",
+    "setSha256": "570778671fa2ce0fc1c6837a8ad7feed65d8a4b614c25a892bc890dd8715a35e",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "4",
+    "hintsSha": null,
+    "loadAvgAtStart": [
+     [
+      5,
+      5.2,
+      9.2
+     ],
+     [
+      5,
+      5.2,
+      9.2
+     ],
+     [
+      5,
+      5.2,
+      9.2
+     ]
+    ]
+   },
+   "all": {
+    "fieldsPerRepeat": 390,
+    "strictAccuracy": 80.68,
+    "wrongShown": 5.9,
+    "amber": 17.69,
+    "amberButRight": 8.46,
+    "rightValueShown": 77.94,
+    "criticalWrongShown": 2,
+    "warmP50": 2335,
+    "warmP95": 2953
+   },
+   "byForm": {
+    "A": {
+     "fieldsPerRepeat": 135,
+     "strictAccuracy": 84.94,
+     "wrongShown": 5.68,
+     "amber": 16.54,
+     "amberButRight": 9.88,
+     "rightValueShown": 77.32,
+     "criticalWrongShown": 1.11,
+     "pastes": 15,
+     "jsonValid": "45/45",
+     "warmP50": 2334,
+     "warmP95": 2953
+    },
+    "B": {
+     "fieldsPerRepeat": 105,
+     "strictAccuracy": 80.63,
+     "wrongShown": 6.35,
+     "amber": 17.46,
+     "amberButRight": 7.62,
+     "rightValueShown": 78.65,
+     "criticalWrongShown": 3.33,
+     "pastes": 15,
+     "jsonValid": "45/45",
+     "warmP50": 2138,
+     "warmP95": 2538
+    },
+    "C": {
+     "fieldsPerRepeat": 150,
+     "strictAccuracy": 76.89,
+     "wrongShown": 5.78,
+     "amber": 18.89,
+     "amberButRight": 7.78,
+     "rightValueShown": 78.05,
+     "criticalWrongShown": 2.22,
+     "pastes": 15,
+     "jsonValid": "45/45",
+     "warmP50": 2670,
+     "warmP95": 3208
+    }
+   },
+   "fieldTable": {
+    "A.name": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 62.22,
+     "amber": 100
+    },
+    "A.phone": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 86.67,
+     "amber": 26.67
+    },
+    "A.street": {
+     "critical": true,
+     "wrongShown": 4.44,
+     "strict": 93.33,
+     "amber": 0
+    },
+    "A.city": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "A.province": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "A.postal_code": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "A.item": {
+     "critical": false,
+     "wrongShown": 8.89,
+     "strict": 64.44,
+     "amber": 0
+    },
+    "A.quantity": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 6.67
+    },
+    "A.notes": {
+     "critical": false,
+     "wrongShown": 37.78,
+     "strict": 57.78,
+     "amber": 15.56
+    },
+    "B.guest_name": {
+     "critical": true,
+     "wrongShown": 6.67,
+     "strict": 77.78,
+     "amber": 0
+    },
+    "B.phone": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 86.67,
+     "amber": 20
+    },
+    "B.email": {
+     "critical": false,
+     "wrongShown": 4.44,
+     "strict": 88.89,
+     "amber": 6.67
+    },
+    "B.room_type": {
+     "critical": false,
+     "wrongShown": 6.67,
+     "strict": 91.11,
+     "amber": 2.22
+    },
+    "B.check_in": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 66.67,
+     "amber": 80
+    },
+    "B.nights": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 100,
+     "amber": 0
+    },
+    "B.requests": {
+     "critical": false,
+     "wrongShown": 26.67,
+     "strict": 53.33,
+     "amber": 13.33
+    },
+    "C.cnee_nm": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 60,
+     "amber": 100
+    },
+    "C.cnee_tel": {
+     "critical": true,
+     "wrongShown": 0,
+     "strict": 80,
+     "amber": 33.33
+    },
+    "C.addr_1": {
+     "critical": true,
+     "wrongShown": 6.67,
+     "strict": 84.44,
+     "amber": 0
+    },
+    "C.dist_city": {
+     "critical": false,
+     "wrongShown": 4.44,
+     "strict": 95.56,
+     "amber": 0
+    },
+    "C.st_prov": {
+     "critical": false,
+     "wrongShown": 4.44,
+     "strict": 95.56,
+     "amber": 0
+    },
+    "C.zip": {
+     "critical": true,
+     "wrongShown": 2.22,
+     "strict": 95.56,
+     "amber": 0
+    },
+    "C.desc": {
+     "critical": false,
+     "wrongShown": 8.89,
+     "strict": 44.44,
+     "amber": 0
+    },
+    "C.pcs": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 93.33,
+     "amber": 11.11
+    },
+    "C.svc": {
+     "critical": false,
+     "wrongShown": 0,
+     "strict": 64.44,
+     "amber": 35.56
+    },
+    "C.rmks": {
+     "critical": false,
+     "wrongShown": 31.11,
+     "strict": 55.56,
+     "amber": 8.89
+    }
+   },
+   "onDeviceAll": true
+  }
+ },
+ "criticalOver5": [
+  {
+   "field": "B.guest_name",
+   "wrongShown": 6.67
+  },
+  {
+   "field": "C.addr_1",
+   "wrongShown": 6.67
+  }
+ ]
+}

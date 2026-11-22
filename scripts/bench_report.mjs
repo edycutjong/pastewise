@@ -44,7 +44,7 @@ function stats(rows, runs) {
 const ALWAYS_CHECK = new Set(["name", "cnee_nm"]);
 const regate = (r) => (ALWAYS_CHECK.has(r.field) && r.outcome.startsWith("accepted") ? { ...r, outcome: "amber" } : r);
 const gateV4 = process.argv.includes("--gate4");
-const out = { set, gateView: gateV4 ? "gate v4 applied offline to the recorded model outputs" : "gate as recorded in the run files", arms: {} };
+const out = { set, gateView: arg("view", gateV4 ? "gate v4 applied offline to the recorded model outputs" : "gate as recorded in the run files"), arms: {} };
 for (const [arm, { runs: rawRuns, meta }] of Object.entries(arms)) {
   const runs = gateV4 ? rawRuns.map((d) => ({ ...d, fieldRows: d.fieldRows.map(regate) })) : rawRuns;
   const R = runs.length;

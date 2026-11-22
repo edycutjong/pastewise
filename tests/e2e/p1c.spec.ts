@@ -57,7 +57,7 @@ test("Teach this form shows the empty-form payload before anything is sent", asy
 
 test("/bench and /receipt render from committed evidence and keep the nav", async ({ page }) => {
   await page.goto("/bench/");
-  await expect(page.getByRole("heading", { name: "Bench" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Bench", exact: true })).toBeVisible();
   await expect(page.getByRole("link", { name: "Receipt" })).toBeVisible();
   await page.getByRole("link", { name: "Receipt" }).click();
   await expect(page.getByRole("heading", { name: "Receipt" })).toBeVisible();

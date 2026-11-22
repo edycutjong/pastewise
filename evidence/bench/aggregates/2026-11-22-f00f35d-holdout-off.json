@@ -1,0 +1,115 @@
+{
+ "set": "holdout",
+ "setSha256": "570778671fa2ce0fc1c6837a8ad7feed65d8a4b614c25a892bc890dd8715a35e",
+ "pastes": 45,
+ "forms": [
+  "A",
+  "C",
+  "B"
+ ],
+ "arm": "off",
+ "hintsSource": "none",
+ "hintsSha": null,
+ "repeats": 3,
+ "date": "2026-11-22",
+ "commit": "f00f35d",
+ "srcDirty": false,
+ "promptVersion": "p0c-v3",
+ "gateVersion": "4",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": false,
+ "loadAvgAtStart": [
+  5,
+  5.2,
+  9.2
+ ],
+ "loadAvgAtEnd": [
+  5.9,
+  5.2,
+  7.8
+ ],
+ "rerunReason": null,
+ "path": "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
+ "metrics": {
+  "rawAccuracyStrict": {
+   "mean": 80.69,
+   "min": 80.26,
+   "max": 81.54
+  },
+  "rawAccuracyP0c": {
+   "mean": 81.62,
+   "min": 81.28,
+   "max": 82.31
+  },
+  "acceptedWrongPct": {
+   "mean": 5.9,
+   "min": 5.13,
+   "max": 6.41
+  },
+  "coverage": {
+   "mean": 83.33,
+   "min": 83.23,
+   "max": 83.53
+  },
+  "usefulCoverage": {
+   "mean": 77.94,
+   "min": 77.54,
+   "max": 78.14
+  },
+  "amberPct": {
+   "mean": 17.69,
+   "min": 17.44,
+   "max": 17.95
+  },
+  "warmP50": {
+   "mean": 2342.33,
+   "min": 2334,
+   "max": 2358
+  },
+  "warmP95": {
+   "mean": 2942.67,
+   "min": 2889,
+   "max": 2986
+  }
+ },
+ "perRepeat": [
+  {
+   "jsonValid": "45/45",
+   "onDeviceBatches": "45/45",
+   "stalls": 0,
+   "rawAccuracyStrict": 81.54,
+   "acceptedWrongPct": 5.13,
+   "acceptedWrongCount": 20,
+   "coverage": 83.23,
+   "usefulCoverage": 78.14,
+   "warmP50": 2334,
+   "warmP95": 2953
+  },
+  {
+   "jsonValid": "45/45",
+   "onDeviceBatches": "45/45",
+   "stalls": 0,
+   "rawAccuracyStrict": 80.26,
+   "acceptedWrongPct": 6.15,
+   "acceptedWrongCount": 24,
+   "coverage": 83.53,
+   "usefulCoverage": 78.14,
+   "warmP50": 2358,
+   "warmP95": 2889
+  },
+  {
+   "jsonValid": "45/45",
+   "onDeviceBatches": "45/45",
+   "stalls": 0,
+   "rawAccuracyStrict": 80.26,
+   "acceptedWrongPct": 6.41,
+   "acceptedWrongCount": 25,
+   "coverage": 83.23,
+   "usefulCoverage": 77.54,
+   "warmP50": 2335,
+   "warmP95": 2986
+  }
+ ],
+ "rawRowsInRepo": true
+}

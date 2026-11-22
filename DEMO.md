@@ -21,18 +21,26 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 
 ## 2. What was measured
 
-Through the real page, `ONLY_ON_DEVICE`, 3 repeats, prompt `p0c-v3`, code gate v2, commit `62b2bdd`.
+Through the real page, `ONLY_ON_DEVICE`, 3 repeats per row, prompt `p0c-v3`, Apple M1 Max 32 GB, Chrome 157, 2026-11-22.
 
-| Set | Hints | Strict field accuracy | Wrong value shown | Warm p50 |
-|---|---|---|---|---|
-| continuity-20 (20 messages, forms A and B) | off | 92.5% | 1.88% | 2.24 s |
-| continuity-20 | on | 92.7% | 1.46% | 2.23 s |
-| form C (10 harder messages) | off | 74.0% | 10.33% | 2.62 s |
-| form C | on | 74.3% | 7.00% | 2.67 s |
+**Held-out set (45 message-form pairs, SHA-256 `57077867…`), run once on the release gate v4, commit `f00f35d`:**
 
-continuity-20 is a frozen held-out set kept out of the repo (SHA-256 `8b019d42…e997f0`, recorded in both continuity-20 aggregate files), so it cannot be re-run from a clone; `sets/form-c-mid.json` and `sets/dev.json` can.
+| Hints | Strict field accuracy | Wrong value shown (all boxes) | …name/phone/address/postal only | Warm p50 / p95 | JSON valid |
+|---|---|---|---|---|---|
+| off | 80.7% (80.3–81.5) | 5.9% (5.1–6.4) | 2.0% | 2.34 s / 2.94 s | 45/45 ×3 |
+| on (frozen cloud hints) | 81.5% (80.0–82.6) | 5.3% (5.1–5.4) | 1.3% | 2.40 s / 2.93 s | 45/45 ×3 |
 
-Source files: `evidence/bench/aggregates/2026-11-22-62b2bdd-*.json`; form C also has `*-summary.md` files and the raw `r1`–`r3` rows (continuity-20 has aggregates only).
+The bars set before the run (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were all missed. Free-text boxes (notes, remarks, requests) account for most
+of the wrong-shown figure; see the README for the split.
+
+**180-pair bench (60 orders on forms A and C, 60 bookings on form B), gate v3, commits `c5e56c5` (off) and `b939206` (on; same `src/`):** hints off strict 80.6%,
+wrong shown 7.7% (2.9% in name/phone/address/postal boxes), p50 2.32 s; hints on 80.5%, 7.5%, 2.6%. Teacher delta on form C strict: 78.28% → 78.39%.
+The release response that followed (gate v4: recipient names always amber) is described in the README.
+
+Source files: `evidence/bench/aggregates/2026-11-22-{c5e56c5,b939206,f00f35d}-*.json` and the raw rows `evidence/bench/2026-11-22-*-r{1,2,3}.json`; per-form
+tables in `evidence/bench/report-*.json` (`node scripts/bench_report.mjs --set holdout`). Earlier midpoint rows (continuity-20 on gate v2, form-c-mid) are on
+[/bench](https://pastewise.edycu.dev/bench/) and are not mixed into the figures above; continuity-20 is a frozen set kept out of the repo (SHA-256 `8b019d42…e997f0`).
+
 Network capture of the hosted page (5 synthetic messages: 4 fills, all on-device, plus 1 over-long paste refused): 0 paste-word hits, 0 requests during the on-device fills, canary caught:
 [`evidence/network/2026-11-22-94854aa-live.json`](evidence/network/2026-11-22-94854aa-live.json).
 
@@ -43,10 +51,11 @@ Needs Chrome desktop with Gemini Nano downloaded, a Firebase web config, and an 
 ```bash
 git clone https://github.com/edycutjong/pastewise.git && cd pastewise
 cp .env.example .env.local        # Firebase web config
-npm install && npm test           # 115 unit tests
+npm install && npm test           # 123 unit tests
 npm run build                     # static export to out/
-node scripts/bench.mjs --set sets/form-c-mid.json --repeats 3 --hints off
-node scripts/bench.mjs --set sets/form-c-mid.json --repeats 3 --hints cloud
+node scripts/bench.mjs --set sets/holdout.json --repeats 3 --hints off          # refuses a second held-out run per prompt/gate/arm
+node scripts/bench.mjs --set sets/bench.json --repeats 3 --hints cloud          # calls the real cloud teacher once per form
+node scripts/bench_report.mjs --set holdout                                       # per-form and per-field tables from the raw rows
 node scripts/egress_check.mjs     # add --base https://pastewise.edycu.dev for the hosted page
 ```
 
@@ -56,5 +65,5 @@ The bench opens a headed Chrome, uses the real Fill button and scores the app's 
 ## 4. What this does not show
 
 - It is a hosted web app, not a Chrome extension: it does not fill forms on other sites.
-- The bench has not been re-run on the current gate version (v3).
-- Form C still shows wrong values 7% of the time; see "Honest limits" in the [README](README.md).
+- The held-out set is 45 pairs: its ranges are wide, and two boxes (guest name on B, ADDR 1 on C) were above 5% wrong-shown there.
+- Form C still shows wrong values 4.7–5.8% of the time on the held-out set; see "Honest limits" in the [README](README.md).

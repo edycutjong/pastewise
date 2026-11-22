@@ -1,6 +1,6 @@
 {
  "set": "bench",
- "gateView": "gate v4 applied offline to the recorded model outputs",
+ "gateView": "gate v4 applied offline to the recorded bench outputs (no new model calls)",
  "arms": {
   "hints": {
    "repeats": 3,

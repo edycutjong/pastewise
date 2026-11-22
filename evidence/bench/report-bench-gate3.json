@@ -1,6 +1,6 @@
 {
  "set": "bench",
- "gateView": "gate as recorded in the run files",
+ "gateView": "gate v3, as recorded in the run files",
  "arms": {
   "hints": {
    "repeats": 3,
