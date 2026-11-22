@@ -28,6 +28,12 @@ try {
   );
   await sleep(100);
   const before = await app.evaluate(() => window.__pastewise.ledger().length);
+  // independent of the in-page ledger: Chrome's own request log of AI Logic POSTs whose body carries the message (JSON-escaped)
+  const needle = JSON.stringify(S1.paste).slice(1, -1);
+  const wire = [];
+  app.on("request", (rq) => {
+    if (/firebasevertexai|generativelanguage/.test(rq.url()) && rq.method() === "POST") wire.push((rq.postData() ?? "").includes(needle));
+  });
   await app.click("#fill");
   await app.waitForSelector("dialog.modal[open]", { timeout: 20000 });
   out.firstDialog = await app.$eval("dialog.modal[open]", (e) => e.getAttribute("aria-label"));
@@ -50,11 +56,12 @@ try {
   out.consentBytesShown = await app.$eval('[data-testid="consent-bytes"] b', (e) => e.textContent).catch(() => null);
   out.messageBytes = new TextEncoder().encode(S1.paste).length;
   out.aiRequests = (await app.evaluate(() => window.__pastewise.ledger())).filter((r) => /vertexai|generativelanguage/.test(r.host)).map((r) => ({ host: r.host, size: r.size, tokensFound: r.hits }));
-  // the ledger counts the message once per AI Logic request that carried it (a timed-out first attempt plus its retry = 2)
-  const afterYes = (await app.evaluate(() => window.__pastewise.ledger())).slice(before).filter((r) => /vertexai|generativelanguage/.test(r.host) && r.consentRunId);
-  out.aiRequestsCarryingMessage = afterYes.length;
-  out.consentBytesExpected = afterYes.length * out.messageBytes;
-  out.consentShownMatchesRequests = out.consentBytesShown === `${out.consentBytesExpected.toLocaleString("en-US")} bytes`;
+  // expected total from Chrome's request log (not from the ledger the screen sums): message bytes x AI POSTs whose body carried it;
+  // a timed-out first attempt plus its retry = 2
+  out.aiPostsSeenByChrome = wire.length;
+  out.aiPostsCarryingMessage = wire.filter(Boolean).length;
+  out.consentBytesExpected = out.aiPostsCarryingMessage * out.messageBytes;
+  out.consentShownMatchesWire = out.consentBytesShown === `${out.consentBytesExpected.toLocaleString("en-US")} bytes`;
   const f = path.join(ROOT, `evidence/consent-path-${new Date().toISOString().slice(0, 10)}.json`);
   fs.writeFileSync(f, JSON.stringify(out, null, 1) + "\n");
   console.log(JSON.stringify(out, null, 1));

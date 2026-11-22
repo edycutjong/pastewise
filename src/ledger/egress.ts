@@ -25,15 +25,18 @@ const records: LedgerRecord[] = [];
 const listeners = new Set<() => void>();
 let installed = false;
 /** Runs sent after an explicit Yes on the consent sheet. The "sent with your Yes" total is derived from the records: an AI Logic
- *  request counts once (that message's byte length) when its URL or body contains the whole consented message, raw or as the
- *  JSON-escaped string the SDK sends, whenever it lands (a late request after the run returned still counts). Exact content, not
+ *  request counts once (that message's byte length) when its body contains the whole consented message inside the fill prompt's
+ *  Message block, raw or as the JSON-escaped string the SDK sends, whenever it lands (a late request after the run returned still counts). Exact content, not
  *  token overlap, so a short message with no matchable tokens still counts and a request sharing one word with it does not.
  *  The message is held in this tab's memory only, to recognise it; it is never stored or sent anywhere by the ledger. */
 const consentRuns = new Map<string, { bytes: number; needles: string[] }>();
 
 export function markConsentRun(runId: string, message: string) {
-  const json = JSON.stringify(message).slice(1, -1);
-  consentRuns.set(runId, { bytes: new TextEncoder().encode(message).length, needles: [...new Set([message, json])] });
+  // the message exactly as the fill prompt wraps it (src/ai/prompt.ts: Message:\n"""\n<paste>\n"""), so a short message such as
+  // "name" cannot match the empty-form teacher request or any other text that merely contains the same word
+  const wrapped = `Message:\n"""\n${message}\n"""`;
+  const json = JSON.stringify(wrapped).slice(1, -1);
+  consentRuns.set(runId, { bytes: new TextEncoder().encode(message).length, needles: [...new Set([wrapped, json])] });
   listeners.forEach((l) => l());
 }
 

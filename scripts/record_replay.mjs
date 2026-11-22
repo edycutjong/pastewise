@@ -15,7 +15,7 @@ try {
   if (!rec.batches.every((b) => b.inferenceSource === "on_device")) throw new Error("not an on-device run");
   const ua = await page.evaluate(() => navigator.userAgent);
   const cap = Object.fromEntries(spec.fields.map((f) => [f.key, f.label]));
-  const reasonText = { two_candidates: "two numbers in the text", not_in_text: "not in the text", format: "format" };
+  const reasonText = { two_candidates: "two numbers in the text", not_in_text: "not in the text", format: "format", too_long: "longer than the box allows" };
   const out = {
     label: "Synthetic message S1 on the consignment note (form C)",
     recorded: new Date().toISOString(),

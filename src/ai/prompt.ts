@@ -17,6 +17,7 @@ export function fieldLine(f: FieldSpec): string {
   return `- ${f.key}: ${f.label}${hint}${opts}`;
 }
 
+/** The Message block wrapping is also what the egress ledger matches for the consent total (src/ledger/egress.ts markConsentRun): keep them in step. */
 export function buildPrompt(title: string, fields: FieldSpec[], paste: string, today: string): string {
   return `${GUIDE}\nToday: ${today}\nForm: ${title}\nFields:\n${fields.map(fieldLine).join("\n")}\n\nMessage:\n"""\n${paste}\n"""\n\nJSON:`;
 }
