@@ -41,7 +41,7 @@ Pastewise never presses Submit. You always see the form before it goes anywhere.
 ## 💡 The Problem & Solution
 
 ### The Problem
-People who take orders in chat re-type each message into a courier portal, a booking form or a stock sheet. Browser autofill is built around your saved profile, not around a message you just copied, which holds someone else's name, phone number and address. Sending that message to a cloud model to read it means sending a customer's private details to a third party.
+People who take orders in chat re-type each message into a courier portal, a booking form or a stock sheet. Browser autofill is mainly built around saved profiles, not around a message you just copied, which holds someone else's name, phone number and address. Sending that message to a cloud model to read it means sending a customer's private details to a third party.
 
 ### The Solution
 The message is read by the model on the laptop. The model is not trusted: a value is accepted by **code**, not by a model's "confidence". The cloud is used for what it is better at and what carries no customer data: it sees only the **empty form** (labels, names, options) and writes hints for cryptic boxes such as "CNEE" or "form teacher".
@@ -55,7 +55,7 @@ The message is read by the model on the laptop. The model is not trusted: a valu
 | App | Next.js (App Router) + TypeScript, **static export**: no Pastewise server exists to receive customer data |
 | On-device AI | Gemini Nano in Chrome desktop, reached through Firebase AI Logic `InferenceMode.ONLY_ON_DEVICE` |
 | Cloud AI | Firebase AI Logic `ONLY_IN_CLOUD` "form teacher" (empty form only); `PREFER_ON_DEVICE` consent path when Nano is missing |
-| Attestation | Firebase App Check, reCAPTCHA Enterprise (debug provider on localhost only) |
+| Attestation | Firebase App Check, reCAPTCHA Enterprise (debug token injected only in local tests, never in the bundle) |
 | Config / data | Remote Config (paste cap, timeout, batch size, teacher model, cloud kill switch); Firestore (saved hints by form shape, structure only, read-only to clients) |
 | Hosting | Vercel, CSP and security headers in `vercel.json` |
 | Tests | Vitest, Playwright, Puppeteer + headed Chrome for the bench and network capture |
@@ -79,7 +79,7 @@ The code gate (the part a model cannot override) is [`src/gate/`](src/gate): cle
 
 ## 📊 Engineering Rigor
 
-All numbers below come from the committed raw runs in [`evidence/`](evidence). They were measured on one machine (Apple M1 Max, 32 GB, Chrome 157), through the real page with `ONLY_ON_DEVICE`, three repeats, prompt `p0c-v3`, code gate **v2**, commit `62b2bdd`, 2026-11-22. The data is synthetic.
+All numbers below come from the committed run files in [`evidence/`](evidence) (aggregates for all four rows; per-message rows for form C only). They were measured on one machine (Apple M1 Max, 32 GB, Chrome 157), through the real page with `ONLY_ON_DEVICE`, three repeats, prompt `p0c-v3`, code gate **v2**, commit `62b2bdd`, 2026-11-22. The data is synthetic.
 
 | Set | Hints | Strict field accuracy | Wrong value shown | Warm p50 | JSON valid |
 |---|---|---|---|---|---|
@@ -88,14 +88,14 @@ All numbers below come from the committed raw runs in [`evidence/`](evidence). T
 | form C, 10 harder messages | off | 74.0% | 10.33% | 2.62 s | 10/10 ×3 |
 | form C | on | 74.3% | 7.00% | 2.67 s | 10/10 ×3 |
 
-continuity-20 is a frozen, held-out set of 20 messages kept **out of this repo** so the model and prompt are never tuned on it (its SHA-256, `8b019d42…f997f0`, is recorded in every run file). The 10-message dev set and the form C set are in [`sets/`](sets) and can be re-run.
+continuity-20 is a frozen, held-out set of 20 messages kept **out of this repo** so the model and prompt are never tuned on it (its SHA-256, `8b019d42…e997f0`, is recorded in both continuity-20 aggregate files). The 10-message dev set and the form C set are in [`sets/`](sets) and can be re-run.
 
 "Wrong value shown" means a value the gate accepted that does not match the answer key; it is the number that matters, because an amber box costs the person a second and a wrong blue box costs them an error.
 
 | Check | Result | Evidence |
 |---|---|---|
 | Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-94854aa-live.json`](evidence/network/2026-11-22-94854aa-live.json) |
-| No-Nano consent path | 0 AI requests before Yes; the bytes the screen says it sent equal what Chrome's wire log recorded | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
+| No-Nano consent path | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
 | Unit tests (Vitest) | **115 passing** in 12 files | `npm test` |
 | Browser tests (Playwright) | **13** tests in 2 files | `npm run e2e` |
 | Interaction check on the deployed page | 13/13 hover and focus states, 0 dead links | [`evidence/interaction-qa.json`](evidence/interaction-qa.json) |

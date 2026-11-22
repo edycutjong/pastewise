@@ -17,8 +17,7 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 | Open [`/bench/`](https://pastewise.edycu.dev/bench/) | The measured numbers below, with hints off and on |
 
 **No Nano on your browser?** A plain notice appears. Nothing is sent until you press **Yes**; that one paste then goes through
-`PREFER_ON_DEVICE` to the cloud, and the screen shows the bytes sent (in one recorded S1 run the first attempt timed out and was retried, so it showed 2 × 341 bytes, equal to Chrome's wire log in
-[`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json)).
+`PREFER_ON_DEVICE` to the cloud, and the screen shows the bytes sent. In one recorded S1 run the first attempt timed out and was retried, so it showed 682 bytes (2 × the 341-byte message), matching the 2 requests Chrome's wire log recorded carrying it ([`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json)).
 
 ## 2. What was measured
 
@@ -31,9 +30,9 @@ Through the real page, `ONLY_ON_DEVICE`, 3 repeats, prompt `p0c-v3`, code gate v
 | form C (10 harder messages) | off | 74.0% | 10.33% | 2.62 s |
 | form C | on | 74.3% | 7.00% | 2.67 s |
 
-continuity-20 is a frozen held-out set kept out of the repo (SHA-256 `8b019d42…f997f0`, recorded in every run file), so it cannot be re-run from a clone; `sets/form-c-mid.json` and `sets/dev.json` can.
+continuity-20 is a frozen held-out set kept out of the repo (SHA-256 `8b019d42…e997f0`, recorded in both continuity-20 aggregate files), so it cannot be re-run from a clone; `sets/form-c-mid.json` and `sets/dev.json` can.
 
-Source files: `evidence/bench/aggregates/2026-11-22-62b2bdd-*.json` and the `*-summary.md` files beside the raw `r1`–`r3` rows.
+Source files: `evidence/bench/aggregates/2026-11-22-62b2bdd-*.json`; form C also has `*-summary.md` files and the raw `r1`–`r3` rows (continuity-20 has aggregates only).
 Network capture of the hosted page (5 synthetic messages: 4 fills, all on-device, plus 1 over-long paste refused): 0 paste-word hits, 0 requests during the on-device fills, canary caught:
 [`evidence/network/2026-11-22-94854aa-live.json`](evidence/network/2026-11-22-94854aa-live.json).
 
