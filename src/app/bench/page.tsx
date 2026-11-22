@@ -154,7 +154,7 @@ export default function Bench() {
                   };
                   return (
                     <p key={h.commit} className="delta">
-                      Hints off → on, same commit. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
+                      Hints off → on, same message set, prompt and gate. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
                     </p>
                   );
                 })}
