@@ -1,6 +1,6 @@
 {
  "date": "2026-11-22",
- "base": "http://localhost:3102",
+ "base": "https://pastewise.edycu.dev",
  "elementClasses": [
   {
    "name": "nav link",

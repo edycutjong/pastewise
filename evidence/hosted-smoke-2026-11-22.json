@@ -1,18 +1,18 @@
 {
  "label": "synthetic S1 only",
  "base": "https://pastewise.edycu.dev/",
- "date": "2026-11-22T12:30:24.434Z",
- "commit": "53d956f",
+ "date": "2026-11-22T12:46:02.903Z",
+ "commit": "89479af",
  "availability": "available",
  "savedHints": "Hints on (saved copy)",
- "fillHintsUsed": 0,
+ "fillHintsUsed": 10,
  "fill": {
   "done": true,
   "error": null,
   "sources": [
    "on_device"
   ],
-  "totalMs": 7030,
+  "totalMs": 7283,
   "states": {
    "cnee_nm": "found",
    "cnee_tel": "amber",
@@ -23,7 +23,7 @@
    "desc": "found",
    "pcs": "found",
    "svc": "found",
-   "rmks": "amber"
+   "rmks": "found"
   }
  },
  "ledgerAfterFill": [
@@ -54,6 +54,12 @@
   {
    "host": "pastewise.edycu.dev",
    "purpose": "this site",
+   "size": 66,
+   "hits": 0
+  },
+  {
+   "host": "pastewise.edycu.dev",
+   "purpose": "this site",
    "size": 72,
    "hits": 0
   },
@@ -64,33 +70,9 @@
    "hits": 0
   },
   {
-   "host": "pastewise.edycu.dev",
-   "purpose": "this site",
-   "size": 66,
-   "hits": 0
-  },
-  {
-   "host": "pastewise.edycu.dev",
-   "purpose": "this site",
-   "size": 81,
-   "hits": 0
-  },
-  {
-   "host": "pastewise.edycu.dev",
-   "purpose": "this site",
-   "size": 85,
-   "hits": 0
-  },
-  {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
    "size": 292,
-   "hits": 0
-  },
-  {
-   "host": "pastewise.edycu.dev",
-   "purpose": "this site",
-   "size": 69,
    "hits": 0
   },
   {
@@ -114,19 +96,19 @@
   {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
-   "size": 292,
-   "hits": 0
-  },
-  {
-   "host": "firestore.googleapis.com",
-   "purpose": "Firestore",
-   "size": 631,
+   "size": 633,
    "hits": 0
   },
   {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
    "size": 292,
+   "hits": 0
+  },
+  {
+   "host": "firestore.googleapis.com",
+   "purpose": "Firestore",
+   "size": 293,
    "hits": 0
   },
   {
@@ -151,11 +133,11 @@
  "teacher": {
   "hints": 10,
   "inferenceSource": "in_cloud",
-  "ms": 3282
+  "ms": 17806
  },
  "cspViolationsInPage": [],
  "pageErrors": [],
  "failedRequests": [
-  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?gsessionid=REYRVwDMwpM net::ERR_ABORTED"
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?gsessionid=4Z4RYT4DvCq net::ERR_ABORTED"
  ]
 }
