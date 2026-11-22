@@ -132,13 +132,15 @@ body{font:400 30px/1.45 var(--font-body);color:var(--ink)}
 .dark .kick{color:color-mix(in srgb,var(--sheet) 72%,var(--ink))}
 h1,h2{font:700 112px/.93 var(--font-display);text-transform:uppercase;margin:0;letter-spacing:.004em}
 h2{font-size:96px}
-h1 em,h2 em{font-style:normal;color:var(--after);text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.09em;text-decoration-skip-ink:none}
+h1 em,h2 em{font-style:normal;color:var(--ink);text-decoration:underline;text-decoration-thickness:.07em;text-underline-offset:.09em;text-decoration-skip-ink:none}
+h1 em.blue,h2 em.blue{color:var(--after)}
+h2 em.amb{color:var(--before)}
 .dark h2 em{color:var(--sheet);text-decoration-color:var(--sheet)}
 .dark h2 .am{color:var(--before-wash)}
 p{margin:0}
 .lead{font-size:34px;line-height:1.45;color:var(--ink-soft);max-width:30em}
 .mono{font-family:var(--font-data)}
-.foot{position:absolute;left:120px;right:120px;bottom:40px;display:flex;justify-content:space-between;font:18px var(--font-data);color:var(--muted)}
+.foot{position:absolute;left:120px;right:560px;bottom:40px;display:flex;flex-wrap:wrap;gap:6px 40px;font:18px var(--font-data);color:var(--muted)}
 .dark .foot{color:color-mix(in srgb,var(--sheet) 60%,var(--ink))}
 /* cover */
 .cover{display:grid;grid-template-columns:840px 1fr;gap:70px;align-items:center}
@@ -180,12 +182,32 @@ p{margin:0}
 .pd-boxes .cap{font-size:22px}
 .pd-boxes .pw-box{font-size:38px;min-height:88px;padding:12px 22px}
 .pd-boxes .pw-why{font-size:24px;margin-top:10px}
+/* merged split + wire (slide 4) */
+.wire{margin-top:6px;border-top:2px dashed color-mix(in srgb,var(--sheet) 45%,var(--ink));padding-top:22px}
+.wire-h{font:600 22px/1 var(--font-display);letter-spacing:.16em;text-transform:uppercase;color:color-mix(in srgb,var(--sheet) 72%,var(--ink));margin-bottom:14px}
+.wrow{display:grid;grid-template-columns:360px 300px 1fr;gap:24px;align-items:baseline;padding:10px 0;border-bottom:1px solid color-mix(in srgb,var(--sheet) 18%,var(--ink));font-size:28px}
+.wrow b{font:700 34px/1.1 var(--font-display);letter-spacing:.04em;text-transform:uppercase}
+.wrow em{font:21px/1.4 var(--font-data);font-style:normal;color:color-mix(in srgb,var(--sheet) 75%,var(--ink))}
+/* impact (slide 9) */
+.impact{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:30px;margin-top:70px}
+.impact .big{border:1px solid var(--rule);background:var(--copy);padding:36px 38px}
+.impact .big b{display:block;font:400 104px/1 var(--font-data);color:var(--after);letter-spacing:-.03em}
+.impact .big.amb b{color:var(--before)}
+.impact .big:last-child b{color:var(--ink)}
+.impact .big span{display:block;margin-top:16px;font-size:29px;line-height:1.4;color:var(--ink-soft)}
+.forms3{margin-top:44px;font:600 26px/1.4 var(--font-display);letter-spacing:.12em;text-transform:uppercase}
+/* release stat (slide 7) */
+.namestat{display:grid;grid-template-columns:auto auto auto auto 1fr;gap:10px 22px;align-items:baseline;margin-top:56px}
+.namestat b{font:400 96px/1 var(--font-data);color:var(--ink)}
+.namestat span{font:600 24px var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-right:26px}
+.namestat p{font-size:28px;line-height:1.4;color:var(--ink-soft);max-width:22em}
+.runmeta{margin-top:18px;font:20px var(--font-data);color:var(--ink);display:flex;gap:12px;align-items:center}
 /* lanes (slide 5) */
-.lanes{display:grid;grid-template-columns:1fr 70px 1fr;margin-top:50px}
+.lanes{display:grid;grid-template-columns:1fr 70px 1fr;margin-top:40px}
 .lane h3{font:700 40px/1 var(--font-display);letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
 .lane .sub{font:21px var(--font-data);color:color-mix(in srgb,var(--sheet) 70%,var(--ink));margin-bottom:30px}
 .lane ol{list-style:none;margin:0;padding:0;counter-reset:s}
-.lane li{position:relative;padding:0 0 38px 80px;counter-increment:s;font-size:34px;line-height:1.35}
+.lane li{position:relative;padding:0 0 22px 74px;counter-increment:s;font-size:30px;line-height:1.35}
 .lane li::before{content:counter(s);position:absolute;left:0;top:-2px;width:50px;height:50px;display:grid;place-items:center;font:700 26px/1 var(--font-display);border:2px solid var(--sheet)}
 .lane.cloud li::before{border-style:dashed}
 .lane code{font:22px var(--font-data);background:color-mix(in srgb,var(--sheet) 12%,var(--ink));padding:2px 8px}
@@ -267,7 +289,7 @@ p{margin:0}
   <div class="cover">
     <div>
       <div class="brandrow"><img src="/icon.svg" alt="" width="56" height="56">PASTEWISE</div>
-      <h1>Your customer typed it once. Pastewise <em>copies it across.</em></h1>
+      <h1>Your customer typed it once. Pastewise <em class="blue">copies it across.</em></h1>
       <p class="lead" style="margin-top:34px">Gemini Nano fills the form on your laptop. Code shows a value only if it is in your text; the rest stays amber.</p>
       <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" class="segno"><path fill="#fffdf8" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#1f2433" d="M2 2.5h7m2 0h4m1 0h1m1 0h1m1 0h1m3 0h7m-29 1h1m5 0h1m1 0h3m3 0h3m3 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m4 0h2m4 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m3 0h1m1 0h1m1 0h3m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m4 0h3m1 0h1m3 0h2m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h1m3 0h5m2 0h1m-20 1h3m1 0h2m4 0h3m2 0h1m2 0h2m5 0h2m-24 1h1m2 0h3m2 0h1m2 0h1m2 0h3m1 0h5m1 0h1m-26 1h4m1 0h1m1 0h1m1 0h3m1 0h3m3 0h1m1 0h1m2 0h1m-28 1h2m1 0h1m3 0h1m3 0h1m3 0h2m2 0h2m7 0h1m-29 1h4m2 0h1m4 0h3m2 0h2m3 0h1m1 0h1m2 0h3m-29 1h1m7 0h1m1 0h1m1 0h2m1 0h2m2 0h1m2 0h2m1 0h2m1 0h1m-28 1h1m3 0h4m2 0h1m1 0h3m1 0h3m1 0h5m2 0h1m-29 1h6m1 0h5m4 0h3m5 0h2m-26 1h1m1 0h2m2 0h1m7 0h1m1 0h3m1 0h1m2 0h3m1 0h1m-27 1h1m1 0h1m4 0h1m1 0h3m3 0h1m3 0h1m2 0h1m-24 1h1m3 0h3m2 0h2m3 0h3m5 0h4m-23 1h2m3 0h2m1 0h2m4 0h2m2 0h8m-28 1h3m2 0h1m1 0h1m2 0h4m2 0h10m-19 1h2m1 0h4m1 0h1m2 0h2m3 0h2m1 0h2m-29 1h7m2 0h4m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h2m-28 1h1m5 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m2 0h1m1 0h4m3 0h1m1 0h8m-28 1h1m1 0h3m1 0h1m1 0h4m4 0h4m4 0h4m-28 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m1 0h1m2 0h1m-29 1h1m5 0h1m1 0h1m1 0h1m1 0h3m1 0h1m3 0h1m1 0h1m1 0h2m1 0h1m-28 1h7m2 0h3m1 0h1m1 0h1m2 0h3m1 0h2m1 0h1m1 0h1"/></svg>
 <span>pastewise.edycu.dev<br><span style="color:var(--muted)">live · no sign-in</span></span></div>
@@ -281,9 +303,9 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 <mark data-k="svc">express</mark> pls, she needs them before Friday 🙏 leave at the guard post if nobody home
 </div></div></div>
 <div class="pw-copy"><div class="pw-margin" aria-hidden="true"></div><div class="pw-reading" aria-hidden="true"></div>
-<span class="no">Nº 0417-C</span><div class="head"><b>Consignment note</b><span class="pw-badge">on_device · recorded</span></div>
+<span class="no">Nº 0417-C</span><div class="head"><b>Consignment note</b><span class="pw-badge">recorded · on_device</span></div>
 <div class="pw-grid"><div class="pw-f amber" data-key="cnee_nm" data-cap="CNEE"><span class="cap">CNEE</span><div class="pw-box" tabindex="0"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm &mdash; the model suggested <span class="said">&ldquo;Maya Kusuma&rdquo;</span></div></div><div class="pw-f amber" data-key="cnee_tel" data-cap="CNEE TEL"><span class="cap">CNEE TEL</span><div class="pw-box" tabindex="0"><span class="pw-v">085755508812</span></div><div class="pw-why">two numbers in your text — pick one<br><span class="pw-chip">0813-5550-2290</span><span class="pw-chip">0857 5550 8812</span></div></div><div class="pw-f found full" data-key="addr_1" data-cap="ADDR 1"><span class="cap">ADDR 1</span><div class="pw-box" tabindex="0"><span class="pw-v">Jl. Cempaka Putih Raya No. 41</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="dist_city" data-cap="DIST/CITY"><span class="cap">DIST/CITY</span><div class="pw-box" tabindex="0"><span class="pw-v">Jakarta Pusat</span></div><div class="pw-why">found in your text</div></div><div class="pw-f empty" data-key="st_prov" data-cap="ST/PROV"><span class="cap">ST/PROV</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why"></div></div><div class="pw-f found" data-key="zip" data-cap="ZIP"><span class="cap">ZIP</span><div class="pw-box" tabindex="0"><span class="pw-v">10510</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="desc" data-cap="DESC"><span class="cap">DESC</span><div class="pw-box" tabindex="0"><span class="pw-v">linen tablecloths</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="pcs" data-cap="PCS"><span class="cap">PCS</span><div class="pw-box" tabindex="0"><span class="pw-v">2</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="svc" data-cap="SVC"><span class="cap">SVC</span><div class="pw-box" tabindex="0"><span class="pw-v">EXP</span></div><div class="pw-why">found in your text</div></div><div class="pw-f amber full" data-key="rmks" data-cap="RMKS"><span class="cap">RMKS</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why">not in your text &mdash; the model wrote <span class="said">&ldquo;… at the guard post if nobody 홈&rdquo;</span></div></div></div>
-<div class="pw-strip"><span>REQUESTS FROM THIS PAGE WHILE THE GATE RAN</span><b data-reqs>0</b></div></div>
+<div class="pw-strip"><span>LIVE · REQUESTS FROM THIS PAGE WHILE THE GATE RAN</span><b data-reqs>0</b></div></div>
 </div></div>
   </div>
   <div class="foot"><span>Build with Hybrid AI · Web (Chrome)</span><span>recorded on-device run · gate v4</span></div>
@@ -307,7 +329,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 
 <section class="frame" aria-label="Slide 3 of 10: the idea"><div class="slide sheet">
   <p class="kick"><i>Sheet 02</i> The idea</p>
-  <h2>A carbon copy only shows <em>what was pressed.</em></h2>
+  <h2>A carbon copy only shows <em class="blue">what was pressed.</em></h2>
   <p class="lead" style="margin-top:30px">Your message is the top sheet; the form is the copy. A box turns blue only when its value is in your text and fits the box.</p>
   <div class="press-demo">
     <p class="pd-top">…Mrs. Ratna Kusuma, <u>Jl. Cempaka Putih Raya No. 41</u>, <u>Jakarta Pusat</u> <u>10510</u>.<br>her old number <i>0813-5550-2290</i> is dead don't use it, new one is <i>0857 5550 8812</i>.</p>
@@ -321,38 +343,31 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
   <aside class="speaker-notes">The idea comes from the duplicate order book: the pink copy can only show what was written on the top sheet. We made that literal: code accepts a value only if it appears in the paste and passes the box's format check.</aside>
 </div></section>
 
-<section class="frame" aria-label="Slide 4 of 10: Firebase AI Logic"><div class="slide">
-  <p class="kick"><i>Sheet 03</i> One SDK, three modes</p>
-  <h2>Firebase AI Logic, each mode with <em>one job.</em></h2>
-  <div class="stack">
-    <div class="mode"><code>ONLY_ON_DEVICE</code><p>Fills from your message, JSON schema from the live form as <span class="mono">responseConstraint</span>.</p><div class="who">Gemini Nano · customer text</div></div>
-    <div class="mode"><code>ONLY_IN_CLOUD</code><p>The teacher reads only the empty form and writes hints for boxes like CNEE.</p><div class="who">gemini-3.5-flash-lite · no customer text</div></div>
-    <div class="mode"><code>PREFER_ON_DEVICE</code><p>No Nano? You are asked first, and see the bytes, before one message is sent.</p><div class="who">consent path · 0 requests before Yes</div></div>
-  </div>
-  <p class="guards">+ App Check (reCAPTCHA Enterprise) · Remote Config: 2,000-char cap, timeout, kill switch · Firestore: hints by form fingerprint</p>
-  <div class="foot"><span>src/ai/models.ts · src/lib/firebase.ts</span></div>
-  <aside class="speaker-notes">Three getGenerativeModel instances. The fill model is ONLY_ON_DEVICE with the form's JSON schema as the response constraint. The teacher is ONLY_IN_CLOUD and only ever sees labels, names and options. The consent path is PREFER_ON_DEVICE and runs only after Yes.</aside>
-</div></section>
-
-<section class="frame" aria-label="Slide 5 of 10: the hybrid split"><div class="slide dark">
-  <p class="kick"><i>Sheet 04</i> The hybrid split</p>
-  <h2>The message stays left. <em>The empty form goes right.</em></h2>
+<section class="frame" aria-label="Slide 4 of 10: the hybrid split"><div class="slide dark">
+  <p class="kick"><i>Sheet 03</i> The hybrid split · Firebase AI Logic</p>
+  <h2>With Nano, the message stays left. <em>The empty form goes right.</em></h2>
   <div class="lanes">
     <div class="lane"><h3>On your laptop</h3><p class="sub">Gemini Nano · ONLY_ON_DEVICE</p>
-      <ol><li>Live form → JSON schema</li><li>Nano answers inside it</li><li>Code checks each value against your text</li><li>Blue or amber, with <code>inferenceSource</code></li></ol></div>
+      <ol><li>Live form → JSON schema, sent as <code>responseConstraint</code></li><li>Code checks each value against your text</li><li>Blue or amber, with <code>inferenceSource</code></li></ol></div>
     <div class="perf" aria-hidden="true"></div>
     <div class="lane cloud"><h3>In the cloud</h3><p class="sub">gemini-3.5-flash-lite · ONLY_IN_CLOUD</p>
-      <ol><li>Labels, names, options only</li><li>Hints via <code>responseSchema</code></li><li>Saved by form fingerprint</li><li>Behind App Check</li></ol></div>
+      <ol><li>Labels, names, options: hints via <code>responseSchema</code></li><li>Saved by form fingerprint in Firestore</li><li>App Check in front; Remote Config caps</li></ol></div>
   </div>
-  <div class="foot"><span>hosted network log 4b8f0b5: 0 requests during 4 on-device fills</span></div>
-  <aside class="speaker-notes">This is the line judges should remember: customer text never needs the cloud on a Nano laptop. The cloud does what it is better at and what carries no customer data: understanding cryptic form labels.</aside>
+  <div class="wire">
+    <p class="wire-h">What crosses the wire</p>
+    <div class="wrow"><span>Fill on a Nano laptop</span><b>nothing</b><em>0 requests during 4 hosted fills</em></div>
+    <div class="wrow"><span>Teach this form</span><b>the empty form</b><em>labels, names, options</em></div>
+    <div class="wrow"><span>No Nano, after Yes</span><b>that one message</b><em>PREFER_ON_DEVICE · 682 bytes = 2 × 341, one timed-out retry</em></div>
+  </div>
+  <div class="foot"><span>src/ai/models.ts · evidence/network/2026-11-22-4b8f0b5-live.json · evidence/consent-path-2026-11-22.json</span></div>
+  <aside class="speaker-notes">Three getGenerativeModel instances. The fill model is ONLY_ON_DEVICE with the form's JSON schema as the response constraint. The teacher is ONLY_IN_CLOUD and only sees labels, names and options. Without Nano, one message goes to the cloud only after Yes, and the sheet shows the bytes.</aside>
 </div></section>
 
-<section class="frame" data-steps="3" aria-label="Slide 6 of 10: one recorded fill, step by step"><div class="slide">
-  <p class="kick"><i>Sheet 05</i> One recorded fill · press → to step</p>
+<section class="frame" data-steps="3" aria-label="Slide 5 of 10: one recorded fill, step by step"><div class="slide">
+  <p class="kick"><i>Sheet 04</i> One recorded fill · press → to step</p>
   <h2 style="font-size:84px">The model proposes. <em>Code decides.</em></h2>
   <div class="cols">
-    <div class="col"><h3>The message</h3><div class="msg">hiii 👋 it&#x27;s Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:<br>Mrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.<br>her old number 0813-5550-2290 is dead don&#x27;t use it, new one is 0857 5550 8812.<br>express pls, she needs them before Friday 🙏 leave at the guard post if nobody home</div></div>
+    <div class="col"><h3>The message</h3><div class="msg">hiii 👋 it&#x27;s Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:<br>Mrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.<br>her old number 0813-5550-2290 is dead don&#x27;t use it, new one is 0857 5550 8812.<br>express pls, she needs them before Friday 🙏 leave at the guard post if nobody home</div><div class="runmeta"><span class="pw-badge" style="font-size:18px">on_device</span> Chrome 157 · M1 Max · 6.06 s · gate v4</div></div>
     <div class="col s s1"><h3>Nano's answer (raw)</h3><ul class="ans"><li><span>CNEE</span><span>Maya Kusuma</span></li><li><span>CNEE TEL</span><span>085755508812</span></li><li><span>ADDR 1</span><span>Jl. Cempaka Putih Raya No. 41</span></li><li><span>DIST/CITY</span><span>Jakarta Pusat</span></li><li><span>ST/PROV</span><span>&mdash;</span></li><li><span>ZIP</span><span>10510</span></li><li><span>DESC</span><span>2 linen tablecloths (the sage ones)</span></li><li><span>PCS</span><span>2</span></li><li><span>SVC</span><span>EXP</span></li><li><span>RMKS</span><span>express pls, she needs them before Friday 🙏 leave at the guard post if nobody 홈</span></li></ul></div>
     <div class="col s s2"><h3>The gate (shipped code)</h3><ul class="verd"><li class="amber"><span>CNEE</span><span>Maya Kusuma<small>names are always yours to confirm</small></span></li><li class="amber"><span>CNEE TEL</span><span>085755508812<small>two numbers in your text — pick one</small></span></li><li class="found"><span>ADDR 1</span><span>Jl. Cempaka Putih Raya No. 41<small>found in your text</small></span></li><li class="found"><span>DIST/CITY</span><span>Jakarta Pusat<small>found in your text</small></span></li><li class="empty"><span>ST/PROV</span><span>(empty)<small>not in your text</small></span></li><li class="found"><span>ZIP</span><span>10510<small>found in your text</small></span></li><li class="found"><span>DESC</span><span>linen tablecloths<small>found in your text</small></span></li><li class="found"><span>PCS</span><span>2<small>found in your text</small></span></li><li class="found"><span>SVC</span><span>EXP<small>found in your text</small></span></li><li class="amber"><span>RMKS</span><span>(blank)<small>not in your text</small></span></li></ul></div>
   </div>
@@ -361,8 +376,8 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
   <aside class="speaker-notes">Step one: Nano's raw answer. Note the remarks: it ended with the Hangul word for home. Step two: the gate. That word is not in the message, so the box stays amber. The name is in the message but it is the sender, which is why names are always amber in v4.</aside>
 </div></section>
 
-<section class="frame" aria-label="Slide 7 of 10: rules with tests"><div class="slide">
-  <p class="kick"><i>Sheet 06</i> Rules you can read</p>
+<section class="frame" aria-label="Slide 6 of 10: rules with tests"><div class="slide">
+  <p class="kick"><i>Sheet 05</i> Rules you can read</p>
   <h2>Copied word for word, <em>or not at all.</em></h2>
   <div class="rules">
     <div class="rule"><h3>Two numbers? You pick.</h3><p>Both stay on the table as chips, whatever the model chose.</p><span class="t">tests/unit/gate.test.ts:64</span></div>
@@ -374,21 +389,21 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
   <aside class="speaker-notes">Every rule here has a test pinned to a line. The gate is plain TypeScript; the landing page runs the same bundle so you can edit the message and watch it re-check.</aside>
 </div></section>
 
-<section class="frame" aria-label="Slide 8 of 10: release response"><div class="slide sheet">
-  <p class="kick"><i>Sheet 07</i> The bench changed the product</p>
-  <h2>Names are now <em>always yours to confirm.</em></h2>
+<section class="frame" aria-label="Slide 7 of 10: release response"><div class="slide sheet">
+  <p class="kick"><i>Sheet 06</i> The bench changed the product</p>
+  <h2>Names are now <em class="amb">always yours to confirm.</em></h2>
   <div class="vs">
     <div class="card"><p class="lbl">recorded run · ba8a64a · gate v2</p><div class="pw-f found"><span class="cap">CNEE</span><div class="pw-box"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">found in your text, but she is the sender</div></div></div>
     <div class="arrow" aria-hidden="true">→</div>
     <div class="card"><p class="lbl">recorded run · ee635b4 · gate v4</p><div class="pw-f amber"><span class="cap">CNEE</span><div class="pw-box"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm</div></div></div>
   </div>
-  <p class="lead" style="margin-top:44px">Bench, 180 pairs: the recipient box showed a wrong value 10.6% (form A) and 8.3% (form C) of the time.</p>
+  <div class="namestat"><b>10.6%</b><span>form A</span><b>8.3%</b><span>form C</span><p>wrong values in the recipient box on the 180-pair bench (gate v3): over our 5% rule, so v4 keeps every recipient name amber.</p></div>
   <div class="foot"><span>evidence/bench/report-bench-gate3.json · src/gate/index.ts ALWAYS_CHECK_KEYS</span></div>
   <aside class="speaker-notes">We set a rule before the release: any name, phone, address or postal box above 5% wrong-shown becomes always-amber. Two recipient-name boxes crossed it, so gate v4 never presses a recipient name through. It costs a second; it removes the worst error.</aside>
 </div></section>
 
-<section class="frame" aria-label="Slide 9 of 10: measured"><div class="slide">
-  <p class="kick"><i>Sheet 08</i> Held-out set · 45 pairs × 3</p>
+<section class="frame" aria-label="Slide 8 of 10: measured"><div class="slide">
+  <p class="kick"><i>Sheet 07</i> Held-out set · 45 pairs × 3</p>
   <h2>Three bars aimed for. <em>Three missed.</em></h2>
   <div class="slip">
     <div class="srow"><b>Strict accuracy</b><span class="v">80.7%</span><span class="aim">aimed ≥ 90%</span><span class="stamp">Missed</span></div>
@@ -398,6 +413,19 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
   <div class="notes3"><div><b>2.0%</b>wrong in name, phone, address, postal boxes</div><div><b>135/135</b>valid JSON, every batch on_device</div><div><b>+0.1 pt</b>from cloud hints on form C: adds little</div></div>
   <div class="foot"><span>evidence/bench/report-holdout.json · synthetic data · one M1 Max</span></div>
   <aside class="speaker-notes">These are the numbers on a held-out set written before any run and hashed. We missed all three bars we aimed for, and we say so. Most wrong values are free-text notes; in the boxes where an error does damage it is two percent.</aside>
+</div></section>
+
+<section class="frame" aria-label="Slide 9 of 10: what it saves"><div class="slide sheet">
+  <p class="kick"><i>Sheet 08</i> What it saves</p>
+  <h2>Most boxes arrive filled. <em class="amb">The doubtful ones wait for you.</em></h2>
+  <div class="impact">
+    <div class="big"><b>77.9%</b><span>of boxes with an answer in the message arrive with the right value, found in your text</span></div>
+    <div class="big amb"><b>17.7%</b><span>left amber for a second look, not shown as found</span></div>
+    <div class="big"><b>2.0%</b><span>wrong in name, phone, address and postal boxes</span></div>
+  </div>
+  <p class="forms3">Three forms in the app: courier consignment note · hotel front-desk booking · shop order form</p>
+  <div class="foot"><span>held-out set, 45 pairs × 3, hints off · evidence/bench/report-holdout.json</span></div>
+  <aside class="speaker-notes">The impact is the typing that disappears: on held-out messages most boxes arrive with the right value, and the boxes code could not accept are amber instead of wrong. Anyone who takes orders or bookings in chat re-types the same details; these are the three forms we built and measured.</aside>
 </div></section>
 
 <section class="frame" aria-label="Slide 10 of 10: try it"><div class="slide dark">
@@ -415,7 +443,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
     <div class="qr"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" class="segno"><path fill="#fffdf8" d="M0 0h33v33h-33z"/><path class="qrline" stroke="#1f2433" d="M2 2.5h7m2 0h4m1 0h1m1 0h1m1 0h1m3 0h7m-29 1h1m5 0h1m1 0h3m3 0h3m3 0h1m1 0h1m5 0h1m-29 1h1m1 0h3m1 0h1m1 0h1m1 0h3m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m4 0h2m4 0h1m2 0h1m1 0h1m1 0h3m1 0h1m-29 1h1m1 0h3m1 0h1m2 0h1m3 0h1m1 0h1m1 0h3m2 0h1m1 0h3m1 0h1m-29 1h1m5 0h1m4 0h3m1 0h1m3 0h2m1 0h1m5 0h1m-29 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-20 1h1m3 0h5m2 0h1m-20 1h3m1 0h2m4 0h3m2 0h1m2 0h2m5 0h2m-24 1h1m2 0h3m2 0h1m2 0h1m2 0h3m1 0h5m1 0h1m-26 1h4m1 0h1m1 0h1m1 0h3m1 0h3m3 0h1m1 0h1m2 0h1m-28 1h2m1 0h1m3 0h1m3 0h1m3 0h2m2 0h2m7 0h1m-29 1h4m2 0h1m4 0h3m2 0h2m3 0h1m1 0h1m2 0h3m-29 1h1m7 0h1m1 0h1m1 0h2m1 0h2m2 0h1m2 0h2m1 0h2m1 0h1m-28 1h1m3 0h4m2 0h1m1 0h3m1 0h3m1 0h5m2 0h1m-29 1h6m1 0h5m4 0h3m5 0h2m-26 1h1m1 0h2m2 0h1m7 0h1m1 0h3m1 0h1m2 0h3m1 0h1m-27 1h1m1 0h1m4 0h1m1 0h3m3 0h1m3 0h1m2 0h1m-24 1h1m3 0h3m2 0h2m3 0h3m5 0h4m-23 1h2m3 0h2m1 0h2m4 0h2m2 0h8m-28 1h3m2 0h1m1 0h1m2 0h4m2 0h10m-19 1h2m1 0h4m1 0h1m2 0h2m3 0h2m1 0h2m-29 1h7m2 0h4m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h2m-28 1h1m5 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1m2 0h1m-28 1h1m1 0h3m1 0h1m2 0h1m1 0h4m3 0h1m1 0h8m-28 1h1m1 0h3m1 0h1m1 0h4m4 0h4m4 0h4m-28 1h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m2 0h4m1 0h1m2 0h1m1 0h1m2 0h1m-29 1h1m5 0h1m1 0h1m1 0h1m1 0h3m1 0h1m3 0h1m1 0h1m1 0h2m1 0h1m-28 1h7m2 0h3m1 0h1m1 0h1m2 0h3m1 0h2m1 0h1m1 0h1"/></svg>
 <p class="url">pastewise.edycu.dev</p></div>
   </div>
-  <div class="foot"><span>build 252d373 · Apache-2.0 · /about for the long version</span></div>
+  <div class="foot"><span>build 841a71d · Apache-2.0 · /about for the long version</span></div>
   <aside class="speaker-notes">The judge path is three clicks. If your Chrome has Nano, every fill says on_device. If not, you get a plain notice and a consent sheet with the exact bytes. The receipt page shows the recorded network log.</aside>
 </div></section>
 

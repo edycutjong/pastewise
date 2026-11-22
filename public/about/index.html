@@ -162,7 +162,7 @@ h1 em{font-style:normal;color:var(--after);text-decoration:underline;text-decora
 .proof{display:flex;flex-wrap:wrap;gap:6px 16px;font:12.5px/1.5 var(--font-data);color:var(--ink);margin:0;padding:0;list-style:none}
 .proof li::before{content:"■ ";color:var(--after);font-size:9px;vertical-align:2px}
 .proof li.am::before{color:var(--before)}
-.exhibit-cap{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;margin:16px 0 0 4px;font:12px/1.45 var(--font-data);color:var(--muted)}
+.exhibit-cap{display:flex;flex-direction:column;gap:4px;margin:16px 0 0 4px;font:12px/1.45 var(--font-data);color:var(--muted)}
 .exhibit-cap b{font-weight:400;color:var(--ink)}
 .pw-desk .live{display:none}
 .pw-desk.edited .live{display:inline}
@@ -185,6 +185,7 @@ h1 em{font-style:normal;color:var(--after);text-decoration:underline;text-decora
 .receipt .fig.blue{color:var(--after)}
 .receipt p{margin:8px 0 8px;font-size:15px;line-height:1.45;color:var(--ink-soft)}
 .receipt code{font:11px/1.4 var(--font-data);color:var(--muted);overflow-wrap:anywhere}
+.forms-line{margin-top:26px!important;padding-top:16px;font:600 13px/1.5 var(--font-display);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);border-top:1px dashed var(--rule)}
 section{scroll-margin-top:20px}
 .sec{padding:92px 0}
 .sec-head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:end;margin-bottom:38px}
@@ -331,6 +332,7 @@ footer{background:var(--ink);color:var(--sheet);padding:56px 0 40px}
 }
 @media (max-width:600px){
   body{font-size:16px}
+  .proof{display:none}
   .top-bar{padding:16px 0}
   .brand span{display:none}
   .btn{padding:11px 13px;font-size:13px}
@@ -399,22 +401,23 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 <mark data-k="svc">express</mark> pls, she needs them before Friday 🙏 leave at the guard post if nobody home
 </div><textarea class="pw-ta" spellcheck="false" aria-label="The message, editable: the gate re-checks every box as you type"></textarea></div><div class="pw-edit"><span class="hint">Edit the message: the gate re-checks every box as you type.</span><button class="pw-btn" type="button" data-replay>Replay</button></div></div>
 <div class="pw-copy"><div class="pw-margin" aria-hidden="true"></div><div class="pw-reading" aria-hidden="true"></div>
-<span class="no">Nº 0417-C</span><div class="head"><b>Consignment note</b><span class="pw-badge">on_device · recorded</span></div>
+<span class="no">Nº 0417-C</span><div class="head"><b>Consignment note</b><span class="pw-badge">recorded · on_device</span></div>
 <div class="pw-grid"><div class="pw-f amber" data-key="cnee_nm" data-cap="CNEE"><span class="cap">CNEE</span><div class="pw-box" tabindex="0"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm &mdash; the model suggested <span class="said">&ldquo;Maya Kusuma&rdquo;</span></div></div><div class="pw-f amber" data-key="cnee_tel" data-cap="CNEE TEL"><span class="cap">CNEE TEL</span><div class="pw-box" tabindex="0"><span class="pw-v">085755508812</span></div><div class="pw-why">two numbers in your text — pick one<br><span class="pw-chip">0813-5550-2290</span><span class="pw-chip">0857 5550 8812</span></div></div><div class="pw-f found full" data-key="addr_1" data-cap="ADDR 1"><span class="cap">ADDR 1</span><div class="pw-box" tabindex="0"><span class="pw-v">Jl. Cempaka Putih Raya No. 41</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="dist_city" data-cap="DIST/CITY"><span class="cap">DIST/CITY</span><div class="pw-box" tabindex="0"><span class="pw-v">Jakarta Pusat</span></div><div class="pw-why">found in your text</div></div><div class="pw-f empty" data-key="st_prov" data-cap="ST/PROV"><span class="cap">ST/PROV</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why"></div></div><div class="pw-f found" data-key="zip" data-cap="ZIP"><span class="cap">ZIP</span><div class="pw-box" tabindex="0"><span class="pw-v">10510</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="desc" data-cap="DESC"><span class="cap">DESC</span><div class="pw-box" tabindex="0"><span class="pw-v">linen tablecloths</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="pcs" data-cap="PCS"><span class="cap">PCS</span><div class="pw-box" tabindex="0"><span class="pw-v">2</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="svc" data-cap="SVC"><span class="cap">SVC</span><div class="pw-box" tabindex="0"><span class="pw-v">EXP</span></div><div class="pw-why">found in your text</div></div><div class="pw-f amber full" data-key="rmks" data-cap="RMKS"><span class="cap">RMKS</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why">not in your text &mdash; the model wrote <span class="said">&ldquo;… at the guard post if nobody 홈&rdquo;</span></div></div></div>
-<div class="pw-strip"><span>REQUESTS FROM THIS PAGE WHILE THE GATE RAN</span><b data-reqs>0</b></div></div>
+<div class="pw-strip"><span>LIVE · REQUESTS FROM THIS PAGE WHILE THE GATE RAN</span><b data-reqs>0</b></div></div>
 </div>
-      <p class="exhibit-cap"><span><b>Recorded on-device run</b> · 2026-11-22 · gate v4 · replayed at 3× speed · the gate is the shipped code, running in this page: <b data-selfcheck>10/10 boxes match the recording</b></span></p>
+      <p class="exhibit-cap"><span><b>Model answers: recorded</b> on-device run, 2026-11-22, Chrome 157 on an M1 Max, replayed at 3× speed.</span><span><b>Gate: live in this page</b>, the shipped code (v4); edit the message to re-check · <b data-selfcheck>10/10 boxes match the recording</b></span></p>
     </div>
   </div>
 </section>
 
 <section class="sheet-band" aria-label="Receipts">
   <div class="wrap receipts">
-    <div class="receipt"><span class="fig blue" data-count="0">0</span><p>message words found in any request, 4 on-device fills, hosted page</p><code>evidence/network/2026-11-22-4b8f0b5-live.json</code></div>
+    <div class="receipt"><span class="fig" data-count="0">0</span><p>message words found in any request, 4 on-device fills, hosted page</p><code>evidence/network/2026-11-22-4b8f0b5-live.json</code></div>
     <div class="receipt"><span class="fig" data-count="2.0" data-dec="1" data-suf="%">2.0%</span><p>wrong values shown in name, phone, address and postal boxes (held-out)</p><code>evidence/bench/report-holdout.json</code></div>
-    <div class="receipt"><span class="fig" data-count="135" data-suf="/135">135/135</span><p>held-out fills with valid JSON, every one on-device (45 pairs × 3)</p><code>evidence/bench/aggregates/2026-11-22-f00f35d-holdout-off.json</code></div>
+    <div class="receipt"><span class="fig blue" data-count="77.9" data-dec="1" data-suf="%">77.9%</span><p>of boxes with an answer in the message arrive with the right value, found in your text (held-out)</p><code>evidence/bench/report-holdout.json</code></div>
     <div class="receipt"><span class="fig" data-count="2.34" data-dec="2" data-suf=" s">2.34 s</span><p>warm median per fill, Nano on an M1 Max</p><code>evidence/bench/aggregates/2026-11-22-f00f35d-holdout-off.json</code></div>
   </div>
+  <p class="wrap forms-line">Three forms in the app, one shortcut: a courier consignment note, a hotel front-desk booking, a shop order form.</p>
 </section>
 
 <section class="sec" id="watch" aria-labelledby="h-watch">
@@ -445,7 +448,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 <li><span>CANARY</span><span>planted message words</span><span class="n">caught</span></li>
         </ol>
         <div class="tot"><span>PASTE WORDS FOUND IN ANY REQUEST</span><b>0</b></div>
-        <p class="fine">Request bodies are not stored, only host, path, size and hit counts. Blind spots: words under four letters and encoded text. <a href="/receipt/">Open the full receipt</a></p>
+        <p class="fine">Counts from Chrome's network log (CDP). Bodies are not stored, only host, path, size and hits. Blind spots: words under four letters, encoded text. <a href="/receipt/">Open the full receipt</a></p>
       </div>
     </div>
   </div>
@@ -454,7 +457,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 <section class="sec ink-band" id="split" aria-labelledby="h-split">
   <div class="wrap">
     <div class="sec-head">
-      <div><p class="label">The hybrid split</p><h2 id="h-split">The message stays on the laptop. The cloud gets the empty form.</h2></div>
+      <div><p class="label">The hybrid split</p><h2 id="h-split">With Nano, the message stays on the laptop. The cloud gets the empty form.</h2></div>
       <p>Three Firebase AI Logic model instances: fill on the device, teach from the empty form, and a consent path that waits for your Yes.</p>
     </div>
     <div class="lanes">
@@ -478,7 +481,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
         </ol>
       </div>
     </div>
-    <p class="consent"><b>No Nano?</b> A consent sheet comes before that one message goes to the cloud (<code>PREFER_ON_DEVICE</code>). Recorded check: 0 AI requests before Yes; the sheet counted 682 bytes (2 × 341) and Chrome's wire log saw 2 requests.</p>
+    <p class="consent"><b>No Nano?</b> A consent sheet comes before that one message goes to the cloud (<code>PREFER_ON_DEVICE</code>). Recorded check: 0 AI requests before Yes; the sheet counted 682 bytes (2 × 341: one attempt timed out and was retried) and Chrome's wire log saw the same 2.</p>
   </div>
 </section>
 
@@ -591,7 +594,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
       <div><h3>Use it</h3><ul><li><a href="/">Try it live</a></li><li><a href="/receipt/">Network receipt</a></li><li><a href="/bench/">Bench numbers</a></li></ul></div>
       <div><h3>Read it</h3><ul><li><a href="/pitch/">Pitch deck</a></li><li><a href="https://github.com/edycutjong/pastewise">Source code</a></li><li><a href="https://github.com/edycutjong/pastewise/blob/main/LICENSE">Apache-2.0</a></li></ul></div>
     </div>
-    <p class="stamp-line">Built from evidence at 252d373 · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
+    <p class="stamp-line">Built from evidence at 841a71d · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
   </div>
 </footer>
 <script src="/site/gate.js"></script>
