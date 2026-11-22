@@ -9,15 +9,15 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 
 | Step | What you should see |
 |---|---|
-| Pick sample message **S1** and press **Fill** | Boxes fill in carbon blue; each value's source words are underlined in the message |
+| Paste the synthetic message **S1** (from [`fixtures/demo/S1.json`](fixtures/demo/S1.json), field `paste`) and press **Fill this message** | Boxes fill in carbon blue; each value's source words are underlined in the message |
 | Look at the **CNEE TEL** box | It stays **amber**: the message holds two phone numbers (an old dead one and a new one), and the code refuses to guess |
 | Look at the badge on the fill | `ON_DEVICE` on a Chrome with Gemini Nano. This is the `inferenceSource` Firebase AI Logic reports |
-| Open the **Teach** drawer | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload and its `IN_CLOUD` source |
+| Open the **Teach** drawer | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload, and after a fresh cloud call its `IN_CLOUD` source (otherwise it says it is showing a saved copy) |
 | Open [`/receipt/`](https://pastewise.edycu.dev/receipt/) | The recorded network log behind the "0 bytes" counter |
 | Open [`/bench/`](https://pastewise.edycu.dev/bench/) | The measured numbers below, with hints off and on |
 
 **No Nano on your browser?** A plain notice appears. Nothing is sent until you press **Yes**; that one paste then goes through
-`PREFER_ON_DEVICE` to the cloud, and the screen shows the bytes sent (equal to Chrome's wire log in
+`PREFER_ON_DEVICE` to the cloud, and the screen shows the bytes sent (in one recorded S1 run the first attempt timed out and was retried, so it showed 2 × 341 bytes, equal to Chrome's wire log in
 [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json)).
 
 ## 2. What was measured
@@ -34,7 +34,7 @@ Through the real page, `ONLY_ON_DEVICE`, 3 repeats, prompt `p0c-v3`, code gate v
 continuity-20 is a frozen held-out set kept out of the repo (SHA-256 `8b019d42…f997f0`, recorded in every run file), so it cannot be re-run from a clone; `sets/form-c-mid.json` and `sets/dev.json` can.
 
 Source files: `evidence/bench/aggregates/2026-11-22-62b2bdd-*.json` and the `*-summary.md` files beside the raw `r1`–`r3` rows.
-Network capture of the hosted page (5 synthetic messages): 0 paste-word hits, 0 requests during on-device fills, canary caught:
+Network capture of the hosted page (5 synthetic messages: 4 fills, all on-device, plus 1 over-long paste refused): 0 paste-word hits, 0 requests during the on-device fills, canary caught:
 [`evidence/network/2026-11-22-94854aa-live.json`](evidence/network/2026-11-22-94854aa-live.json).
 
 ## 3. Reproduce
