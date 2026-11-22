@@ -2,7 +2,7 @@
 // edited is never overwritten, edited boxes never count as "found", and a
 // result from a previous message is marked stale.
 import { describe, expect, it } from "vitest";
-import { boxClass, countBoxes, mergeBatch, stateNote, type FormRun } from "@/components/runState";
+import { boxClass, countBoxes, mergeBatch, rowForCopy, stateNote, type FormRun } from "@/components/runState";
 import type { FieldSpec } from "@/forms/types";
 import type { BatchResult } from "@/ai/fill";
 
@@ -65,5 +65,45 @@ describe("countBoxes / boxClass / stateNote", () => {
   });
   it("an amber note names the reason and what the model suggested, never 'verified'", () => {
     expect(stateNote(filled.boxes.phone, false)).toMatch(/^not in your text — the model suggested/);
+  });
+});
+
+describe("rowForCopy (copy the boxes as one row)", () => {
+  const cols = [
+    { name: "name", caption: "Recipient name" },
+    { name: "phone", caption: "Phone" },
+    { name: "notes", caption: "Delivery notes" },
+    { name: "city", caption: "City" },
+  ];
+  const run = {
+    runId: "r1",
+    paste: "",
+    batches: [],
+    ms: 0,
+    done: true,
+    boxes: {
+      name: { value: "Maya Kusuma", gate: { state: "amber" } },
+      phone: { value: "", gate: { state: "amber" } },
+      notes: { value: "leave at the\nguard post\tplease", gate: { state: "found" } },
+      city: { value: "Jakarta Pusat", gate: { state: "found" }, edited: true },
+    },
+  } as unknown as FormRun;
+
+  it("puts captions on the first row and the box values, tab-separated, on the second", () => {
+    const r = rowForCopy(run, cols);
+    expect(r.tsv).toBe("Recipient name\tPhone\tDelivery notes\tCity\nMaya Kusuma\t\tleave at the guard post please\tJakarta Pusat");
+  });
+
+  it("counts the amber boxes the person has not touched, and the filled boxes", () => {
+    const r = rowForCopy(run, cols);
+    expect(r.toCheck).toBe(2);
+    expect(r.filled).toBe(3);
+  });
+
+  it("no run: empty values, nothing to check", () => {
+    const r = rowForCopy(undefined, cols);
+    expect(r.tsv.split("\n")[1]).toBe("\t\t\t");
+    expect(r.toCheck).toBe(0);
+    expect(r.filled).toBe(0);
   });
 });

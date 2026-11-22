@@ -205,3 +205,38 @@ test("consent Yes that fails: the sheet says so, a new Yes is needed, and declin
   await expect(page.getByRole("status").filter({ hasText: "may still have reached the cloud" })).toBeVisible();
   await expect(page.getByRole("button", { name: /Fill this message/ })).toBeEnabled();
 });
+
+test("after a fill, 'Copy the boxes as one row' puts captions + values on the clipboard and says how many are still amber", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  // the model answers with the sender's name and no phone; the gate keeps the name amber (always) and the phone stays empty
+  const answer = { name: "Tia Ramadhani", phone: "", street: "Jl. Kopo 9", city: "Bandung", province: "Jawa Barat", postal_code: "40222", item: "notebooks", quantity: "2", notes: "" };
+  const cors = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "POST, OPTIONS" };
+  await page.addInitScript(() => {
+    (globalThis as { FIREBASE_APPCHECK_DEBUG_TOKEN?: string }).FIREBASE_APPCHECK_DEBUG_TOKEN = "00000000-0000-4000-8000-000000000000";
+  });
+  await page.route("**/content-firebaseappcheck.googleapis.com/**", (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", headers: cors, body: JSON.stringify({ token: "stand-in", ttl: "3600s" }) }),
+  );
+  await page.route("**/firebasevertexai.googleapis.com/**", (route) =>
+    route.request().method() === "OPTIONS"
+      ? route.fulfill({ status: 204, headers: cors })
+      : route.fulfill({ status: 200, contentType: "application/json", headers: cors, body: JSON.stringify({ candidates: [{ content: { role: "model", parts: [{ text: JSON.stringify(answer) }] }, finishReason: "STOP" }] }) }),
+  );
+  await page.goto("/");
+  await expect(page.getByTestId("copy-row")).toHaveCount(0);
+  await page.locator("#paste").fill(MSG);
+  await page.getByRole("button", { name: /Fill this message/ }).click();
+  const sheet = page.getByRole("dialog", { name: /Send this one message to the cloud/ });
+  await sheet.getByTestId("consent-send").click();
+  await expect(sheet).toBeHidden({ timeout: 15000 });
+  await page.getByTestId("copy-row").click();
+  await expect(page.getByTestId("copy-status")).toContainText("still amber");
+  const clip = await page.evaluate(() => navigator.clipboard.readText());
+  const [head, row] = clip.split("\n");
+  expect(head.split("\t")[0]).toBe("Recipient name");
+  expect(row.split("\t")).toContain("Bandung");
+  expect(row.split("\t")[0]).toBe("Tia Ramadhani");
+  // editing a box hides the old status: the clipboard no longer matches the boxes
+  await page.locator("#A-city").fill("Bandung Kota");
+  await expect(page.getByTestId("copy-status")).toHaveCount(0);
+});

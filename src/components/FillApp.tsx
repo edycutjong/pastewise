@@ -31,7 +31,7 @@ import { batches as splitBatches, readForm, type Hint } from "@/schema/buildSche
 import { gateField, GATE_VERSION } from "@/gate";
 import LedgerStrip from "./LedgerStrip";
 import SiteNav from "./SiteNav";
-import { boxClass, countBoxes, mergeBatch, stateNote, type Box, type FormRun } from "./runState";
+import { boxClass, countBoxes, mergeBatch, rowForCopy, stateNote, type Box, type FormRun } from "./runState";
 import { pasteTokens, tokensFound } from "@/ledger/tokens";
 
 type Phase = "idle" | "reading" | "retrying" | "preparing";
@@ -94,6 +94,7 @@ export default function FillApp() {
   const [teachStatus, setTeachStatus] = useState<"idle" | "sending" | "error">("idle");
   const [teachError, setTeachError] = useState<string | null>(null);
   const [payload, setPayload] = useState<ReturnType<typeof teacherPayload> | null>(null);
+  const [copied, setCopied] = useState<{ runId: string; form: string; msg: string } | null>(null);
 
   const formRefs = useRef<Record<string, HTMLFormElement | null>>({});
   const runIdRef = useRef<Record<string, string>>({});
@@ -500,11 +501,28 @@ export default function FillApp() {
   }
 
   function edit(key: string, value: string) {
+    setCopied(null);
     setRuns((prev) => {
       const run = prev[active] ?? { runId: "manual", paste: textRef.current, boxes: {}, batches: [], ms: 0, done: true };
       const box = run.boxes[key];
       return { ...prev, [active]: { ...run, boxes: { ...run.boxes, [key]: { ...box, value, edited: true } } } };
     });
+  }
+
+  /** Hands the boxes to the clipboard as one tab-separated row (captions first). Nothing is submitted and nothing is sent. */
+  async function copyBoxes() {
+    const run = runs[active];
+    if (!run) return;
+    const r = rowForCopy(run, formById(active).inputs);
+    try {
+      await navigator.clipboard.writeText(r.tsv);
+      const msg = r.toCheck
+        ? `Copied ${r.filled} filled box${r.filled === 1 ? "" : "es"} as one row. ${r.toCheck} still amber: check ${r.toCheck === 1 ? "it" : "them"} where you paste.`
+        : `Copied ${r.filled} filled box${r.filled === 1 ? "" : "es"} as one row, tab-separated: paste into a sheet or your form.`;
+      setCopied({ runId: run.runId, form: active, msg });
+    } catch {
+      setCopied({ runId: run.runId, form: active, msg: "This browser blocked the clipboard, so nothing was copied." });
+    }
   }
 
   const cur = runs[active];
@@ -689,6 +707,16 @@ export default function FillApp() {
                 {counts.found} of {counts.total} found in your text · {counts.amber} to check · {counts.empty} empty
                 {counts.edited ? ` · ${counts.edited} edited by you` : ""}
                 {cur.ms ? ` · ${(cur.ms / 1000).toFixed(1)} s` : ""}
+              </span>
+            )}
+            {cur?.done && !stale && !cur.discarded && (
+              <button type="button" className="linkish" onClick={copyBoxes} data-testid="copy-row">
+                Copy the boxes as one row
+              </button>
+            )}
+            {copied && cur && copied.form === active && copied.runId === cur.runId && !stale && (
+              <span className="sum" role="status" data-testid="copy-status">
+                {copied.msg}
               </span>
             )}
             <span className="sr-only" aria-live="polite">
