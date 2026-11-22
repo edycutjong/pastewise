@@ -32,7 +32,8 @@ body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body)
 /* top sheet */
 .sheet { background: var(--sheet); padding: 22px 24px; box-shadow: 0 1px 0 var(--rule), 0 12px 24px -18px rgba(31, 36, 51, .35); }
 .sheet-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-.linkish { background: none; border: 0; padding: 0; color: var(--ink); font: 500 14px var(--font-body); text-decoration: underline; cursor: pointer; }
+.linkish { background: none; border: 0; padding: 0; color: var(--ink); font: 500 14px var(--font-body); text-decoration: underline; cursor: pointer; transition: color 120ms; }
+.linkish:hover { color: var(--after); text-decoration-thickness: 2px; }
 .paper { position: relative; margin: 14px 0 8px; }
 .paper textarea, .paper .backdrop {
   font: 18px/1.7 var(--font-body); padding: 10px 12px; margin: 0; width: 100%; min-height: 300px;
@@ -78,7 +79,8 @@ body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body)
 
 .bar { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; flex-wrap: wrap; }
 .fill { font: 600 16px var(--font-body); padding: 12px 18px; background: var(--ink); color: var(--sheet); border: 0; cursor: pointer; transition: transform 120ms var(--press), opacity 120ms; }
-.fill:hover { transform: translateY(-1px); }
+.fill { transition: transform 120ms, box-shadow 120ms; }
+.fill:hover { transform: translateY(-1px); box-shadow: 3px 3px 0 var(--after); }
 .fill:active { transform: translateY(1px); }
 .fill[aria-disabled="true"] { opacity: .7; cursor: progress; }
 .fill kbd { font: 13px var(--font-data); margin-left: 8px; opacity: .8; }
@@ -94,7 +96,8 @@ body { background: var(--bg); color: var(--ink); font: 16px/1.5 var(--font-body)
 .strip-row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
 .strip b { font: 400 32px var(--font-data); font-variant-numeric: tabular-nums; }
 .strip details { margin-top: 8px; font-size: 14px; }
-.strip summary { cursor: pointer; }
+.strip summary, details > summary { cursor: pointer; transition: color 120ms; }
+summary:hover { color: var(--after); text-decoration: underline; }
 .strip table { border-collapse: collapse; width: 100%; margin-top: 6px; font: 12px var(--font-data); }
 .strip th, .strip td { text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--rule); }
 
@@ -126,7 +129,8 @@ dialog.modal h2.cap { margin: 0 0 8px; }
 .payload { max-height: 220px; overflow: auto; background: var(--bg); border: 1px solid var(--rule); padding: 10px; font-size: 12px; white-space: pre-wrap; }
 .modal-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 8px; }
 button.primary { font: 600 16px var(--font-body); padding: 12px 18px; background: var(--ink); color: var(--sheet); border: 0; cursor: pointer; transition: transform 120ms; }
-button.primary:hover:not(:disabled) { transform: translateY(-1px); }
+button.primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 3px 3px 0 var(--after); }
+button.ghost:active, .teach-btn:active { transform: translateY(1px); }
 button.primary:active:not(:disabled) { transform: translateY(1px); }
 button.primary:disabled { opacity: .6; cursor: not-allowed; }
 button.ghost { font: 600 16px var(--font-body); padding: 12px 18px; background: transparent; color: var(--ink); border: 2px solid var(--ink); cursor: pointer; transition: background 120ms, color 120ms; }

@@ -59,5 +59,5 @@ test("/bench and /receipt render from committed evidence and keep the nav", asyn
   await page.getByRole("link", { name: "Receipt" }).click();
   await expect(page.getByRole("heading", { name: "Receipt" })).toBeVisible();
   await expect(page.getByText("This session, live")).toBeVisible();
-  await expect(page.getByText("Recorded network log")).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Recorded network log/ })).toBeVisible();
 });

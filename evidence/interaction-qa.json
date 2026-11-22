@@ -1,0 +1,156 @@
+{
+ "date": "2026-11-22",
+ "base": "http://localhost:3102",
+ "elementClasses": [
+  {
+   "name": "nav link",
+   "selector": ".site-nav a:not([aria-current=\"page\"])",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "form tab (unselected)",
+   "selector": ".tab[aria-selected=\"false\"]",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "fill button",
+   "selector": "#fill",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "teach button",
+   "selector": ".teach-btn",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "paste-from-clipboard link",
+   "selector": ".sheet-head .linkish",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "receipt strip link",
+   "selector": ".strip .linkish",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "receipt strip details summary",
+   "selector": ".strip summary",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "consent: Send this one",
+   "selector": "[data-testid=\"consent-send\"]",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "consent: I'll type it",
+   "selector": "[data-testid=\"consent-decline\"]",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "consent: how-to summary",
+   "selector": "dialog.modal[open] summary",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "consent: watch recorded run",
+   "selector": "dialog.modal[open] .linkish",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "teach: send",
+   "selector": "dialog.modal[open] button.primary",
+   "hover": "PASS",
+   "focus": "PASS"
+  },
+  {
+   "name": "teach: close",
+   "selector": "dialog.modal[open] button.ghost",
+   "hover": "PASS",
+   "focus": "PASS"
+  }
+ ],
+ "links": [
+  {
+   "page": "/",
+   "href": "/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/",
+   "href": "/receipt/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/",
+   "href": "/bench/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/",
+   "href": "/receipt/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/bench/",
+   "href": "/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/bench/",
+   "href": "/receipt/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/bench/",
+   "href": "/bench/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/receipt/",
+   "href": "/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/receipt/",
+   "href": "/receipt/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  },
+  {
+   "page": "/receipt/",
+   "href": "/bench/",
+   "ok": true,
+   "status": 200,
+   "kind": "internal"
+  }
+ ]
+}

@@ -15,7 +15,7 @@ const out = { label: "synthetic S1 only", base, date: new Date().toISOString(), 
 try {
   const consoleErrors = [];
   const failed = [];
-  const app = await openApp(chrome.browser, { base, today: "2026-11-22" });
+  const app = await openApp(chrome.browser, { base, today: "2026-11-22", savedHints: true });
   // listeners go on the app page, then it reloads so every load-time violation is seen
   app.on("console", (m) => m.type() === "error" && consoleErrors.push(m.text().slice(0, 200)));
   app.on("requestfailed", (r) => failed.push(`${r.url().slice(0, 100)} ${r.failure()?.errorText}`));
@@ -27,6 +27,10 @@ try {
   await app.waitForFunction(() => !!window.__pastewise, { timeout: 30000 });
   out.availability = await app.evaluate(async () => (globalThis.LanguageModel ? await globalThis.LanguageModel.availability() : "no LanguageModel"));
   const rec = await fillOnce(app, "C", S1.paste);
+  // the saved (Firestore) hint copy for form C is loaded on tab open; read it from the page
+  await app.waitForSelector(".toggle.inline", { timeout: 15000 }).catch(() => {});
+  out.savedHints = await app.$eval(".toggle.inline", (e) => e.textContent.trim()).catch(() => "none shown");
+  out.fillHintsUsed = rec.hints;
   out.fill = { done: rec.done, error: rec.error ?? null, sources: rec.batches.map((b) => b.inferenceSource), totalMs: rec.totalMs, states: Object.fromEntries(Object.entries(rec.fields).map(([k, v]) => [k, v.state])) };
   out.ledgerAfterFill = await app.evaluate(() => window.__pastewise.ledger().map((r) => ({ host: r.host, purpose: r.purpose, size: r.size, hits: r.hits })));
   try {

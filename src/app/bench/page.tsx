@@ -28,7 +28,7 @@ type Agg = {
 };
 
 const ABOUT: Record<string, string> = {
-  "continuity-20": "The 20 order and booking messages from the kill test, on the plain order form (A) and the hotel form (B). The messages themselves are not published; the file hash below identifies them.",
+  "continuity-20": "The 20 order and booking messages from the kill test, on the plain order form (A) and the hotel form (B). The messages themselves are not published; the file hash below identifies them. The prompt and the gate were shaped by this set's failures, so it is a continuity check, not a held-out measure.",
   "form-c-mid": "10 order messages for the legacy consignment-note form (C), whose boxes have cryptic names like CNEE and ZIP. Used while building, so not a held-out set.",
   dev: "The tuning set used while building.",
 };
@@ -40,7 +40,7 @@ function load(): Agg[] {
     .readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as Agg)
-    .sort((a, b) => (a.date + a.set + a.arm).localeCompare(b.date + b.set + b.arm));
+    .sort((a, b) => (a.date + a.set).localeCompare(b.date + b.set) || Number(!!a.stalledRun) - Number(!!b.stalledRun) || (a.arm === b.arm ? 0 : a.arm === "off" ? -1 : 1));
 }
 
 const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.toFixed(1)})`;
@@ -78,7 +78,7 @@ export default function Bench() {
                   <tr>
                     <th>Teacher hints</th>
                     <th>Wrong value shown as found</th>
-                    <th>Found in text, correct</th>
+                    <th>Right value in the box (strict)</th>
                     <th>Filled (coverage)</th>
                     <th>Left amber</th>
                     <th>Warm p50 / p95</th>

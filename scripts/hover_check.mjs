@@ -14,23 +14,27 @@ const srv = i > 0 ? { close() {} } : serveOut();
 const profile = fs.mkdtempSync(path.join(os.tmpdir(), "pw-hover-"));
 const chrome = await launchChrome({ profile, port: 9341 });
 const results = [];
-const check = async (page, name, selector, { prepare, scope } = {}) => {
-  if (prepare) await prepare();
+// Page-level screenshots over a FIXED padded rectangle: an element screenshot follows a translated element and an
+// outline sits outside its box, so both would read as "no change".
+const check = async (page, name, selector) => {
   const el = await page.$(selector);
   if (!el) return results.push({ name, selector, hover: "MISSING", focus: "MISSING" });
   await el.evaluate((e) => e.scrollIntoView({ block: "center" }));
   await page.mouse.move(0, 0);
   await sleep(500);
-  const before = await el.screenshot();
+  const r = await el.boundingBox(); // viewport coordinates; clip wants page coordinates
+  const sc = await page.evaluate(() => ({ x: window.scrollX, y: window.scrollY }));
+  const clip = { x: Math.max(0, r.x + sc.x - 8), y: Math.max(0, r.y + sc.y - 8), width: r.width + 16, height: r.height + 16 };
+  const shot = () => page.screenshot({ clip, captureBeyondViewport: false });
+  const before = await shot();
   await el.hover();
   await sleep(450);
-  const hovered = await el.screenshot();
+  const hovered = await shot();
   await page.mouse.move(0, 0);
   await sleep(450);
   await el.evaluate((e) => e.focus({ focusVisible: true }));
-  await page.keyboard.press("Shift");
   await sleep(450);
-  const focused = await el.screenshot();
+  const focused = await shot();
   await el.evaluate((e) => e.blur());
   results.push({ name, selector, hover: Buffer.compare(before, hovered) !== 0 ? "PASS" : "FAIL", focus: Buffer.compare(before, focused) !== 0 ? "PASS" : "FAIL" });
 };
@@ -89,5 +93,9 @@ try {
 } finally {
   await chrome.close();
   srv.close();
-  fs.rmSync(profile, { recursive: true, force: true });
+  try {
+    fs.rmSync(profile, { recursive: true, force: true, maxRetries: 5, retryDelay: 300 });
+  } catch {
+    /* temp dir, the OS cleans it */
+  }
 }
