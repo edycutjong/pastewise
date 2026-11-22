@@ -7,12 +7,14 @@ const body = Archivo({ subsets: ["latin"], weight: ["400", "500", "600"], variab
 const data = Fragment_Mono({ subsets: ["latin"], weight: "400", variable: "--font-fragment", display: "swap" });
 
 const description =
-  "Paste a messy order message and the form fills on your laptop (Gemini Nano via Firebase AI Logic). Code keeps only what is in your text. The cloud sees the empty form; your message leaves only if you say Yes.";
+  "Paste a messy order message and the form fills on your laptop with Gemini Nano. Code keeps only what is in your text.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pastewise.edycu.dev"),
   title: "Pastewise",
   description,
+  authors: [{ name: "Edy Cu" }],
+  creator: "Edy Cu",
   icons: { icon: { url: "/icon.svg", type: "image/svg+xml" } },
   openGraph: {
     type: "website",
@@ -22,7 +24,7 @@ export const metadata: Metadata = {
     url: "/",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Pastewise: text from your paste sent to the cloud, 0 bytes found; boxes pressed in carbon blue, one phone number amber" }],
   },
-  twitter: { card: "summary_large_image", title: "Pastewise — order forms, filled on your laptop", description, images: ["/og-image.png"] },
+  twitter: { card: "summary_large_image", creator: "@edycutjong", title: "Pastewise — order forms, filled on your laptop", description, images: ["/og-image.png"] },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
