@@ -123,7 +123,7 @@ continuity-20 is a frozen, held-out set of 20 messages kept **out of this repo**
 ## 🚀 Getting Started
 
 ### Prerequisites
-Node 22.12+; Chrome desktop with Gemini Nano available (see Chrome's built-in AI docs) to see on-device fills.
+Node 24.12+; Chrome desktop with Gemini Nano available (see Chrome's built-in AI docs) to see on-device fills.
 
 ### Installation
 ```bash
