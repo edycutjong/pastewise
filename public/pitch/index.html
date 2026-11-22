@@ -4,14 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Pastewise · pitch deck</title>
-<meta name="description" content="Pastewise pitch deck: order messages fill the form on your laptop with Gemini Nano via Firebase AI Logic; code shows a value only if it is in your text.">
+<meta name="description" content="Pastewise pitch deck: order messages fill the form on your laptop with Gemini Nano; code keeps only what is in your text.">
+<meta name="author" content="Edy Cu">
+<meta name="twitter:creator" content="@edycutjong">
 <meta name="theme-color" content="#1F2433">
 <link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="canonical" href="https://pastewise.edycu.dev/pitch/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Pastewise">
 <meta property="og:title" content="Pastewise · pitch deck">
-<meta property="og:description" content="Your customer typed it once. Pastewise copies it across, on your laptop, and code checks every box.">
+<meta property="og:description" content="Your customer typed it once. Pastewise copies it across on your laptop; code checks each box.">
 <meta property="og:url" content="https://pastewise.edycu.dev/pitch/">
 <meta property="og:image" content="https://pastewise.edycu.dev/og-image.png?v=dbb86ca7">
 <meta property="og:image:width" content="1200">
@@ -34,6 +36,7 @@
   --copy:color-mix(in srgb,var(--bg) 78%,var(--sheet));
   --shade:color-mix(in srgb,var(--muted) 45%,transparent);
   --ink-soft:color-mix(in srgb,var(--ink) 82%,var(--bg));
+  --before-ink:color-mix(in srgb,var(--before) 75%,var(--ink)); /* amber for small text: 4.6:1 on the copy and the wash */
 }
 .cap{font:600 11px/1.2 var(--font-display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .mono{font-family:var(--font-data);font-variant-numeric:tabular-nums}
@@ -74,12 +77,13 @@
 .pw-box{position:relative;display:flex;align-items:center;min-height:34px;margin-top:3px;padding:4px 9px;border:1px solid var(--rule);
   background:color-mix(in srgb,var(--sheet) 35%,transparent);font:500 16.5px/1.25 var(--font-body);color:var(--after);overflow-wrap:anywhere;
   transition:border-color .15s,background-color .15s,box-shadow .15s;cursor:default}
-.pw-box:hover,.pw-box:focus-visible,.pw-f.hot .pw-box{border-color:var(--after);box-shadow:inset 0 0 0 1px var(--after);outline:none}
+.pw-box:hover,.pw-box:focus-visible,.pw-f.hot .pw-box{border-color:var(--after);box-shadow:inset 0 0 0 1px var(--after)}
+.pw-box:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .pw-f.amber .pw-box{border:2px dashed var(--before);background:var(--before-wash);color:var(--ink)}
 .pw-f.amber .pw-box:hover,.pw-f.amber .pw-box:focus-visible,.pw-f.amber.hot .pw-box{box-shadow:inset 0 0 0 1px var(--before)}
 .pw-f.empty .pw-box{color:var(--muted)}
 .pw-why{min-height:17px;margin-top:3px;font:400 12.5px/1.35 var(--font-body);color:var(--after)}
-.pw-f.amber .pw-why{color:var(--before)}
+.pw-f.amber .pw-why{color:var(--before-ink)}
 .pw-f.empty .pw-why{color:var(--muted)}
 .pw-why .said{color:var(--ink);font-style:italic}
 .pw-chip{display:inline-block;margin:3px 4px 0 0;padding:2px 6px;border:1px solid var(--before);background:var(--before-wash);
@@ -166,9 +170,9 @@ p{margin:0}
 .ans li,.verd li{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:5px 0;border-bottom:1px solid var(--rule)}
 .ans li span:first-child,.verd li span:first-child{font:600 18px/1.4 var(--font-display);letter-spacing:.1em;color:var(--muted)}
 .verd li.found span:last-child{color:var(--after)}
-.verd li.amber span:last-child{color:var(--before)}
+.verd li.amber span:last-child{color:var(--before-ink)}
 .verd li.empty span:last-child{color:var(--muted)}
-.verd li small{display:block;font:16px/1.25 var(--font-body);color:var(--before)}
+.verd li small{display:block;font:16px/1.25 var(--font-body);color:var(--before-ink)}
 .verd li.found small{color:var(--after)}
 .verd li.empty small{color:var(--muted)}
 .col.s{transition:opacity .35s}
@@ -310,7 +314,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 </div></div></div>
 <div class="pw-copy"><div class="pw-margin" aria-hidden="true"></div><div class="pw-reading" aria-hidden="true"></div>
 <span class="no">Nº 0417-C</span><div class="head"><b>Consignment note</b><span class="pw-badge">recorded · on_device</span></div>
-<div class="pw-grid"><div class="pw-f amber" data-key="cnee_nm" data-cap="CNEE"><span class="cap">CNEE</span><div class="pw-box" tabindex="0"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm &mdash; the model suggested <span class="said">&ldquo;Maya Kusuma&rdquo;</span></div></div><div class="pw-f amber" data-key="cnee_tel" data-cap="CNEE TEL"><span class="cap">CNEE TEL</span><div class="pw-box" tabindex="0"><span class="pw-v">085755508812</span></div><div class="pw-why">two numbers in your text — pick one<br><span class="pw-chip">0813-5550-2290</span><span class="pw-chip">0857 5550 8812</span></div></div><div class="pw-f found full" data-key="addr_1" data-cap="ADDR 1"><span class="cap">ADDR 1</span><div class="pw-box" tabindex="0"><span class="pw-v">Jl. Cempaka Putih Raya No. 41</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="dist_city" data-cap="DIST/CITY"><span class="cap">DIST/CITY</span><div class="pw-box" tabindex="0"><span class="pw-v">Jakarta Pusat</span></div><div class="pw-why">found in your text</div></div><div class="pw-f empty" data-key="st_prov" data-cap="ST/PROV"><span class="cap">ST/PROV</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why"></div></div><div class="pw-f found" data-key="zip" data-cap="ZIP"><span class="cap">ZIP</span><div class="pw-box" tabindex="0"><span class="pw-v">10510</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="desc" data-cap="DESC"><span class="cap">DESC</span><div class="pw-box" tabindex="0"><span class="pw-v">linen tablecloths</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="pcs" data-cap="PCS"><span class="cap">PCS</span><div class="pw-box" tabindex="0"><span class="pw-v">2</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="svc" data-cap="SVC"><span class="cap">SVC</span><div class="pw-box" tabindex="0"><span class="pw-v">EXP</span></div><div class="pw-why">found in your text</div></div><div class="pw-f amber full" data-key="rmks" data-cap="RMKS"><span class="cap">RMKS</span><div class="pw-box" tabindex="0"><span class="pw-v"></span></div><div class="pw-why">not in your text &mdash; the model wrote <span class="said">&ldquo;…guard post if nobody 홈&rdquo;</span></div></div></div>
+<div class="pw-grid"><div class="pw-f amber" data-key="cnee_nm" data-cap="CNEE"><span class="cap">CNEE</span><div class="pw-box" role="group"><span class="pw-v">Maya Kusuma</span></div><div class="pw-why">names are always yours to confirm &mdash; the model suggested <span class="said">&ldquo;Maya Kusuma&rdquo;</span></div></div><div class="pw-f amber" data-key="cnee_tel" data-cap="CNEE TEL"><span class="cap">CNEE TEL</span><div class="pw-box" role="group"><span class="pw-v">085755508812</span></div><div class="pw-why">two numbers in your text — pick one<br><span class="pw-chip">0813-5550-2290</span><span class="pw-chip">0857 5550 8812</span></div></div><div class="pw-f found full" data-key="addr_1" data-cap="ADDR 1"><span class="cap">ADDR 1</span><div class="pw-box" role="group"><span class="pw-v">Jl. Cempaka Putih Raya No. 41</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="dist_city" data-cap="DIST/CITY"><span class="cap">DIST/CITY</span><div class="pw-box" role="group"><span class="pw-v">Jakarta Pusat</span></div><div class="pw-why">found in your text</div></div><div class="pw-f empty" data-key="st_prov" data-cap="ST/PROV"><span class="cap">ST/PROV</span><div class="pw-box" role="group"><span class="pw-v"></span></div><div class="pw-why"></div></div><div class="pw-f found" data-key="zip" data-cap="ZIP"><span class="cap">ZIP</span><div class="pw-box" role="group"><span class="pw-v">10510</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="desc" data-cap="DESC"><span class="cap">DESC</span><div class="pw-box" role="group"><span class="pw-v">linen tablecloths</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="pcs" data-cap="PCS"><span class="cap">PCS</span><div class="pw-box" role="group"><span class="pw-v">2</span></div><div class="pw-why">found in your text</div></div><div class="pw-f found" data-key="svc" data-cap="SVC"><span class="cap">SVC</span><div class="pw-box" role="group"><span class="pw-v">EXP</span></div><div class="pw-why">found in your text</div></div><div class="pw-f amber full" data-key="rmks" data-cap="RMKS"><span class="cap">RMKS</span><div class="pw-box" role="group"><span class="pw-v"></span></div><div class="pw-why">not in your text &mdash; the model wrote <span class="said">&ldquo;…guard post if nobody 홈&rdquo;</span></div></div></div>
 <div class="pw-strip"><span>SHIPPED GATE, RE-RUN ON THE RECORDED ANSWERS</span><b data-selfcheck data-short>10/10</b></div></div>
 </div></div>
   </div>
@@ -455,10 +459,12 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
 
 </div>
 </main>
+<nav aria-label="Deck controls">
 <button class="navbtn" id="prev" type="button" aria-label="Previous slide">←</button>
 <button class="navbtn" id="next" type="button" aria-label="Next slide">→</button>
 <a class="navbtn" id="home" href="/about/">About</a>
 <div class="counter" id="counter" aria-live="polite">01 / 10</div>
+</nav>
 <script src="/site/gate.js"></script>
 <script>
 /* Shared by /about and /pitch. The desk re-checks the recorded model answers with the shipped gate (gate.js, built from src/gate).
@@ -505,6 +511,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
         el.classList.add(r.state);
         $(".pw-v", el).textContent = r.state === "empty" ? "" : r.value || "";
         $(".pw-why", el).innerHTML = why(key, r);
+        $(".pw-box", el).setAttribute("role", "group");
         $(".pw-box", el).setAttribute("aria-label", `${el.dataset.cap}: ${r.state === "found" ? r.value + ", found in your text" : r.state === "amber" ? (r.value || "blank") + ", amber, " + (G.REASON_TEXT[r.reason] || r.reason) : "empty"}`);
         if (r.state === "found" || r.reason === "check_by_hand") for (const s of r.spans || []) marks.push([s[0], s[1], key, ""]);
         if (r.reason === "two_candidates") for (const c of r.candidates || []) if (c.span) marks.push([c.span[0], c.span[1], key, "cand"]);
