@@ -8,6 +8,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
+import os from "node:os";
 import { execSync } from "node:child_process";
 import { ROOT, serveOut, launchChrome, openApp, fillOnce } from "./lib/chrome.mjs";
 import { score } from "./lib/score.mjs";
@@ -35,6 +36,10 @@ const AGG = path.join(ROOT, "evidence/bench/aggregates");
 fs.mkdirSync(OUT, { recursive: true });
 fs.mkdirSync(AGG, { recursive: true });
 
+// The held-out set is scored once per (prompt version, gate version): a second run needs a printed reason.
+const rerunReason = arg("rerun-reason");
+const loadAtStart = os.loadavg().map((x) => +x.toFixed(1));
+
 let contended = false;
 try {
   execSync("pgrep -f footing-nano-chrome");
@@ -49,6 +54,12 @@ const files = [];
 try {
   const page = await openApp(chrome.browser, { base, today: SET.today });
   const meta = await page.evaluate(() => ({ ua: navigator.userAgent, versions: window.__pastewise.versions }));
+  if (SET.set === "holdout") {
+    const key = `${meta.versions.prompt}|${meta.versions.gate}`;
+    const seen = fs.readdirSync(AGG).filter((f) => f.includes("-holdout-")).map((f) => JSON.parse(fs.readFileSync(path.join(AGG, f), "utf8"))).filter((d) => `${d.promptVersion}|${d.gateVersion}` === key && d.arm === (hintsMode === "off" && !hintsFile ? "off" : "hints"));
+    if (seen.length >= 1 && !rerunReason) throw new Error(`holdout already scored for prompt/gate ${key} on this hints arm; pass --rerun-reason "<why>"`);
+    if (seen.length >= 1) console.log(`HOLDOUT RERUN (reason: ${rerunReason})`);
+  }
   const forms = [...new Set(items.map((x) => x.form))];
   const specs = {};
   let hints = {};
@@ -98,6 +109,8 @@ try {
       chrome: meta.ua,
       machine: "Apple M1 Max, 32 GB (builder's laptop)",
       contendedBySiblingChrome: contended,
+      loadAvgAtStart: loadAtStart,
+      rerunReason: rerunReason ?? null,
       validRun: offDevice.length === 0,
       summary,
       rows: rows.map((x) => ({ id: x.id, form: x.form, record: x.record })),
@@ -140,6 +153,9 @@ try {
     chrome: meta.ua,
     machine: "Apple M1 Max, 32 GB (builder's laptop)",
     contendedBySiblingChrome: contended,
+    loadAvgAtStart: loadAtStart,
+    loadAvgAtEnd: os.loadavg().map((x) => +x.toFixed(1)),
+    rerunReason: rerunReason ?? null,
     path: "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
     metrics: agg,
     perRepeat: summaries.map((s) => ({
