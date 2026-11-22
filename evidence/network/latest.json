@@ -1,8 +1,8 @@
 {
  "label": "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
  "date": "2026-11-22",
- "commit": "d660396",
- "base": "http://localhost:3102 (static export)",
+ "commit": "ae97f31",
+ "base": "https://pastewise.edycu.dev",
  "capture": "CDP Network.requestWillBeSent on the page + Target.setAutoAttach({flatten:true}) children (iframes, workers)",
  "rule": "paste tokens = digit runs >= 4 + words >= 4 chars minus the empty form's vocabulary and a stop-list (src/ledger/tokens.ts)",
  "attachedTargets": [
@@ -11,8 +11,16 @@
    "host": "www.google.com"
   },
   {
+   "type": "worker",
+   "host": "www.google.com"
+  },
+  {
    "type": "iframe",
    "host": ""
+  },
+  {
+   "type": "worker",
+   "host": "www.google.com"
   }
  ],
  "fills": [
@@ -72,15 +80,17 @@
   },
   "positiveControlCaught": true,
   "inPageLedger": {
-   "requests": 12,
+   "requests": 10,
    "byHost": {
-    "localhost:3102": 10,
+    "pastewise.edycu.dev": 7,
     "content-firebaseappcheck.googleapis.com": 1,
+    "www.google.com": 1,
     "firebasevertexai.googleapis.com": 1
    },
    "cdpApiRequestsByHost": {
-    "localhost:3102": 10,
+    "pastewise.edycu.dev": 7,
     "content-firebaseappcheck.googleapis.com": 1,
+    "www.google.com": 1,
     "firebasevertexai.googleapis.com": 1
    },
    "missingFromLedger": [],
@@ -94,9 +104,9 @@
    "target": "page",
    "type": "Document",
    "method": "GET",
-   "host": "localhost:3102",
+   "host": "pastewise.edycu.dev",
    "path": "/",
-   "size": 22,
+   "size": 28,
    "hits": {}
   },
   {
@@ -104,9 +114,9 @@
    "target": "page",
    "type": "Font",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/media/6b7c1e249124c789-s.p.1wuove6chewkg.woff2",
-   "size": 81,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/media/6b7c1e249124c789-s.p.3iqcxut7vbr0t.woff2",
+   "size": 97,
    "hits": {}
   },
   {
@@ -114,9 +124,9 @@
    "target": "page",
    "type": "Font",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/media/a3163e680834fbf0-s.p.09kihw1cxxru6.woff2",
-   "size": 81,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/media/a3163e680834fbf0-s.p.422uhnrlcv_7h.woff2",
+   "size": 97,
    "hits": {}
   },
   {
@@ -124,9 +134,9 @@
    "target": "page",
    "type": "Font",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/media/c6a5c2fdc12da45c-s.p.17-aodiw50953.woff2",
-   "size": 81,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/media/c6a5c2fdc12da45c-s.p.13rul5q9jl2r0.woff2",
+   "size": 97,
    "hits": {}
   },
   {
@@ -134,9 +144,9 @@
    "target": "page",
    "type": "Stylesheet",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/30cmxf1ddgv1d.css",
-   "size": 59,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/1c939d7j_8vac.css",
+   "size": 75,
    "hits": {}
   },
   {
@@ -144,9 +154,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/310vm2bl3xxpt.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/25kvgcvbp6c14.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -154,9 +164,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/1wnov70f88xjy.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/1vkbvs5cv4r1l.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -164,9 +174,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/39_j1bdzreq0m.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/0yx3vtpvly-mi.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -174,9 +184,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/0c98xzjfks9hq.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/3npyda_jge259.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -184,9 +194,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/turbopack-2u1d16houkiyo.js",
-   "size": 68,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/turbopack-3xd-7z66s-4wg.js",
+   "size": 84,
    "hits": {}
   },
   {
@@ -194,9 +204,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/3qfy96eoyh-ek.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/3sav3yefleyvp.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -204,9 +214,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/2ephdqomb_8ax.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/41uyd43q0kbsj.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -214,9 +224,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/2_3519uxztnmm.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/2-1nkwnu3ts-9.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -224,9 +234,9 @@
    "target": "page",
    "type": "Script",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/2qi3vq0cs2b8x.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/_next/static/immutable/chunks/1l1bb39yf8hwx.js",
+   "size": 74,
    "hits": {}
   },
   {
@@ -242,6 +252,36 @@
   {
    "phase": "boot",
    "target": "page",
+   "type": "Fetch",
+   "method": "HEAD",
+   "host": "pastewise.edycu.dev",
+   "path": "/",
+   "size": 28,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "HEAD",
+   "host": "pastewise.edycu.dev",
+   "path": "/receipt/",
+   "size": 36,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "HEAD",
+   "host": "pastewise.edycu.dev",
+   "path": "/bench/",
+   "size": 34,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
    "type": "Script",
    "method": "GET",
    "host": "www.gstatic.com",
@@ -252,41 +292,11 @@
   {
    "phase": "boot",
    "target": "page",
-   "type": "Fetch",
-   "method": "HEAD",
-   "host": "localhost:3102",
-   "path": "/",
-   "size": 22,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Fetch",
-   "method": "HEAD",
-   "host": "localhost:3102",
-   "path": "/receipt/",
-   "size": 30,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Fetch",
-   "method": "HEAD",
-   "host": "localhost:3102",
-   "path": "/bench/",
-   "size": 28,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
    "type": "Document",
    "method": "GET",
    "host": "www.google.com",
    "path": "/recaptcha/enterprise/anchor",
-   "size": 240,
+   "size": 256,
    "hits": {}
   },
   {
@@ -294,28 +304,8 @@
    "target": "page",
    "type": "Fetch",
    "method": "GET",
-   "host": "localhost:3102",
+   "host": "pastewise.edycu.dev",
    "path": "/__next._tree.txt",
-   "size": 60,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Fetch",
-   "method": "GET",
-   "host": "localhost:3102",
-   "path": "/receipt/__next._tree.txt",
-   "size": 68,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Fetch",
-   "method": "GET",
-   "host": "localhost:3102",
-   "path": "/bench/__next._tree.txt",
    "size": 66,
    "hits": {}
   },
@@ -324,9 +314,9 @@
    "target": "page",
    "type": "Fetch",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/__next.__PAGE__.txt",
-   "size": 63,
+   "host": "pastewise.edycu.dev",
+   "path": "/bench/__next._tree.txt",
+   "size": 72,
    "hits": {}
   },
   {
@@ -334,39 +324,9 @@
    "target": "page",
    "type": "Fetch",
    "method": "GET",
-   "host": "localhost:3102",
-   "path": "/receipt/__next.receipt.__PAGE__.txt",
-   "size": 79,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Fetch",
-   "method": "GET",
-   "host": "localhost:3102",
-   "path": "/bench/__next.bench.__PAGE__.txt",
-   "size": 75,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Script",
-   "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/02mpmyjnmygln.js",
-   "size": 58,
-   "hits": {}
-  },
-  {
-   "phase": "boot",
-   "target": "page",
-   "type": "Script",
-   "method": "GET",
-   "host": "localhost:3102",
-   "path": "/_next/static/chunks/3zt_16xndew4w.js",
-   "size": 58,
+   "host": "pastewise.edycu.dev",
+   "path": "/receipt/__next._tree.txt",
+   "size": 74,
    "hits": {}
   },
   {
@@ -390,6 +350,26 @@
    "hits": {}
   },
   {
+   "phase": "boot",
+   "target": "iframe",
+   "type": "Script",
+   "method": "GET",
+   "host": "www.google.com",
+   "path": "/recaptcha/enterprise/webworker.js",
+   "size": 89,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "worker",
+   "type": "Other",
+   "method": "GET",
+   "host": "www.gstatic.com",
+   "path": "/recaptcha/releases/4i3aN5wAweL7i3ADI7BSX4B-/recaptcha__en.js",
+   "size": 84,
+   "hits": {}
+  },
+  {
    "phase": "fill:S2",
    "target": "page",
    "type": "Image",
@@ -402,12 +382,22 @@
   },
   {
    "phase": "teach:C",
+   "target": "iframe",
+   "type": "XHR",
+   "method": "POST",
+   "host": "www.google.com",
+   "path": "/recaptcha/enterprise/reload",
+   "size": 11488,
+   "hits": {}
+  },
+  {
+   "phase": "teach:C",
    "target": "page",
    "type": "Other",
    "method": "OPTIONS",
    "host": "content-firebaseappcheck.googleapis.com",
    "path": "/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:",
-   "size": 189,
+   "size": 203,
    "hits": {}
   },
   {
@@ -417,7 +407,7 @@
    "method": "POST",
    "host": "content-firebaseappcheck.googleapis.com",
    "path": "/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:",
-   "size": 262,
+   "size": 2616,
    "hits": {}
   },
   {
@@ -425,9 +415,9 @@
    "target": "page",
    "type": "Fetch",
    "method": "POST",
-   "host": "firebasevertexai.googleapis.com",
-   "path": "/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateConten",
-   "size": 1737,
+   "host": "www.google.com",
+   "path": "/recaptcha/enterprise/clr",
+   "size": 2029,
    "hits": {}
   },
   {
@@ -441,13 +431,55 @@
    "hits": {}
   },
   {
+   "phase": "teach:C",
+   "target": "page",
+   "type": "Fetch",
+   "method": "POST",
+   "host": "firebasevertexai.googleapis.com",
+   "path": "/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateConten",
+   "size": 1737,
+   "hits": {}
+  },
+  {
    "phase": "canary",
    "target": "page",
    "type": "Fetch",
    "method": "GET",
-   "host": "localhost:3102",
+   "host": "pastewise.edycu.dev",
    "path": "/__egress_canary",
-   "size": 214,
+   "size": 220,
+   "hits": {
+    "S1": {
+     "tokens": 1,
+     "bytes": 4
+    },
+    "S2": {
+     "tokens": 1,
+     "bytes": 4
+    },
+    "S3": {
+     "tokens": 14,
+     "bytes": 83
+    },
+    "S4": {
+     "tokens": 2,
+     "bytes": 8
+    },
+    "S5": {
+     "tokens": 14,
+     "bytes": 83
+    }
+   }
+  },
+  {
+   "phase": "canary",
+   "target": "page",
+   "type": "Fetch",
+   "redirectHop": true,
+   "method": "GET",
+   "host": "pastewise.edycu.dev",
+   "path": "/__egress_canary/",
+   "size": 221,
    "hits": {
     "S1": {
      "tokens": 1,

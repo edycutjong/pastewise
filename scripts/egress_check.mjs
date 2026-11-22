@@ -48,7 +48,7 @@ try {
         }
       }
       const local = /^(data|blob):/.test(e.request.url); // in-memory resources, not network
-      reqs.push({ phase, target: kind, type: e.type, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local, bodyUnreadable: bodyUnreadable || undefined });
+      reqs.push({ phase, target: kind, type: e.type, url: local ? e.request.url.slice(0, 30) : e.request.url, method: e.request.method, body: local ? "" : body, local, bodyUnreadable: bodyUnreadable || undefined, redirectHop: e.redirectResponse ? true : undefined });
     });
     session.on("Target.attachedToTarget", async (e) => {
       attached.push({ type: e.targetInfo.type, host: (() => { try { return new URL(e.targetInfo.url).host; } catch { return ""; } })() });
@@ -123,12 +123,14 @@ try {
     } catch {
       host = r.url.slice(0, 40);
     }
-    rows.push({ phase: r.phase, target: r.target, type: r.type, local: r.local || undefined, bodyUnreadable: r.bodyUnreadable, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
+    rows.push({ phase: r.phase, target: r.target, type: r.type, local: r.local || undefined, redirectHop: r.redirectHop, bodyUnreadable: r.bodyUnreadable, method: r.method, host, path: (() => { try { return new URL(r.url).pathname.slice(0, 80); } catch { return ""; } })(), size: Buffer.byteLength(text) - 1, hits });
   }
   // completeness of the on-screen receipt: every fetch/XHR/beacon/WebSocket the page itself sent must be in the in-page ledger
   const ledgerRecs = await app.evaluate(() => window.__pastewise.ledger().map((r) => ({ host: r.host, api: r.api, pasteBytesFound: r.pasteBytesFound })));
   const byHost = (list) => list.reduce((m, r) => ((m[r.host] = (m[r.host] ?? 0) + 1), m), {});
-  const cdpApi = byHost(rows.filter((r) => r.target === "page" && !r.local && r.method !== "OPTIONS" && ["Fetch", "XHR", "Ping", "WebSocket", "EventSource"].includes(r.type)));
+  // a redirect hop (e.g. Vercel's trailing-slash 308) is the same fetch() followed by the browser: one ledger entry, two CDP events.
+  // Hops are still scanned for paste tokens above; they are left out of this one-to-one count only.
+  const cdpApi = byHost(rows.filter((r) => r.target === "page" && !r.local && !r.redirectHop && r.method !== "OPTIONS" && ["Fetch", "XHR", "Ping", "WebSocket", "EventSource"].includes(r.type)));
   const ledgerHosts = byHost(ledgerRecs);
   const missingFromLedger = Object.entries(cdpApi).filter(([h, n]) => (ledgerHosts[h] ?? 0) < n).map(([h, n]) => ({ host: h, cdp: n, ledger: ledgerHosts[h] ?? 0 }));
   const appHost = new URL(base ?? "http://localhost:3102").host; // the canary is a relative URL, so it lands on the app's own origin
