@@ -1,21 +1,21 @@
 {
  "label": "synthetic S1 only",
  "base": "https://pastewise.edycu.dev/",
- "date": "2026-11-22T12:57:27.600Z",
- "commit": "eb9701a",
+ "date": "2026-11-22T13:04:10.127Z",
+ "commit": "d660396",
  "availability": "downloadable",
  "firstDialog": "Getting the on-device model ready",
  "sheetOpened": true,
  "sheetHeading": "The on-device model isn't ready yet",
  "aiRequestsBeforeYes": 0,
- "afterYesMs": 6818,
+ "afterYesMs": 3415,
  "batches": [
   {
    "status": "ok",
    "attempts": 1,
-   "ms": 6410,
+   "ms": 2944,
    "error": "",
-   "raw": "{\"cnee_nm\":\"Mrs. Ratna Kusuma\",\"cnee_tel\":\"085755508812\",\"addr_1\":\"Jl. Cempaka P"
+   "raw": "{\"cnee_nm\": \"Mrs. Ratna Kusuma\", \"cnee_tel\": \"0857 5550 8812\", \"addr_1\": \"Jl. Ce"
   }
  ],
  "fill": {

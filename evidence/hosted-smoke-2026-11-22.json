@@ -1,8 +1,8 @@
 {
  "label": "synthetic S1 only",
  "base": "https://pastewise.edycu.dev/",
- "date": "2026-11-22T12:57:04.912Z",
- "commit": "eb9701a",
+ "date": "2026-11-22T13:03:51.590Z",
+ "commit": "d660396",
  "availability": "available",
  "savedHints": "Hints on (saved copy)",
  "fillHintsUsed": 10,
@@ -13,7 +13,7 @@
   "sources": [
    "on_device"
   ],
-  "totalMs": 7328,
+  "totalMs": 6985,
   "states": {
    "cnee_nm": "found",
    "cnee_tel": "amber",
@@ -24,7 +24,7 @@
    "desc": "found",
    "pcs": "found",
    "svc": "found",
-   "rmks": "amber"
+   "rmks": "found"
   }
  },
  "ledgerAfterFill": [
@@ -49,19 +49,19 @@
   {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
-   "size": 1789,
-   "hits": 0
-  },
-  {
-   "host": "pastewise.edycu.dev",
-   "purpose": "this site",
-   "size": 74,
+   "size": 1787,
    "hits": 0
   },
   {
    "host": "pastewise.edycu.dev",
    "purpose": "this site",
    "size": 72,
+   "hits": 0
+  },
+  {
+   "host": "pastewise.edycu.dev",
+   "purpose": "this site",
+   "size": 74,
    "hits": 0
   },
   {
@@ -91,7 +91,7 @@
   {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
-   "size": 415,
+   "size": 414,
    "hits": 0
   },
   {
@@ -103,7 +103,7 @@
   {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
-   "size": 633,
+   "size": 632,
    "hits": 0
   },
   {
@@ -121,7 +121,7 @@
   {
    "host": "firestore.googleapis.com",
    "purpose": "Firestore",
-   "size": 416,
+   "size": 415,
    "hits": 0
   },
   {
@@ -134,11 +134,11 @@
  "teacher": {
   "hints": 10,
   "inferenceSource": "in_cloud",
-  "ms": 5589
+  "ms": 3693
  },
  "cspViolationsInPage": [],
  "pageErrors": [],
  "failedRequests": [
-  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?gsessionid=E_KcdralzFD net::ERR_ABORTED"
+  "https://firestore.googleapis.com/google.firestore.v1.Firestore/Listen/channel?gsessionid=DUp35xoM-6J net::ERR_ABORTED"
  ]
 }
