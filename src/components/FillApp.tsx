@@ -16,6 +16,7 @@ import { PROMPT_VERSION, buildPrompt } from "@/ai/prompt";
 import { teachForm, teacherPayload, type TeachResult } from "@/ai/teacher";
 import type { Consent } from "@/ai/fill";
 import { rcNumber, rcString, cloudKillSwitch, rcSnapshot } from "@/lib/rc";
+import { withTimeout } from "@/lib/timeout";
 import { formFingerprint } from "@/hints/fingerprint";
 import { readSaved } from "@/hints/store";
 import ConsentSheet, { type ConsentState } from "./ConsentSheet";
@@ -84,6 +85,7 @@ export default function FillApp() {
   const [kill, setKill] = useState(false);
   const [dlFailed, setDlFailed] = useState<string | null>(null);
   const [requestBytes, setRequestBytes] = useState(0);
+  const [requestCount, setRequestCount] = useState(1);
   const [consent, setConsent] = useState<{ open: boolean; state: ConsentState; message: string }>({ open: false, state: "ask", message: "" });
   const [consentBytes, setConsentBytes] = useState(0);
   const [teachOpen, setTeachOpen] = useState(false);
@@ -104,11 +106,16 @@ export default function FillApp() {
   const backdropRef = useRef<HTMLDivElement | null>(null);
   const consentForm = useRef<string>("A");
   const savedTried = useRef<Set<string>>(new Set());
+  const sendLatch = useRef(false); // one Yes = one send, even on a double click
+  const phaseRef = useRef<Phase>("idle");
   const manualHints = useRef(false); // the bench/egress hooks set hints directly; the saved-copy loader then stays out of the way
   useEffect(() => {
     textRef.current = text;
     activeRef.current = active;
   }, [text, active]);
+  useEffect(() => {
+    phaseRef.current = phase;
+  }, [phase]);
 
   const ledgerVersion = useSyncExternalStore(ledger.subscribe, ledger.version, () => "0:0");
   const records = useMemo(() => (ledgerVersion ? ledger.records() : []), [ledgerVersion]);
@@ -238,12 +245,14 @@ export default function FillApp() {
     }
     // initializeDeviceModel must follow a user interaction: start it now, before any await.
     if (!initRef.current) {
-      initRef.current = deviceModel({ type: "object", properties: {} })
+      const init: Promise<void> = deviceModel({ type: "object", properties: {} })
         .initializeDeviceModel((p) => setProgress(p))
         .catch((e) => {
-          initRef.current = null;
+          if (initRef.current === init) initRef.current = null; // a real failure: the next Fill starts afresh
           throw e;
         });
+      init.catch(() => {}); // run() awaits it; this keeps a never-awaited rejection from going unhandled
+      initRef.current = init;
     }
     const s = spec(formId);
     if (!s) return;
@@ -257,12 +266,17 @@ export default function FillApp() {
     void run(formId, runId, paste, s, today, cold, api);
   }
 
-  /** Re-fetches Remote Config (short timeout) so a switch flipped after page load is honoured; a failed fetch keeps the last known value. */
+  /** Re-fetches Remote Config (short timeout, no 60 s throttle for this one fetch) so a switch flipped after page load is honoured;
+   *  a failed or slow fetch keeps the last activated value (the explicit Yes is still required either way). */
   async function refreshKill(): Promise<boolean> {
+    const { rc } = firebase();
     try {
-      await Promise.race([fetchAndActivate(firebase().rc), new Promise((_, rej) => setTimeout(() => rej(new Error("rc timeout")), 2500))]);
+      rc.settings.minimumFetchIntervalMillis = 0;
+      await withTimeout(fetchAndActivate(rc), 2500, "rc timeout");
     } catch {
       /* keep the last activated value */
+    } finally {
+      rc.settings.minimumFetchIntervalMillis = 60_000;
     }
     const k = cloudKillSwitch();
     setKill(k);
@@ -279,6 +293,7 @@ export default function FillApp() {
     // the whole request text: the message inside the prompt, per batch, as it would be built
     const rb = s ? splitBatches(s.fields, rcNumber("batch_max_fields")).reduce((n, b) => n + new TextEncoder().encode(buildPrompt(s.title, b, paste, today)).length, 0) : 0;
     setRequestBytes(rb);
+    setRequestCount(s ? splitBatches(s.fields, rcNumber("batch_max_fields")).length : 1);
     setConsent({ open: true, state: "ask", message: paste });
   }
 
@@ -306,7 +321,7 @@ export default function FillApp() {
         if (a === "downloadable" || a === "downloading") setDownloading(true);
         // a model that is already downloaded must start quickly; a download may take many minutes
         const limit = a === "available" ? 60_000 : 20 * 60_000;
-        await Promise.race([initRef.current, new Promise((_, rej) => setTimeout(() => rej(new Error(`the model did not start within ${limit / 1000} s`)), limit))]);
+        await withTimeout(initRef.current ?? Promise.resolve(), limit, `the model did not start within ${limit / 1000} s`);
         setProgress(null);
         setDownloading(false);
       } catch (e) {
@@ -318,7 +333,7 @@ export default function FillApp() {
         record({ ...base, done: true, error: String(e) });
         if (String(e).includes("unavailable")) openConsent(formId, paste, "unavailable");
         else {
-          initRef.current = null; // the next Fill starts the model afresh
+          // a timed-out init stays pending (a second concurrent init is never started); a rejected one already reset itself
           setDlFailed(String(e instanceof Error ? e.message : e).slice(0, 200));
         }
         return false;
@@ -384,24 +399,40 @@ export default function FillApp() {
 
   /** The Yes: one message, PREFER_ON_DEVICE, counted in the ledger as "sent with your Yes". */
   async function onConsentSend() {
+    if (sendLatch.current) return; // a double click is one Yes
+    sendLatch.current = true;
+    setConsent((c) => ({ ...c, state: "sending" })); // locks Decline and Esc before anything is awaited
     const formId = consentForm.current;
     const paste = consent.message;
-    const s = spec(formId);
-    if (!s || phase !== "idle") return;
-    if (await refreshKill()) return; // the sheet now shows "the cloud path is off"
-    setConsent((c) => ({ ...c, state: "sending" }));
-    const sentBefore = ledger.records().length;
-    const runId = crypto.randomUUID();
-    runIdRef.current[formId] = runId;
-    trackRun(runId, paste, vocabOf(s));
-    setRuns((prev) => ({ ...prev, [formId]: { runId, paste, boxes: {}, batches: [], ms: 0, done: false } }));
-    setViaCloud(true);
-    setPhase("preparing");
-    const ok = await run(formId, runId, paste, s, todayLocal(), false, null, true);
-    // count the message once per request that actually left (a retry sends it again); nothing counts if no request went out
-    const left = ledger.records().slice(sentBefore).filter((r) => /vertexai|generativelanguage/.test(r.host)).length;
-    setConsentBytes((n) => n + left * new TextEncoder().encode(paste).length);
-    setConsent((c) => (ok ? { ...c, open: false, state: "ask" } : { ...c, open: true, state: "failed" }));
+    try {
+      const s = spec(formId);
+      if (!s || phaseRef.current !== "idle") {
+        setConsent((c) => ({ ...c, state: "ask" }));
+        return;
+      }
+      if (await refreshKill()) {
+        setConsent((c) => ({ ...c, state: "ask" })); // the sheet now shows "the cloud path is off"
+        return;
+      }
+      const sentBefore = ledger.records().length;
+      const runId = crypto.randomUUID();
+      runIdRef.current[formId] = runId;
+      trackRun(runId, paste, vocabOf(s));
+      setRuns((prev) => ({ ...prev, [formId]: { runId, paste, boxes: {}, batches: [], ms: 0, done: false } }));
+      setViaCloud(true);
+      setPhase("preparing");
+      const ok = await run(formId, runId, paste, s, todayLocal(), false, null, true);
+      // count the message once per request that actually left (a retry sends it again); nothing counts if no request went out
+      const left = ledger.records().slice(sentBefore).filter((r) => /vertexai|generativelanguage/.test(r.host)).length;
+      setConsentBytes((n) => n + left * new TextEncoder().encode(paste).length);
+      setConsent((c) => (ok ? { ...c, open: false, state: "ask" } : { ...c, open: true, state: "failed" }));
+    } catch {
+      setViaCloud(false);
+      setPhase("idle");
+      setConsent((c) => ({ ...c, open: true, state: "failed" }));
+    } finally {
+      sendLatch.current = false;
+    }
   }
 
   function chooseCloudInstead() {
@@ -519,7 +550,7 @@ export default function FillApp() {
     <>
       <header className="top">
         <h1>Pastewise</h1>
-        <p>Paste a messy order message. With the on-device model the form fills on this laptop — otherwise nothing leaves unless you say Yes — and code accepts only what is in your text.</p>
+        <p>Paste a messy order message. With the on-device model the form fills on this laptop — otherwise no message text leaves unless you say Yes — and code accepts only what is in your text.</p>
       </header>
       <SiteNav current="fill" />
       <main className="desk">
@@ -674,6 +705,7 @@ export default function FillApp() {
         replay={replayS1 as ReplayData}
         onSend={() => void onConsentSend()}
         requestBytes={requestBytes}
+        requestCount={requestCount}
         onDecline={() => {
           setConsent((c) => ({ ...c, open: false, state: "ask" }));
           setNotice("Nothing was sent. Type the form by hand, or press Fill to ask again.");

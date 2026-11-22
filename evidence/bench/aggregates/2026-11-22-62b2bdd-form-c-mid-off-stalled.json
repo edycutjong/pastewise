@@ -100,6 +100,6 @@
  ],
  "rawRowsInRepo": true,
  "stalledRun": true,
- "note": "First run of this arm: the on-device model stopped answering for two stretches (7 fills in repeat 2, 5 in repeat 3); the page timed out and retried as designed, and these rows show it. The system was also busy (a second Chrome with the model open, backups running). Kept as measured. The next row is a rerun of the same set, commit and code.",
+ "note": "First run of this arm: the on-device model stopped answering for two stretches (7 fills in repeat 2, 5 in repeat 3); the page timed out and retried as designed, and these rows show it. A second Chrome with the model open was running at the same time (flagged in this file). Kept as measured. The next row is a rerun of the same set, commit and code.",
  "rawRowsFile": "evidence/bench/2026-11-22-62b2bdd-form-c-mid-off-stalled-r{1,2,3}.json"
 }

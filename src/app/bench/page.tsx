@@ -44,7 +44,7 @@ function load(): Agg[] {
 }
 
 const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.toFixed(1)})`;
-const secs = (r: Range) => `${(r.mean / 1000).toFixed(1)} s`;
+const secs = (r: Range) => `${(r.mean / 1000).toFixed(1)} s${r.max - r.min > 1000 ? ` (${(r.min / 1000).toFixed(1)}–${(r.max / 1000).toFixed(1)})` : ""}`;
 const sameRun = (a: Agg, b: Agg) => a.set === b.set && a.commit === b.commit && a.setSha256 === b.setSha256 && !a.stalledRun && !b.stalledRun;
 
 export const metadata = { title: "Bench — Pastewise" };
@@ -89,7 +89,7 @@ export default function Bench() {
                 </thead>
                 <tbody>
                   {rows.map((a) => (
-                    <tr key={`${a.arm}-${a.commit}`}>
+                    <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}`}>
                       <td>
                         {a.arm === "off" ? "off" : `on (hints from the ${a.hintsSource === "cloud" ? "cloud teacher" : a.hintsSource})`}
                         {a.stalledRun && <div className="fine">first run, with model stalls — see note</div>}
@@ -112,7 +112,7 @@ export default function Bench() {
                 </tbody>
               </table>
               {rows.filter((a) => a.note).map((a) => (
-                <p key={`${a.arm}-${a.commit}-note`} className="fine">
+                <p key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-note`} className="fine">
                   Note: {a.note}
                 </p>
               ))}

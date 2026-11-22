@@ -13,13 +13,15 @@ export default function ConsentSheet(props: {
   message: string;
   /** bytes of the whole request text (message + the form's field names + our reading instructions) */
   requestBytes: number;
+  /** how many requests the message is sent in (one per batch of fields) */
+  requestCount: number;
   killSwitch: boolean;
   state: ConsentState;
   replay: ReplayData;
   onSend: () => void;
   onDecline: () => void;
 }) {
-  const { open, availability, message, requestBytes, killSwitch, state, replay, onSend, onDecline } = props;
+  const { open, availability, message, requestBytes, requestCount, killSwitch, state, replay, onSend, onDecline } = props;
   const [showReplay, setShowReplay] = useState(false);
   const notReady = availability === "downloadable" || availability === "downloading";
   const bytes = new TextEncoder().encode(message).length;
@@ -37,8 +39,8 @@ export default function ConsentSheet(props: {
             {notReady ? "The on-device model isn't ready yet. " : ""}Send <em>this one message</em> to the cloud to fill the form?
           </p>
           <p className="fine">
-            Your message, exactly as below — {message.length.toLocaleString("en-US")} characters, {bytes.toLocaleString("en-US")} bytes — goes inside a request of about{" "}
-            {requestBytes.toLocaleString("en-US")} bytes that also carries this form&apos;s field names and our reading instructions:
+            Your message, exactly as below — {message.length.toLocaleString("en-US")} characters, {bytes.toLocaleString("en-US")} bytes — goes inside {requestCount === 1 ? "one request" : `${requestCount} requests (one per batch of fields)`} of about{" "}
+            {requestBytes.toLocaleString("en-US")} bytes in total, which also {requestCount === 1 ? "carries" : "carry"} this form&apos;s field names and our reading instructions:
           </p>
           <pre className="consent-text" data-testid="consent-text">
             {message}

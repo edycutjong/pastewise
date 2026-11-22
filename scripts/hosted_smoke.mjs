@@ -32,6 +32,7 @@ try {
   out.savedHints = await app.$eval(".toggle.inline", (e) => e.textContent.trim()).catch(() => "none shown");
   const rec = await fillOnce(app, "C", S1.paste);
   out.fillHintsUsed = rec.hints;
+  out.hintsMissing = rec.hints === 0; // the smoke is only meaningful with the saved copy in force
   out.fill = { done: rec.done, error: rec.error ?? null, sources: rec.batches.map((b) => b.inferenceSource), totalMs: rec.totalMs, states: Object.fromEntries(Object.entries(rec.fields).map(([k, v]) => [k, v.state])) };
   out.ledgerAfterFill = await app.evaluate(() => window.__pastewise.ledger().map((r) => ({ host: r.host, purpose: r.purpose, size: r.size, hits: r.hits })));
   try {
@@ -46,6 +47,7 @@ try {
   const f = path.join(ROOT, `evidence/hosted-smoke-${new Date().toISOString().slice(0, 10)}.json`);
   fs.writeFileSync(f, JSON.stringify(out, null, 1) + "\n");
   console.log(JSON.stringify(out, null, 1));
+  if (out.hintsMissing) process.exitCode = 1;
 } finally {
   await chrome.close();
 }

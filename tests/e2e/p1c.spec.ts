@@ -136,3 +136,41 @@ test("first run: a model that fails to start shows the reason and offers retry o
   expect(aiRequests).toEqual([]);
   await expect(page.getByRole("button", { name: /Fill this message/ })).toBeEnabled();
 });
+
+// The Yes, end to end with a stand-in cloud: a double click is ONE request, the badge says IN_CLOUD, the receipt counts the
+// message once, and a successful send must not leave the "Nothing was sent" notice behind (regression: the dialog's own close event).
+test("consent Yes: one request for a double click, IN_CLOUD badge, bytes counted once, no false 'nothing was sent'", async ({ page }) => {
+  const answer = { name: "Tia Ramadhani", phone: "081300001111", street: "Jl. Kopo 9", city: "Bandung", province: "Jawa Barat", postal_code: "40222", item: "notebooks", quantity: "2", notes: "" };
+  let calls = 0;
+  // stand-in App Check: the debug provider (never bundled) with its token exchange answered locally
+  await page.addInitScript(() => {
+    (globalThis as { FIREBASE_APPCHECK_DEBUG_TOKEN?: string }).FIREBASE_APPCHECK_DEBUG_TOKEN = "00000000-0000-4000-8000-000000000000";
+  });
+  await page.route("**/content-firebaseappcheck.googleapis.com/**", (route) =>
+    route.fulfill({ status: 200, contentType: "application/json", headers: { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "POST, OPTIONS" }, body: JSON.stringify({ token: "stand-in", ttl: "3600s" }) }),
+  );
+  await page.route("**/firebasevertexai.googleapis.com/**", async (route) => {
+    const cors = { "access-control-allow-origin": "*", "access-control-allow-headers": "*", "access-control-allow-methods": "POST, OPTIONS" };
+    if (route.request().method() === "OPTIONS") return route.fulfill({ status: 204, headers: cors });
+    calls++;
+    await new Promise((r) => setTimeout(r, 400));
+    return route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      headers: cors,
+      body: JSON.stringify({ candidates: [{ content: { role: "model", parts: [{ text: JSON.stringify(answer) }] }, finishReason: "STOP" }] }),
+    });
+  });
+  await page.goto("/");
+  await page.locator("#paste").fill(MSG);
+  await page.getByRole("button", { name: /Fill this message/ }).click();
+  const sheet = page.getByRole("dialog", { name: /Send this one message to the cloud/ });
+  const send = sheet.getByTestId("consent-send");
+  await send.dblclick();
+  await expect(sheet).toBeHidden({ timeout: 15000 });
+  expect(calls).toBe(1);
+  await expect(page.locator(".badge")).toHaveText("in_cloud");
+  await expect(page.getByTestId("consent-bytes").locator("b")).toHaveText(`${new TextEncoder().encode(MSG).length} bytes`);
+  await expect(page.locator("#A-name")).toHaveValue("Tia Ramadhani");
+  await expect(page.getByText("Nothing was sent.")).toHaveCount(0);
+});
