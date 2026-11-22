@@ -68,7 +68,8 @@ export const metadata = { title: "Bench — Pastewise" };
 
 export default function Bench() {
   const all = load();
-  const sets = [...new Set(all.map((a) => a.set))];
+  // The held-out set leads: it is the only set measured on the frozen release; the rest were used while building.
+  const sets = [...new Set(all.map((a) => a.set))].sort((a, b) => Number(b === "holdout") - Number(a === "holdout"));
   const reports = loadReports();
   return (
     <>
@@ -76,7 +77,8 @@ export default function Bench() {
         <h1>Bench</h1>
         <p>
           Measured on one laptop through the real Fill button, with the on-device model. Every figure comes from a committed file in{" "}
-          <span className="mono">evidence/bench/aggregates/</span>; only the captions are written by hand.
+          <span className="mono">evidence/bench/aggregates/</span>; only the captions are written by hand. The held-out set comes first: it is the only
+          set measured on the frozen release (gate v4). The sets below it were used while building.
         </p>
       </header>
       <SiteNav current="bench" />
@@ -208,7 +210,7 @@ export default function Bench() {
           <p>
             “Wrong value shown as found” counts values that the code accepted (they appear in the message and pass the field&apos;s format check) but
             that are not the right value for that box. The code checks presence and format, not truth, so this number is never zero and the boxes stay
-            editable. Names are never shown as found: after the bench, the recipient-name boxes became always amber (gate v4). Only the held-out set was measured on that frozen release; the bench and earlier sets were used while building. The bars we aimed for on the held-out set (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were missed, and the numbers above say by how much.
+            editable. Recipient names are never shown as found: after the bench, the recipient-name boxes on forms A and C became always amber (gate v4); the guest name on form B was not changed. Only the held-out set was measured on that frozen release; the bench and earlier sets were used while building. The bars we aimed for on the held-out set (strict ≥ 90%, wrong shown ≤ 3%, warm p50 ≤ 2 s) were missed, and the numbers above say by how much.
           </p>
         </section>
       </main>
