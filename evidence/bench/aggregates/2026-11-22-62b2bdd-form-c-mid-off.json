@@ -1,0 +1,102 @@
+{
+ "set": "form-c-mid",
+ "setSha256": "927c8a5b022e120f09e28f83a2edb65eb2f2d496962d5173b32c457ff18a0166",
+ "pastes": 10,
+ "forms": [
+  "C"
+ ],
+ "arm": "off",
+ "hintsSource": "none",
+ "hintsSha": null,
+ "repeats": 3,
+ "date": "2026-11-22",
+ "commit": "62b2bdd",
+ "srcDirty": false,
+ "promptVersion": "p0c-v3",
+ "gateVersion": "2",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": false,
+ "path": "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
+ "metrics": {
+  "rawAccuracyStrict": {
+   "mean": 74,
+   "min": 73,
+   "max": 75
+  },
+  "rawAccuracyP0c": {
+   "mean": 74,
+   "min": 73,
+   "max": 75
+  },
+  "acceptedWrongPct": {
+   "mean": 10.33,
+   "min": 10,
+   "max": 11
+  },
+  "coverage": {
+   "mean": 89.89,
+   "min": 89.89,
+   "max": 89.89
+  },
+  "usefulCoverage": {
+   "mean": 81.65,
+   "min": 80.9,
+   "max": 82.02
+  },
+  "amberPct": {
+   "mean": 9.33,
+   "min": 8,
+   "max": 11
+  },
+  "warmP50": {
+   "mean": 2615.33,
+   "min": 2598,
+   "max": 2630
+  },
+  "warmP95": {
+   "mean": 2842.67,
+   "min": 2711,
+   "max": 3032
+  }
+ },
+ "perRepeat": [
+  {
+   "jsonValid": "10/10",
+   "onDeviceBatches": "10/10",
+   "stalls": 0,
+   "rawAccuracyStrict": 75,
+   "acceptedWrongPct": 10,
+   "acceptedWrongCount": 10,
+   "coverage": 89.89,
+   "usefulCoverage": 82.02,
+   "warmP50": 2618,
+   "warmP95": 2711
+  },
+  {
+   "jsonValid": "10/10",
+   "onDeviceBatches": "10/10",
+   "stalls": 0,
+   "rawAccuracyStrict": 74,
+   "acceptedWrongPct": 10,
+   "acceptedWrongCount": 10,
+   "coverage": 89.89,
+   "usefulCoverage": 82.02,
+   "warmP50": 2598,
+   "warmP95": 3032
+  },
+  {
+   "jsonValid": "10/10",
+   "onDeviceBatches": "10/10",
+   "stalls": 0,
+   "rawAccuracyStrict": 73,
+   "acceptedWrongPct": 11,
+   "acceptedWrongCount": 11,
+   "coverage": 89.89,
+   "usefulCoverage": 80.9,
+   "warmP50": 2630,
+   "warmP95": 2785
+  }
+ ],
+ "rawRowsInRepo": true
+}

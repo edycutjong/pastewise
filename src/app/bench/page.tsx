@@ -23,6 +23,14 @@ type Agg = {
   contendedBySiblingChrome: boolean;
   metrics: Record<"rawAccuracyStrict" | "acceptedWrongPct" | "coverage" | "usefulCoverage" | "amberPct" | "warmP50" | "warmP95", Range>;
   perRepeat: { jsonValid: string; onDeviceBatches: string }[];
+  stalledRun?: boolean;
+  note?: string;
+};
+
+const ABOUT: Record<string, string> = {
+  "continuity-20": "The 20 order and booking messages from the kill test, on the plain order form (A) and the hotel form (B). The messages themselves are not published; the file hash below identifies them.",
+  "form-c-mid": "10 order messages for the legacy consignment-note form (C), whose boxes have cryptic names like CNEE and ZIP. Used while building, so not a held-out set.",
+  dev: "The tuning set used while building.",
 };
 
 function load(): Agg[] {
@@ -37,7 +45,7 @@ function load(): Agg[] {
 
 const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.toFixed(1)})`;
 const secs = (r: Range) => `${(r.mean / 1000).toFixed(1)} s`;
-const sameRun = (a: Agg, b: Agg) => a.set === b.set && a.commit === b.commit && a.setSha256 === b.setSha256;
+const sameRun = (a: Agg, b: Agg) => a.set === b.set && a.commit === b.commit && a.setSha256 === b.setSha256 && !a.stalledRun && !b.stalledRun;
 
 export const metadata = { title: "Bench — Pastewise" };
 
@@ -64,6 +72,7 @@ export default function Bench() {
               <h2 className="cap">
                 Set {set} · {first.pastes} pastes · forms {first.forms.join(", ")}
               </h2>
+              {ABOUT[set] && <p className="fine">{ABOUT[set]}</p>}
               <table className="data">
                 <thead>
                   <tr>
@@ -80,7 +89,10 @@ export default function Bench() {
                 <tbody>
                   {rows.map((a) => (
                     <tr key={`${a.arm}-${a.commit}`}>
-                      <td>{a.arm === "off" ? "off" : `on (${a.hintsSource})`}</td>
+                      <td>
+                        {a.arm === "off" ? "off" : `on (${a.hintsSource})`}
+                        {a.stalledRun && <div className="fine">first run, with model stalls — see note</div>}
+                      </td>
                       <td>{pct(a.metrics.acceptedWrongPct)}</td>
                       <td>{pct(a.metrics.rawAccuracyStrict)}</td>
                       <td>{pct(a.metrics.coverage)}</td>
@@ -97,6 +109,11 @@ export default function Bench() {
                   ))}
                 </tbody>
               </table>
+              {rows.filter((a) => a.note).map((a) => (
+                <p key={`${a.arm}-${a.commit}-note`} className="fine">
+                  Note: {a.note}
+                </p>
+              ))}
               {rows
                 .filter((a) => a.arm === "hints")
                 .map((h) => {

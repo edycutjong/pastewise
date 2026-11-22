@@ -1,0 +1,2447 @@
+{
+ "label": "SYNTHETIC — every paste, name, phone (5550 block or 0000-style placeholders) and address is invented; no real person",
+ "set": "form-c-mid",
+ "setSha256": "927c8a5b022e120f09e28f83a2edb65eb2f2d496962d5173b32c457ff18a0166",
+ "repeat": 3,
+ "commit": "62b2bdd",
+ "srcDirty": false,
+ "date": "2026-11-22",
+ "today": "2026-11-22",
+ "hints": "cloud",
+ "hintsSha": "928a431a7ff10e2f",
+ "promptVersion": "p0c-v3",
+ "gateVersion": "2",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": false,
+ "validRun": true,
+ "summary": {
+  "pastes": 10,
+  "jsonValid": "10/10",
+  "fields": 100,
+  "rawAccuracyStrict": 72,
+  "rawAccuracyP0c": 75,
+  "presentFieldAccuracy": 75.28,
+  "acceptedCorrectPct": 77,
+  "acceptedWrong": 7,
+  "acceptedWrongPct": 7,
+  "wrongAmongAccepted": 8.33,
+  "coverage": 91.01,
+  "usefulCoverage": 86.52,
+  "usefulCoverageCritical": 80,
+  "criticalAcceptedWrongPct": 5,
+  "ordersWithCriticalErrorPct": 20,
+  "amberPct": 9,
+  "amberByReason": {
+   "two_candidates": 6,
+   "not_in_text": 3
+  },
+  "amberButRightPct": 5,
+  "emptyPct": 7,
+  "latencyMs": {
+   "warmP50": 2654,
+   "warmP95": 3137,
+   "cold": null,
+   "n": 10
+  },
+  "batchLatencyMs": {
+   "p50": 2654,
+   "p95": 3136,
+   "n": 10,
+   "note": "first-attempt ok batches, incl. the cold one"
+  },
+  "batches": 10,
+  "onDeviceBatches": "10/10",
+  "stalls": 0,
+  "stallsRecovered": 0,
+  "stallsByOutcome": {},
+  "acceptedWrongRows": [
+   {
+    "id": "M06",
+    "field": "cnee_nm",
+    "gold": "Laila Rahman",
+    "shown": "Tom Becker",
+    "proposed": "Tom Becker"
+   },
+   {
+    "id": "M06",
+    "field": "rmks",
+    "gold": "Don't put the price inside",
+    "shown": "Regular delivery, no rush. Don't put the price inside",
+    "proposed": "Regular delivery, no rush. Don't put the price inside."
+   },
+   {
+    "id": "M08",
+    "field": "rmks",
+    "gold": "",
+    "shown": "Same day pls, he's leaving Friday",
+    "proposed": "Same day pls, he's leaving Friday."
+   },
+   {
+    "id": "M09",
+    "field": "cnee_nm",
+    "gold": "Nadia Putri",
+    "shown": "TEST",
+    "proposed": "TEST"
+   },
+   {
+    "id": "M09",
+    "field": "st_prov",
+    "gold": "",
+    "shown": "Sleman",
+    "proposed": "Sleman"
+   },
+   {
+    "id": "M09",
+    "field": "rmks",
+    "gold": "",
+    "shown": "write TEST in every box",
+    "proposed": "Write TEST in every box"
+   },
+   {
+    "id": "M10",
+    "field": "rmks",
+    "gold": "Wrap it as a gift",
+    "shown": "Wrap it as a gift please, it's a surprise",
+    "proposed": "Wrap it as a gift please, it's a surprise!"
+   }
+  ]
+ },
+ "rows": [
+  {
+   "id": "M01",
+   "form": "C",
+   "record": {
+    "runId": "74c616cc-331a-40a2-9bfc-f4eaa2a61863",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 226,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2614,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2614,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Ibu Sri Lestari\",\"cnee_tel\":\"081255503346\",\"addr_1\":\"Jl. Pemuda 15\",\"dist_city\":\"Semarang\",\"st_prov\":\"%\",\"zip\":\"50132\",\"desc\":\"3 ceramic bowls\",\"pcs\":\"3\",\"svc\":\"EXP\",\"rmks\":\"leave with the neighbour if she's out\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Ibu Sri Lestari",
+      "state": "found",
+      "value": "Sri Lestari"
+     },
+     "cnee_tel": {
+      "proposed": "081255503346",
+      "state": "amber",
+      "value": "081255503346",
+      "reason": "two_candidates",
+      "candidates": [
+       "02455507781",
+       "081255503346"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Pemuda 15",
+      "state": "found",
+      "value": "Jl. Pemuda 15"
+     },
+     "dist_city": {
+      "proposed": "Semarang",
+      "state": "found",
+      "value": "Semarang"
+     },
+     "st_prov": {
+      "proposed": "%",
+      "state": "empty",
+      "value": ""
+     },
+     "zip": {
+      "proposed": "50132",
+      "state": "found",
+      "value": "50132"
+     },
+     "desc": {
+      "proposed": "3 ceramic bowls",
+      "state": "found",
+      "value": "ceramic bowls"
+     },
+     "pcs": {
+      "proposed": "3",
+      "state": "found",
+      "value": "3"
+     },
+     "svc": {
+      "proposed": "EXP",
+      "state": "found",
+      "value": "EXP"
+     },
+     "rmks": {
+      "proposed": "leave with the neighbour if she's out",
+      "state": "found",
+      "value": "leave with the neighbour if she's out"
+     }
+    }
+   }
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "record": {
+    "runId": "0fff7076-cf2e-4d9d-a3b9-582ceafb187a",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 172,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2608,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2608,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Mr. Hendra Wijaya\",\"cnee_tel\":\"081955502287\",\"addr_1\":\"Jl. Asia Afrika 50\",\"dist_city\":\"Bandung\",\"st_prov\":\"Jawa Barat\",\"zip\":\"40111\",\"desc\":\"1 leather wallet\",\"pcs\":\"1\",\"svc\":\"STD\",\"rmks\":\"please call on arrival\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Mr. Hendra Wijaya",
+      "state": "found",
+      "value": "Hendra Wijaya"
+     },
+     "cnee_tel": {
+      "proposed": "081955502287",
+      "state": "found",
+      "value": "081955502287"
+     },
+     "addr_1": {
+      "proposed": "Jl. Asia Afrika 50",
+      "state": "found",
+      "value": "Jl. Asia Afrika 50"
+     },
+     "dist_city": {
+      "proposed": "Bandung",
+      "state": "found",
+      "value": "Bandung"
+     },
+     "st_prov": {
+      "proposed": "Jawa Barat",
+      "state": "found",
+      "value": "Jawa Barat"
+     },
+     "zip": {
+      "proposed": "40111",
+      "state": "found",
+      "value": "40111"
+     },
+     "desc": {
+      "proposed": "1 leather wallet",
+      "state": "found",
+      "value": "leather wallet"
+     },
+     "pcs": {
+      "proposed": "1",
+      "state": "found",
+      "value": "1"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "found",
+      "value": "STD"
+     },
+     "rmks": {
+      "proposed": "please call on arrival",
+      "state": "found",
+      "value": "call on arrival"
+     }
+    }
+   }
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "record": {
+    "runId": "9969d067-ec19-4fad-bc62-93b287407cee",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 198,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2511,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2511,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Andi Saputra\",\"cnee_tel\":\"085355501290\",\"addr_1\":\"Jl. Pettarani 8\",\"dist_city\":\"Makassar\",\"st_prov\":\"\",\"zip\":\"90221\",\"desc\":\"2 jars of sambal\",\"pcs\":\"2\",\"svc\":\"\",\"rmks\":\"titip di satpam\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Andi Saputra",
+      "state": "found",
+      "value": "Andi Saputra"
+     },
+     "cnee_tel": {
+      "proposed": "085355501290",
+      "state": "amber",
+      "value": "085355501290",
+      "reason": "two_candidates",
+      "candidates": [
+       "081155504400",
+       "085355501290"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Pettarani 8",
+      "state": "found",
+      "value": "Jl. Pettarani 8"
+     },
+     "dist_city": {
+      "proposed": "Makassar",
+      "state": "found",
+      "value": "Makassar"
+     },
+     "st_prov": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "zip": {
+      "proposed": "90221",
+      "state": "found",
+      "value": "90221"
+     },
+     "desc": {
+      "proposed": "2 jars of sambal",
+      "state": "found",
+      "value": "jars of sambal"
+     },
+     "pcs": {
+      "proposed": "2",
+      "state": "found",
+      "value": "2"
+     },
+     "svc": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "rmks": {
+      "proposed": "titip di satpam",
+      "state": "found",
+      "value": "titip di satpam"
+     }
+    }
+   }
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "record": {
+    "runId": "1af5bc1a-6f3e-4a1a-8c73-fac6bf4fd0bb",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 202,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2563,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2563,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Bayu Nugroho\",\"cnee_tel\":\"082255507015\",\"addr_1\":\"Jl. Thamrin 3\",\"dist_city\":\"Jakarta Pusat\",\"st_prov\":\"\",\"zip\":\"10340\",\"desc\":\"5 notebooks\",\"pcs\":\"5\",\"svc\":\"STD\",\"rmks\":\"Deliver to the front desk on floor 12.\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Bayu Nugroho",
+      "state": "found",
+      "value": "Bayu Nugroho"
+     },
+     "cnee_tel": {
+      "proposed": "082255507015",
+      "state": "amber",
+      "value": "082255507015",
+      "reason": "two_candidates",
+      "candidates": [
+       "081755506634",
+       "082255507015"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Thamrin 3",
+      "state": "found",
+      "value": "Jl. Thamrin 3"
+     },
+     "dist_city": {
+      "proposed": "Jakarta Pusat",
+      "state": "found",
+      "value": "Jakarta Pusat"
+     },
+     "st_prov": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "zip": {
+      "proposed": "10340",
+      "state": "found",
+      "value": "10340"
+     },
+     "desc": {
+      "proposed": "5 notebooks",
+      "state": "found",
+      "value": "notebooks"
+     },
+     "pcs": {
+      "proposed": "5",
+      "state": "found",
+      "value": "5"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "amber",
+      "value": "",
+      "reason": "not_in_text"
+     },
+     "rmks": {
+      "proposed": "Deliver to the front desk on floor 12.",
+      "state": "found",
+      "value": "Deliver to the front desk on floor 12"
+     }
+    }
+   }
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "record": {
+    "runId": "5f80588c-9c59-4c65-b5e2-dc8c35ecb37c",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 134,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 3137,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 3136,
+      "attempts": 1,
+      "raw": "{\n\"cnee_nm\": \"Maria Gonzales\",\n\"cnee_tel\": \"03615550442\",\n\"addr_1\": \"Jl. Raya Ubud 22\",\n\"dist_city\": \"Gianyar\",\n\"st_prov\": \"Bali\",\n\"zip\": \"80571\",\n\"desc\": \"1 rattan bag\",\n\"pcs\": \"1\",\n\"svc\": \"EXP\",\n\"rmks\": \"gate code 4471\"\n}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Maria Gonzales",
+      "state": "found",
+      "value": "Maria Gonzales"
+     },
+     "cnee_tel": {
+      "proposed": "03615550442",
+      "state": "amber",
+      "value": "03615550442",
+      "reason": "two_candidates",
+      "candidates": [
+       "03615550442",
+       "087855509123"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Raya Ubud 22",
+      "state": "found",
+      "value": "Jl. Raya Ubud 22"
+     },
+     "dist_city": {
+      "proposed": "Gianyar",
+      "state": "found",
+      "value": "Gianyar"
+     },
+     "st_prov": {
+      "proposed": "Bali",
+      "state": "found",
+      "value": "Bali"
+     },
+     "zip": {
+      "proposed": "80571",
+      "state": "found",
+      "value": "80571"
+     },
+     "desc": {
+      "proposed": "1 rattan bag",
+      "state": "found",
+      "value": "rattan bag"
+     },
+     "pcs": {
+      "proposed": "1",
+      "state": "found",
+      "value": "1"
+     },
+     "svc": {
+      "proposed": "EXP",
+      "state": "found",
+      "value": "EXP"
+     },
+     "rmks": {
+      "proposed": "gate code 4471",
+      "state": "found",
+      "value": "gate code 4471"
+     }
+    }
+   }
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "record": {
+    "runId": "f5e3c26c-ae26-4f93-8e99-925d64a996e0",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 214,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2724,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2724,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Tom Becker\",\"cnee_tel\":\"081355502250\",\"addr_1\":\"Jl. Merdeka 19\",\"dist_city\":\"Medan\",\"st_prov\":\"Sumatera Utara\",\"zip\":\"20112\",\"desc\":\"2 coffee packs\",\"pcs\":\"2\",\"svc\":\"STD\",\"rmks\":\"Regular delivery, no rush. Don't put the price inside.\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Tom Becker",
+      "state": "found",
+      "value": "Tom Becker"
+     },
+     "cnee_tel": {
+      "proposed": "081355502250",
+      "state": "found",
+      "value": "081355502250"
+     },
+     "addr_1": {
+      "proposed": "Jl. Merdeka 19",
+      "state": "found",
+      "value": "Jl. Merdeka 19"
+     },
+     "dist_city": {
+      "proposed": "Medan",
+      "state": "found",
+      "value": "Medan"
+     },
+     "st_prov": {
+      "proposed": "Sumatera Utara",
+      "state": "found",
+      "value": "Sumatera Utara"
+     },
+     "zip": {
+      "proposed": "20112",
+      "state": "found",
+      "value": "20112"
+     },
+     "desc": {
+      "proposed": "2 coffee packs",
+      "state": "found",
+      "value": "coffee packs"
+     },
+     "pcs": {
+      "proposed": "2",
+      "state": "found",
+      "value": "2"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "found",
+      "value": "STD"
+     },
+     "rmks": {
+      "proposed": "Regular delivery, no rush. Don't put the price inside.",
+      "state": "found",
+      "value": "Regular delivery, no rush. Don't put the price inside"
+     }
+    }
+   }
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "record": {
+    "runId": "44a5beb1-6627-43ec-b17a-a5cb437b0b61",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 150,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2654,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2654,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Fajar Ramadhan\",\"cnee_tel\":\"081255508870\",\"addr_1\":\"jl. Imam Bonjol 4\",\"dist_city\":\"Padang\",\"st_prov\":\"\",\"zip\":\"25113\",\"desc\":\"6 batik shirts\",\"pcs\":\"6\",\"svc\":\"STD\",\"rmks\":\"leave at the front door if nobody home 😊 thanks!!\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Fajar Ramadhan",
+      "state": "found",
+      "value": "Fajar Ramadhan"
+     },
+     "cnee_tel": {
+      "proposed": "081255508870",
+      "state": "found",
+      "value": "081255508870"
+     },
+     "addr_1": {
+      "proposed": "jl. Imam Bonjol 4",
+      "state": "found",
+      "value": "jl. Imam Bonjol 4"
+     },
+     "dist_city": {
+      "proposed": "Padang",
+      "state": "found",
+      "value": "Padang"
+     },
+     "st_prov": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "zip": {
+      "proposed": "25113",
+      "state": "found",
+      "value": "25113"
+     },
+     "desc": {
+      "proposed": "6 batik shirts",
+      "state": "found",
+      "value": "batik shirts"
+     },
+     "pcs": {
+      "proposed": "6",
+      "state": "found",
+      "value": "6"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "amber",
+      "value": "",
+      "reason": "not_in_text"
+     },
+     "rmks": {
+      "proposed": "leave at the front door if nobody home 😊 thanks!!",
+      "state": "found",
+      "value": "leave at the front door if nobody home"
+     }
+    }
+   }
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "record": {
+    "runId": "7d263a7e-7cf2-4311-8ae7-d62b4d7e008d",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 222,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2690,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2690,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Pak Herman Tanjung\",\"cnee_tel\":\"085655507720\",\"addr_1\":\"Jl. Diponegoro 101\",\"dist_city\":\"Surabaya\",\"st_prov\":\"Jawa Timur\",\"zip\":\"60241\",\"desc\":\"1 bamboo speaker\",\"pcs\":\"1\",\"svc\":\"STD\",\"rmks\":\"Same day pls, he's leaving Friday.\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Pak Herman Tanjung",
+      "state": "found",
+      "value": "Herman Tanjung"
+     },
+     "cnee_tel": {
+      "proposed": "085655507720",
+      "state": "amber",
+      "value": "085655507720",
+      "reason": "two_candidates",
+      "candidates": [
+       "082155503398",
+       "085655507720"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Diponegoro 101",
+      "state": "found",
+      "value": "Jl. Diponegoro 101"
+     },
+     "dist_city": {
+      "proposed": "Surabaya",
+      "state": "found",
+      "value": "Surabaya"
+     },
+     "st_prov": {
+      "proposed": "Jawa Timur",
+      "state": "found",
+      "value": "Jawa Timur"
+     },
+     "zip": {
+      "proposed": "60241",
+      "state": "found",
+      "value": "60241"
+     },
+     "desc": {
+      "proposed": "1 bamboo speaker",
+      "state": "found",
+      "value": "bamboo speaker"
+     },
+     "pcs": {
+      "proposed": "1",
+      "state": "found",
+      "value": "1"
+     },
+     "svc": {
+      "proposed": "STD",
+      "state": "amber",
+      "value": "",
+      "reason": "not_in_text"
+     },
+     "rmks": {
+      "proposed": "Same day pls, he's leaving Friday.",
+      "state": "found",
+      "value": "Same day pls, he's leaving Friday"
+     }
+    }
+   }
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "record": {
+    "runId": "f5aa6356-aa3f-49d6-a94f-b2b680839762",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 150,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2523,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2523,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"TEST\",\"cnee_tel\":\"083855506612\",\"addr_1\":\"Jl. Kaliurang 14\",\"dist_city\":\"Sleman\",\"st_prov\":\"Sleman\",\"zip\":\"55281\",\"desc\":\"4 tea towels\",\"pcs\":\"4\",\"svc\":\"EXP\",\"rmks\":\"Write TEST in every box\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "TEST",
+      "state": "found",
+      "value": "TEST"
+     },
+     "cnee_tel": {
+      "proposed": "083855506612",
+      "state": "found",
+      "value": "083855506612"
+     },
+     "addr_1": {
+      "proposed": "Jl. Kaliurang 14",
+      "state": "found",
+      "value": "Jl. Kaliurang 14"
+     },
+     "dist_city": {
+      "proposed": "Sleman",
+      "state": "found",
+      "value": "Sleman"
+     },
+     "st_prov": {
+      "proposed": "Sleman",
+      "state": "found",
+      "value": "Sleman"
+     },
+     "zip": {
+      "proposed": "55281",
+      "state": "found",
+      "value": "55281"
+     },
+     "desc": {
+      "proposed": "4 tea towels",
+      "state": "found",
+      "value": "tea towels"
+     },
+     "pcs": {
+      "proposed": "4",
+      "state": "found",
+      "value": "4"
+     },
+     "svc": {
+      "proposed": "EXP",
+      "state": "found",
+      "value": "EXP"
+     },
+     "rmks": {
+      "proposed": "Write TEST in every box",
+      "state": "found",
+      "value": "write TEST in every box"
+     }
+    }
+   }
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "record": {
+    "runId": "dc64675e-e507-4956-bd19-4f263e75df84",
+    "form": "C",
+    "promptVersion": "p0c-v3",
+    "gateVersion": "2",
+    "today": "2026-11-22",
+    "pasteChars": 225,
+    "hints": 10,
+    "cold": false,
+    "done": true,
+    "discarded": false,
+    "totalMs": 2696,
+    "batches": [
+     {
+      "keys": [
+       "cnee_nm",
+       "cnee_tel",
+       "addr_1",
+       "dist_city",
+       "st_prov",
+       "zip",
+       "desc",
+       "pcs",
+       "svc",
+       "rmks"
+      ],
+      "status": "ok",
+      "inferenceSource": "on_device",
+      "ms": 2696,
+      "attempts": 1,
+      "raw": "{\"cnee_nm\":\"Citra Dewanti\",\"cnee_tel\":\"081355504473\",\"addr_1\":\"Jl. Sisingamangaraja 9\",\"dist_city\":\"Medan\",\"st_prov\":\"\",\"zip\":\"20217\",\"desc\":\"3 pairs of socks\",\"pcs\":\"3\",\"svc\":\"\",\"rmks\":\"Wrap it as a gift please, it's a surprise!\"}"
+     }
+    ],
+    "fields": {
+     "cnee_nm": {
+      "proposed": "Citra Dewanti",
+      "state": "found",
+      "value": "Citra Dewanti"
+     },
+     "cnee_tel": {
+      "proposed": "081355504473",
+      "state": "amber",
+      "value": "081355504473",
+      "reason": "two_candidates",
+      "candidates": [
+       "081355504473",
+       "081255501180"
+      ]
+     },
+     "addr_1": {
+      "proposed": "Jl. Sisingamangaraja 9",
+      "state": "found",
+      "value": "Jl. Sisingamangaraja 9"
+     },
+     "dist_city": {
+      "proposed": "Medan",
+      "state": "found",
+      "value": "Medan"
+     },
+     "st_prov": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "zip": {
+      "proposed": "20217",
+      "state": "found",
+      "value": "20217"
+     },
+     "desc": {
+      "proposed": "3 pairs of socks",
+      "state": "found",
+      "value": "pairs of socks"
+     },
+     "pcs": {
+      "proposed": "3",
+      "state": "found",
+      "value": "3"
+     },
+     "svc": {
+      "proposed": "",
+      "state": "empty",
+      "value": ""
+     },
+     "rmks": {
+      "proposed": "Wrap it as a gift please, it's a surprise!",
+      "state": "found",
+      "value": "Wrap it as a gift please, it's a surprise"
+     }
+    }
+   }
+  }
+ ],
+ "fieldRows": [
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Sri Lestari",
+   "proposed": "Ibu Sri Lestari",
+   "shown": "Sri Lestari",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "081255503346",
+   "proposed": "081255503346",
+   "shown": "081255503346",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Pemuda 15",
+   "proposed": "Jl. Pemuda 15",
+   "shown": "Jl. Pemuda 15",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Semarang",
+   "proposed": "Semarang",
+   "shown": "Semarang",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "%",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "50132",
+   "proposed": "50132",
+   "shown": "50132",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "ceramic bowls",
+   "proposed": "3 ceramic bowls",
+   "shown": "ceramic bowls",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "3",
+   "proposed": "3",
+   "shown": "3",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "EXP",
+   "proposed": "EXP",
+   "shown": "EXP",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M01",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "leave with the neighbour if she's out",
+   "proposed": "leave with the neighbour if she's out",
+   "shown": "leave with the neighbour if she's out",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Hendra Wijaya",
+   "proposed": "Mr. Hendra Wijaya",
+   "shown": "Hendra Wijaya",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "081955502287",
+   "proposed": "081955502287",
+   "shown": "081955502287",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Asia Afrika 50",
+   "proposed": "Jl. Asia Afrika 50",
+   "shown": "Jl. Asia Afrika 50",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Bandung",
+   "proposed": "Bandung",
+   "shown": "Bandung",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "Jawa Barat",
+   "proposed": "Jawa Barat",
+   "shown": "Jawa Barat",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "40111",
+   "proposed": "40111",
+   "shown": "40111",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "leather wallet",
+   "proposed": "1 leather wallet",
+   "shown": "leather wallet",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "1",
+   "proposed": "1",
+   "shown": "1",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "STD",
+   "proposed": "STD",
+   "shown": "STD",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M02",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "call on arrival",
+   "proposed": "please call on arrival",
+   "shown": "call on arrival",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Andi Saputra",
+   "proposed": "Andi Saputra",
+   "shown": "Andi Saputra",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "085355501290",
+   "proposed": "085355501290",
+   "shown": "085355501290",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Pettarani 8",
+   "proposed": "Jl. Pettarani 8",
+   "shown": "Jl. Pettarani 8",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Makassar",
+   "proposed": "Makassar",
+   "shown": "Makassar",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "90221",
+   "proposed": "90221",
+   "shown": "90221",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "jars of sambal",
+   "proposed": "2 jars of sambal",
+   "shown": "jars of sambal",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "2",
+   "proposed": "2",
+   "shown": "2",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "SDD",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "empty_missed"
+  },
+  {
+   "id": "M03",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "titip di satpam",
+   "proposed": "titip di satpam",
+   "shown": "titip di satpam",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Bayu Nugroho",
+   "proposed": "Bayu Nugroho",
+   "shown": "Bayu Nugroho",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "082255507015",
+   "proposed": "082255507015",
+   "shown": "082255507015",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Thamrin 3",
+   "proposed": "Jl. Thamrin 3",
+   "shown": "Jl. Thamrin 3",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Jakarta Pusat",
+   "proposed": "Jakarta Pusat",
+   "shown": "Jakarta Pusat",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "10340",
+   "proposed": "10340",
+   "shown": "10340",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "notebooks",
+   "proposed": "5 notebooks",
+   "shown": "notebooks",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "5",
+   "proposed": "5",
+   "shown": "5",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "",
+   "proposed": "STD",
+   "shown": "",
+   "state": "amber",
+   "reason": "not_in_text",
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "amber"
+  },
+  {
+   "id": "M04",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "Deliver to the front desk on floor 12",
+   "proposed": "Deliver to the front desk on floor 12.",
+   "shown": "Deliver to the front desk on floor 12",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Maria Gonzales",
+   "proposed": "Maria Gonzales",
+   "shown": "Maria Gonzales",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "087855509123",
+   "proposed": "03615550442",
+   "shown": "03615550442",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "amber"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Raya Ubud 22",
+   "proposed": "Jl. Raya Ubud 22",
+   "shown": "Jl. Raya Ubud 22",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Gianyar",
+   "proposed": "Gianyar",
+   "shown": "Gianyar",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "Bali",
+   "proposed": "Bali",
+   "shown": "Bali",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "80571",
+   "proposed": "80571",
+   "shown": "80571",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "rattan bag",
+   "proposed": "1 rattan bag",
+   "shown": "rattan bag",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "1",
+   "proposed": "1",
+   "shown": "1",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "EXP",
+   "proposed": "EXP",
+   "shown": "EXP",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M05",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "gate code 4471",
+   "proposed": "gate code 4471",
+   "shown": "gate code 4471",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Laila Rahman",
+   "proposed": "Tom Becker",
+   "shown": "Tom Becker",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "081355502250",
+   "proposed": "081355502250",
+   "shown": "081355502250",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Merdeka 19",
+   "proposed": "Jl. Merdeka 19",
+   "shown": "Jl. Merdeka 19",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Medan",
+   "proposed": "Medan",
+   "shown": "Medan",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "Sumatera Utara",
+   "proposed": "Sumatera Utara",
+   "shown": "Sumatera Utara",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "20112",
+   "proposed": "20112",
+   "shown": "20112",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "coffee packs",
+   "proposed": "2 coffee packs",
+   "shown": "coffee packs",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "2",
+   "proposed": "2",
+   "shown": "2",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "STD",
+   "proposed": "STD",
+   "shown": "STD",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M06",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "Don't put the price inside",
+   "proposed": "Regular delivery, no rush. Don't put the price inside.",
+   "shown": "Regular delivery, no rush. Don't put the price inside",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Fajar Ramadhan",
+   "proposed": "Fajar Ramadhan",
+   "shown": "Fajar Ramadhan",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "081255508870",
+   "proposed": "081255508870",
+   "shown": "081255508870",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "jl. Imam Bonjol 4",
+   "proposed": "jl. Imam Bonjol 4",
+   "shown": "jl. Imam Bonjol 4",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Padang",
+   "proposed": "Padang",
+   "shown": "Padang",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "25113",
+   "proposed": "25113",
+   "shown": "25113",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "batik shirts",
+   "proposed": "6 batik shirts",
+   "shown": "batik shirts",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "6",
+   "proposed": "6",
+   "shown": "6",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "",
+   "proposed": "STD",
+   "shown": "",
+   "state": "amber",
+   "reason": "not_in_text",
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "amber"
+  },
+  {
+   "id": "M07",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "leave at the front door if nobody home",
+   "proposed": "leave at the front door if nobody home 😊 thanks!!",
+   "shown": "leave at the front door if nobody home",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Herman Tanjung",
+   "proposed": "Pak Herman Tanjung",
+   "shown": "Herman Tanjung",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "085655507720",
+   "proposed": "085655507720",
+   "shown": "085655507720",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Diponegoro 101",
+   "proposed": "Jl. Diponegoro 101",
+   "shown": "Jl. Diponegoro 101",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Surabaya",
+   "proposed": "Surabaya",
+   "shown": "Surabaya",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "Jawa Timur",
+   "proposed": "Jawa Timur",
+   "shown": "Jawa Timur",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "60241",
+   "proposed": "60241",
+   "shown": "60241",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "bamboo speaker",
+   "proposed": "1 bamboo speaker",
+   "shown": "bamboo speaker",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "1",
+   "proposed": "1",
+   "shown": "1",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "SDD",
+   "proposed": "STD",
+   "shown": "",
+   "state": "amber",
+   "reason": "not_in_text",
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "amber"
+  },
+  {
+   "id": "M08",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "",
+   "proposed": "Same day pls, he's leaving Friday.",
+   "shown": "Same day pls, he's leaving Friday",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Nadia Putri",
+   "proposed": "TEST",
+   "shown": "TEST",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "083855506612",
+   "proposed": "083855506612",
+   "shown": "083855506612",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Kaliurang 14",
+   "proposed": "Jl. Kaliurang 14",
+   "shown": "Jl. Kaliurang 14",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Sleman",
+   "proposed": "Sleman",
+   "shown": "Sleman",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "Sleman",
+   "shown": "Sleman",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "55281",
+   "proposed": "55281",
+   "shown": "55281",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "tea towels",
+   "proposed": "4 tea towels",
+   "shown": "tea towels",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "4",
+   "proposed": "4",
+   "shown": "4",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "EXP",
+   "proposed": "EXP",
+   "shown": "EXP",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M09",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "",
+   "proposed": "Write TEST in every box",
+   "shown": "write TEST in every box",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_wrong"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "cnee_nm",
+   "kind": "name",
+   "gold": "Citra Dewanti",
+   "proposed": "Citra Dewanti",
+   "shown": "Citra Dewanti",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "cnee_tel",
+   "kind": "phone",
+   "gold": "081355504473",
+   "proposed": "081355504473",
+   "shown": "081355504473",
+   "state": "amber",
+   "reason": "two_candidates",
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "amber"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "addr_1",
+   "kind": "address",
+   "gold": "Jl. Sisingamangaraja 9",
+   "proposed": "Jl. Sisingamangaraja 9",
+   "shown": "Jl. Sisingamangaraja 9",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "dist_city",
+   "kind": "text",
+   "gold": "Medan",
+   "proposed": "Medan",
+   "shown": "Medan",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "st_prov",
+   "kind": "text",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "zip",
+   "kind": "postal",
+   "gold": "20217",
+   "proposed": "20217",
+   "shown": "20217",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "desc",
+   "kind": "text",
+   "gold": "pairs of socks",
+   "proposed": "3 pairs of socks",
+   "shown": "pairs of socks",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": false,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "pcs",
+   "kind": "int",
+   "gold": "3",
+   "proposed": "3",
+   "shown": "3",
+   "state": "found",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "accepted_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "svc",
+   "kind": "enum",
+   "gold": "",
+   "proposed": "",
+   "shown": "",
+   "state": "empty",
+   "reason": null,
+   "rawStrict": true,
+   "rawP0c": true,
+   "outcome": "empty_correct"
+  },
+  {
+   "id": "M10",
+   "form": "C",
+   "field": "rmks",
+   "kind": "notes",
+   "gold": "Wrap it as a gift",
+   "proposed": "Wrap it as a gift please, it's a surprise!",
+   "shown": "Wrap it as a gift please, it's a surprise",
+   "state": "found",
+   "reason": null,
+   "rawStrict": false,
+   "rawP0c": true,
+   "outcome": "accepted_wrong"
+  }
+ ]
+}

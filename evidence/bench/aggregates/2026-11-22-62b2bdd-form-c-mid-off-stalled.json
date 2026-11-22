@@ -1,0 +1,105 @@
+{
+ "set": "form-c-mid",
+ "setSha256": "927c8a5b022e120f09e28f83a2edb65eb2f2d496962d5173b32c457ff18a0166",
+ "pastes": 10,
+ "forms": [
+  "C"
+ ],
+ "arm": "off",
+ "hintsSource": "none",
+ "hintsSha": null,
+ "repeats": 3,
+ "date": "2026-11-22",
+ "commit": "62b2bdd",
+ "srcDirty": false,
+ "promptVersion": "p0c-v3",
+ "gateVersion": "2",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": true,
+ "path": "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
+ "metrics": {
+  "rawAccuracyStrict": {
+   "mean": 48.67,
+   "min": 33,
+   "max": 73
+  },
+  "rawAccuracyP0c": {
+   "mean": 48.67,
+   "min": 33,
+   "max": 73
+  },
+  "acceptedWrongPct": {
+   "mean": 5.67,
+   "min": 1,
+   "max": 9
+  },
+  "coverage": {
+   "mean": 54.31,
+   "min": 28.09,
+   "max": 89.89
+  },
+  "usefulCoverage": {
+   "mean": 49.44,
+   "min": 26.97,
+   "max": 82.02
+  },
+  "amberPct": {
+   "mean": 45.33,
+   "min": 10,
+   "max": 72
+  },
+  "warmP50": {
+   "mean": 14230.67,
+   "min": 2689,
+   "max": 20002
+  },
+  "warmP95": {
+   "mean": 14257.33,
+   "min": 2766,
+   "max": 20003
+  }
+ },
+ "perRepeat": [
+  {
+   "jsonValid": "10/10",
+   "onDeviceBatches": "10/10",
+   "stalls": 0,
+   "rawAccuracyStrict": 73,
+   "acceptedWrongPct": 9,
+   "acceptedWrongCount": 9,
+   "coverage": 89.89,
+   "usefulCoverage": 82.02,
+   "warmP50": 2689,
+   "warmP95": 2766
+  },
+  {
+   "jsonValid": "3/10",
+   "onDeviceBatches": "3/10",
+   "stalls": 7,
+   "rawAccuracyStrict": 33,
+   "acceptedWrongPct": 1,
+   "acceptedWrongCount": 1,
+   "coverage": 28.09,
+   "usefulCoverage": 26.97,
+   "warmP50": 20002,
+   "warmP95": 20003
+  },
+  {
+   "jsonValid": "5/10",
+   "onDeviceBatches": "5/10",
+   "stalls": 5,
+   "rawAccuracyStrict": 40,
+   "acceptedWrongPct": 7,
+   "acceptedWrongCount": 7,
+   "coverage": 44.94,
+   "usefulCoverage": 39.33,
+   "warmP50": 20001,
+   "warmP95": 20003
+  }
+ ],
+ "rawRowsInRepo": true,
+ "stalledRun": true,
+ "note": "First run of this arm: the on-device model stopped answering for two stretches (about 7 fills in repeat 2, 6 in repeat 3) and the page timed out and retried as designed. Kept as measured; the rerun below is the same set, commit and code.",
+ "rawRowsFile": "evidence/bench/2026-11-22-62b2bdd-form-c-mid-off-stalled-r{1,2,3}.json"
+}

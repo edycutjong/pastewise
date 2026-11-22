@@ -1,7 +1,7 @@
 {
  "form": "C",
  "inferenceSource": "in_cloud",
- "ms": 9992,
+ "ms": 12609,
  "dropped": 0,
  "payload": {
   "title": "Consignment note",
@@ -56,7 +56,7 @@
  "hints": [
   {
    "key": "cnee_nm",
-   "meaning": "Enter the consignee name",
+   "meaning": "Enter the name of the consignee",
    "expected": "name"
   },
   {
@@ -66,7 +66,7 @@
   },
   {
    "key": "addr_1",
-   "meaning": "Enter the first line of the address",
+   "meaning": "Enter the street address",
    "expected": "address"
   },
   {

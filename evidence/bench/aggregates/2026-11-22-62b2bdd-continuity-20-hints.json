@@ -1,0 +1,103 @@
+{
+ "set": "continuity-20",
+ "setSha256": "8b019d428bf076c90782c23bfebf0fe07c1e13232cf05cf5c84637f3b7e997f0",
+ "pastes": 20,
+ "forms": [
+  "A",
+  "B"
+ ],
+ "arm": "hints",
+ "hintsSource": "cloud",
+ "hintsSha": "45127c312a99f2c8",
+ "repeats": 3,
+ "date": "2026-11-22",
+ "commit": "62b2bdd",
+ "srcDirty": false,
+ "promptVersion": "p0c-v3",
+ "gateVersion": "2",
+ "chrome": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "machine": "Apple M1 Max, 32 GB (builder's laptop)",
+ "contendedBySiblingChrome": false,
+ "path": "real app page, ONLY_ON_DEVICE via Firebase AI Logic",
+ "metrics": {
+  "rawAccuracyStrict": {
+   "mean": 92.71,
+   "min": 91.88,
+   "max": 93.75
+  },
+  "rawAccuracyP0c": {
+   "mean": 97.09,
+   "min": 96.25,
+   "max": 98.13
+  },
+  "acceptedWrongPct": {
+   "mean": 1.46,
+   "min": 1.25,
+   "max": 1.88
+  },
+  "coverage": {
+   "mean": 96.53,
+   "min": 96.53,
+   "max": 96.53
+  },
+  "usefulCoverage": {
+   "mean": 95.14,
+   "min": 95.14,
+   "max": 95.14
+  },
+  "amberPct": {
+   "mean": 3.55,
+   "min": 3.13,
+   "max": 4.38
+  },
+  "warmP50": {
+   "mean": 2226.33,
+   "min": 2224,
+   "max": 2230
+  },
+  "warmP95": {
+   "mean": 2669,
+   "min": 2432,
+   "max": 3001
+  }
+ },
+ "perRepeat": [
+  {
+   "jsonValid": "20/20",
+   "onDeviceBatches": "20/20",
+   "stalls": 0,
+   "rawAccuracyStrict": 91.88,
+   "acceptedWrongPct": 1.25,
+   "acceptedWrongCount": 2,
+   "coverage": 96.53,
+   "usefulCoverage": 95.14,
+   "warmP50": 2230,
+   "warmP95": 2432
+  },
+  {
+   "jsonValid": "20/20",
+   "onDeviceBatches": "20/20",
+   "stalls": 0,
+   "rawAccuracyStrict": 92.5,
+   "acceptedWrongPct": 1.88,
+   "acceptedWrongCount": 3,
+   "coverage": 96.53,
+   "usefulCoverage": 95.14,
+   "warmP50": 2225,
+   "warmP95": 3001
+  },
+  {
+   "jsonValid": "20/20",
+   "onDeviceBatches": "20/20",
+   "stalls": 0,
+   "rawAccuracyStrict": 93.75,
+   "acceptedWrongPct": 1.25,
+   "acceptedWrongCount": 2,
+   "coverage": 96.53,
+   "usefulCoverage": 95.14,
+   "warmP50": 2224,
+   "warmP95": 2574
+  }
+ ],
+ "rawRowsInRepo": false
+}
