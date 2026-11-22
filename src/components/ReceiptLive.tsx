@@ -11,5 +11,5 @@ export default function ReceiptLive() {
   const v = useSyncExternalStore(ledger.subscribe, ledger.version, () => "0:0");
   const records = useMemo(() => (v ? ledger.records() : []), [v]);
   const bytes = records.reduce((n, r) => n + r.pasteBytesFound, 0);
-  return <LedgerStrip bytes={bytes} records={records} open link={false} />;
+  return <LedgerStrip bytes={bytes} records={records} consentBytes={ledger.consentBytes()} open link={false} />;
 }

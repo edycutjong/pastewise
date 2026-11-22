@@ -2,6 +2,7 @@
 // (documented blind spots, eval-plan "Egress").
 import { describe, expect, it } from "vitest";
 import { pasteTokens, tokensFound } from "@/ledger/tokens";
+import { addConsentBytes, ledger } from "@/ledger/egress";
 
 const S3 = "Order: 1 ceramic mug set for Budi Santoso, 0812 5550 7734, Jl. Diponegoro 88, Semarang, Jawa Tengah 50241. Gift wrap please.";
 const VOCAB = ["Shipping / order form", "name", "Recipient name", "phone", "Phone", "street", "Street address", "item", "Item", "notes", "Delivery notes"];
@@ -41,5 +42,17 @@ describe("tokensFound", () => {
   });
   it("whole-word only: 'budiman' is not 'budi'", () => {
     expect(tokensFound("budiman", t).bytes).toBe(0);
+  });
+});
+
+describe("consent total (one store with the records)", () => {
+  it("the Yes total lives in the ledger, so /receipt and a remounted Fill screen read the same number", () => {
+    const before = ledger.consentBytes();
+    const v0 = ledger.version();
+    addConsentBytes(341);
+    addConsentBytes(0);
+    addConsentBytes(-5);
+    expect(ledger.consentBytes()).toBe(before + 341);
+    expect(ledger.version()).not.toBe(v0);
   });
 });

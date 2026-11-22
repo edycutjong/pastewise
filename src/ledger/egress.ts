@@ -23,6 +23,15 @@ const runs: Run[] = [];
 const records: LedgerRecord[] = [];
 const listeners = new Set<() => void>();
 let installed = false;
+/** Bytes of messages sent to the cloud after an explicit Yes on the consent sheet. Lives beside the records (same page-session
+ *  lifetime), so the Fill screen and /receipt read one total. */
+let consentBytes = 0;
+
+export function addConsentBytes(n: number) {
+  if (!(n > 0)) return;
+  consentBytes += n;
+  listeners.forEach((l) => l());
+}
 
 export function purposeOf(host: string): string {
   if (/firebasevertexai|firebaseml|generativelanguage|aiplatform/.test(host)) return "AI Logic (cloud model)";
@@ -128,8 +137,9 @@ export function installLedger() {
 export const ledger = {
   records: () => records.slice(),
   totalPasteBytes: () => records.reduce((n, r) => n + r.pasteBytesFound, 0),
+  consentBytes: () => consentBytes,
   /** cheap snapshot key for useSyncExternalStore */
-  version: () => `${records.length}:${records.reduce((n, r) => n + r.pasteBytesFound, 0)}`,
+  version: () => `${records.length}:${records.reduce((n, r) => n + r.pasteBytesFound, 0)}:${consentBytes}`,
   subscribe(fn: () => void) {
     listeners.add(fn);
     return () => listeners.delete(fn);

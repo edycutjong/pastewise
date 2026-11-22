@@ -173,6 +173,10 @@ test("consent Yes: one request for a double click, IN_CLOUD badge, bytes counted
   await expect(page.getByTestId("consent-bytes").locator("b")).toHaveText(`${new TextEncoder().encode(MSG).length} bytes`);
   await expect(page.locator("#A-name")).toHaveValue("Tia Ramadhani");
   await expect(page.getByText("Nothing was sent.")).toHaveCount(0);
+  // the Yes total lives with the request records: /receipt (client navigation, same page session) shows the same number
+  await page.getByRole("link", { name: "Receipt", exact: true }).first().click();
+  await expect(page).toHaveURL(/\/receipt\/?$/);
+  await expect(page.getByTestId("consent-bytes").locator("b")).toHaveText(`${new TextEncoder().encode(MSG).length} bytes`);
 });
 
 test("consent Yes that fails: the sheet says so, a new Yes is needed, and declining does not claim nothing was sent", async ({ page }) => {
