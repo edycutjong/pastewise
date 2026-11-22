@@ -21,7 +21,7 @@ function latest(): { file: string; net: Net } | null {
   const dir = path.join(process.cwd(), "evidence/network");
   if (!fs.existsSync(dir)) return null;
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
-  const file = files.at(-1);
+  const file = files.includes("latest.json") ? "latest.json" : files.at(-1); // the egress script refreshes latest.json on every run
   return file ? { file, net: JSON.parse(fs.readFileSync(path.join(dir, file), "utf8")) as Net } : null;
 }
 

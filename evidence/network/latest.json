@@ -1,0 +1,465 @@
+{
+ "label": "SYNTHETIC demo pastes S1-S5 (fixtures/demo); request bodies are not stored, only host/path/size and paste-token hit counts",
+ "date": "2026-11-22",
+ "commit": "9b1fbe2",
+ "base": "http://localhost:3102 (static export)",
+ "capture": "CDP Network.requestWillBeSent on the page + Target.setAutoAttach({flatten:true}) children (iframes, workers)",
+ "rule": "paste tokens = digit runs >= 4 + words >= 4 chars minus the empty form's vocabulary and a stop-list (src/ledger/tokens.ts)",
+ "attachedTargets": [
+  {
+   "type": "iframe",
+   "host": "www.google.com"
+  },
+  {
+   "type": "iframe",
+   "host": ""
+  }
+ ],
+ "fills": [
+  {
+   "id": "S1",
+   "form": "C",
+   "inferenceSource": [
+    "on_device"
+   ],
+   "error": null,
+   "requestsDuring": 0
+  },
+  {
+   "id": "S2",
+   "form": "B",
+   "inferenceSource": [
+    "on_device"
+   ],
+   "error": null,
+   "requestsDuring": 0
+  },
+  {
+   "id": "S3",
+   "form": "A",
+   "inferenceSource": [
+    "on_device"
+   ],
+   "error": null,
+   "requestsDuring": 0
+  },
+  {
+   "id": "S4",
+   "form": "A",
+   "inferenceSource": [
+    "on_device"
+   ],
+   "error": null,
+   "requestsDuring": 0
+  },
+  {
+   "id": "S5",
+   "form": "A",
+   "refused": true,
+   "notice": "That's 2,001 characters; the limit is 2,000. Select just the order and try again. Nothing was sent.",
+   "requestsDuring": 0
+  }
+ ],
+ "verdict": {
+  "pasteTokenHitsOnRealRequests": 0,
+  "requestsDuringOnDeviceFills": 0,
+  "overLongRefused": true,
+  "allFillsOnDevice": true,
+  "unreadableRequestBodies": 0,
+  "teacherCalled": {
+   "n": 10,
+   "src": "in_cloud"
+  },
+  "positiveControlCaught": true,
+  "inPageLedger": {
+   "requests": 12,
+   "byHost": {
+    "localhost:3102": 10,
+    "content-firebaseappcheck.googleapis.com": 1,
+    "firebasevertexai.googleapis.com": 1
+   },
+   "cdpApiRequestsByHost": {
+    "localhost:3102": 10,
+    "content-firebaseappcheck.googleapis.com": 1,
+    "firebasevertexai.googleapis.com": 1
+   },
+   "missingFromLedger": [],
+   "canaryCaughtByLedger": true
+  },
+  "pass": true
+ },
+ "requests": [
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Document",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/",
+   "size": 22,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Font",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/media/6b7c1e249124c789-s.p.1wuove6chewkg.woff2",
+   "size": 81,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Font",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/media/a3163e680834fbf0-s.p.09kihw1cxxru6.woff2",
+   "size": 81,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Font",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/media/c6a5c2fdc12da45c-s.p.17-aodiw50953.woff2",
+   "size": 81,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Stylesheet",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/30cmxf1ddgv1d.css",
+   "size": 59,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/310vm2bl3xxpt.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/1wnov70f88xjy.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/39_j1bdzreq0m.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/0c98xzjfks9hq.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/turbopack-2u1d16houkiyo.js",
+   "size": 68,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/3qfy96eoyh-ek.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/2ephdqomb_8ax.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/1ne79nr5dbasr.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/2qi3vq0cs2b8x.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "www.google.com",
+   "path": "/recaptcha/enterprise.js",
+   "size": 62,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "www.gstatic.com",
+   "path": "/recaptcha/releases/4i3aN5wAweL7i3ADI7BSX4B-/recaptcha__en.js",
+   "size": 84,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Document",
+   "method": "GET",
+   "host": "www.google.com",
+   "path": "/recaptcha/enterprise/anchor",
+   "size": 240,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "HEAD",
+   "host": "localhost:3102",
+   "path": "/",
+   "size": 22,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "HEAD",
+   "host": "localhost:3102",
+   "path": "/receipt/",
+   "size": 30,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "HEAD",
+   "host": "localhost:3102",
+   "path": "/bench/",
+   "size": 28,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/__next._tree.txt",
+   "size": 60,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/receipt/__next._tree.txt",
+   "size": 68,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/bench/__next._tree.txt",
+   "size": 66,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/__next.__PAGE__.txt",
+   "size": 63,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/receipt/__next.receipt.__PAGE__.txt",
+   "size": 79,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/bench/__next.bench.__PAGE__.txt",
+   "size": 75,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/02mpmyjnmygln.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "page",
+   "type": "Script",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/_next/static/chunks/3zt_16xndew4w.js",
+   "size": 58,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "iframe",
+   "type": "Stylesheet",
+   "method": "GET",
+   "host": "www.gstatic.com",
+   "path": "/recaptcha/releases/4i3aN5wAweL7i3ADI7BSX4B-/styles__ltr.css",
+   "size": 83,
+   "hits": {}
+  },
+  {
+   "phase": "boot",
+   "target": "iframe",
+   "type": "Script",
+   "method": "GET",
+   "host": "www.gstatic.com",
+   "path": "/recaptcha/releases/4i3aN5wAweL7i3ADI7BSX4B-/recaptcha__en.js",
+   "size": 84,
+   "hits": {}
+  },
+  {
+   "phase": "fill:S2",
+   "target": "page",
+   "type": "Image",
+   "local": true,
+   "method": "GET",
+   "host": "",
+   "path": "image/svg+xml;base64,PHN2",
+   "size": 30,
+   "hits": {}
+  },
+  {
+   "phase": "teach:C",
+   "target": "page",
+   "type": "Fetch",
+   "method": "POST",
+   "host": "content-firebaseappcheck.googleapis.com",
+   "path": "/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:",
+   "size": 262,
+   "hits": {}
+  },
+  {
+   "phase": "teach:C",
+   "target": "page",
+   "type": "Fetch",
+   "method": "POST",
+   "host": "firebasevertexai.googleapis.com",
+   "path": "/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateConten",
+   "size": 1737,
+   "hits": {}
+  },
+  {
+   "phase": "teach:C",
+   "target": "page",
+   "type": "Other",
+   "method": "OPTIONS",
+   "host": "firebasevertexai.googleapis.com",
+   "path": "/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateConten",
+   "size": 120,
+   "hits": {}
+  },
+  {
+   "phase": "canary",
+   "target": "page",
+   "type": "Fetch",
+   "method": "GET",
+   "host": "localhost:3102",
+   "path": "/__egress_canary",
+   "size": 214,
+   "hits": {
+    "S1": {
+     "tokens": 1,
+     "bytes": 4
+    },
+    "S2": {
+     "tokens": 1,
+     "bytes": 4
+    },
+    "S3": {
+     "tokens": 14,
+     "bytes": 83
+    },
+    "S4": {
+     "tokens": 2,
+     "bytes": 8
+    },
+    "S5": {
+     "tokens": 14,
+     "bytes": 83
+    }
+   }
+  }
+ ]
+}

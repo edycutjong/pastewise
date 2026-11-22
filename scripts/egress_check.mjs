@@ -171,6 +171,7 @@ try {
   fs.mkdirSync(OUT, { recursive: true });
   const file = path.join(OUT, `${date}-${sha}${base ? "-live" : "-local"}.json`);
   fs.writeFileSync(file, JSON.stringify(out, null, 1) + "\n");
+  fs.copyFileSync(file, path.join(path.dirname(file), "latest.json")); // /receipt renders this one
   console.log(JSON.stringify(verdict, null, 1));
   console.log(`requests: ${rows.length} (${[...new Set(rows.map((r) => r.host))].join(", ")}) -> ${path.relative(ROOT, file)}`);
   if (!verdict.pass) process.exitCode = 1;
