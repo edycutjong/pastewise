@@ -1,0 +1,27 @@
+{
+ "project": "pastewise-hybrid-ai",
+ "date": "2026-11-22",
+ "docs": [
+  {
+   "form": "A",
+   "fingerprint": "0f7ae9c454c6ac3a3ddd68f20ef785e352e079b0780274fda2ca6cccc2440bb3",
+   "hints": 9,
+   "teacherMs": 3315,
+   "inferenceSource": "in_cloud"
+  },
+  {
+   "form": "B",
+   "fingerprint": "0c0b4be07dd1e2c3e6aeb2b5f4136fca6f0541c26f44e762c8ecfe96343a2257",
+   "hints": 7,
+   "teacherMs": 3195,
+   "inferenceSource": "in_cloud"
+  },
+  {
+   "form": "C",
+   "fingerprint": "0dfc3eeac8511d383b857c4516b504b39959efbdeada15d2ed2411e6ed53eef6",
+   "hints": 10,
+   "teacherMs": 2700,
+   "inferenceSource": "in_cloud"
+  }
+ ]
+}
