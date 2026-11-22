@@ -72,12 +72,17 @@ try {
   phase = "idle-after-load";
   await sleep(1500);
 
+  // the app's own cap (Remote Config, clamped in src/lib/rc.ts), read from the page, so the refusal check tests the live boundary
+  const capRaw = await app.evaluate(() => window.__pastewise.rc().paste_char_cap);
+  const cap = Number.parseInt(String(capRaw), 10);
+  if (!Number.isFinite(cap)) throw new Error(`could not read the paste cap from the page: ${capRaw}`);
+  if (!demos.some((d) => d.paste.length > cap)) throw new Error(`no demo paste is longer than the live cap ${cap}: the over-long refusal would go untested`);
   const results = [];
   for (const d of demos) {
     phase = `fill:${d.id}`;
     const before = reqs.filter((r) => !r.local).length;
     const during = () => reqs.filter((r) => !r.local).length - before;
-    if (d.paste.length > 2000) {
+    if (d.paste.length > cap) {
       // over-long paste: must be refused before any model call
       await app.$eval("#paste", (el, v) => {
         Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value").set.call(el, v);
