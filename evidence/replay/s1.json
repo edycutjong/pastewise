@@ -1,19 +1,19 @@
 {
  "label": "Synthetic message S1 on the consignment note (form C)",
- "recorded": "2026-11-22T12:11:41.799Z",
- "commit": "621b6df",
+ "recorded": "2026-11-22T12:12:13.407Z",
+ "commit": "ba8a64a",
  "machine": "Apple M1 Max, 32 GB",
  "chrome": "157.0.0.0",
  "form": "C",
  "paste": "hiii 👋 it's Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:\nMrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.\nher old number 0813-5550-2290 is dead don't use it, new one is 0857 5550 8812.\nexpress pls, she needs them before Friday 🙏 leave at the guard post if nobody home",
  "inferenceSource": "on_device",
- "totalMs": 6031,
+ "totalMs": 5327,
  "fields": [
   {
    "key": "cnee_nm",
    "caption": "CNEE",
    "state": "found",
-   "value": "Ratna Kusuma"
+   "value": "Maya Kusuma"
   },
   {
    "key": "cnee_tel",
@@ -67,8 +67,9 @@
   {
    "key": "rmks",
    "caption": "RMKS",
-   "state": "found",
-   "value": "leave at the guard post if nobody home"
+   "state": "amber",
+   "value": "",
+   "note": "not in the text"
   }
  ]
 }
