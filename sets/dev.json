@@ -1,0 +1,162 @@
+{
+ "label": "SYNTHETIC — every paste, name, phone (5550 block or 0000-style placeholders) and address is invented; no real person",
+ "set": "dev",
+ "today": "2026-11-22",
+ "note": "Tuning set: the only set used to tune prompt, hints and cleanup. 4 pastes from the kill-test dev set + 6 new (2 per form).",
+ "items": [
+  {
+   "id": "DA1",
+   "form": "A",
+   "paste": "Hello! Please send 2 notebooks to Tia Ramadhani, 0813 0000 1111, Jl. Kopo 9, Bandung, Jawa Barat 40222. Thanks",
+   "gold": {
+    "name": "Tia Ramadhani",
+    "phone": "081300001111",
+    "street": "Jl. Kopo 9",
+    "city": "Bandung",
+    "province": "Jawa Barat",
+    "postal_code": "40222",
+    "item": "notebooks",
+    "quantity": "2",
+    "notes": ""
+   }
+  },
+  {
+   "id": "DA2",
+   "form": "A",
+   "paste": "Sam Tan / 0877 1010 2020 / Jl. Basuki Rahmat 5 Surabaya Jawa Timur / 1 desk lamp / hurry pls",
+   "gold": {
+    "name": "Sam Tan",
+    "phone": "087710102020",
+    "street": "Jl. Basuki Rahmat 5",
+    "city": "Surabaya",
+    "province": "Jawa Timur",
+    "postal_code": "",
+    "item": "desk lamp",
+    "quantity": "1",
+    "notes": "hurry"
+   }
+  },
+  {
+   "id": "DB1",
+   "form": "B",
+   "paste": "Anna Lee wants a single room, 12 Dec 2026, 2 nights, anna.lee@example.com, 0811 2222 3333, high floor",
+   "gold": {
+    "guest_name": "Anna Lee",
+    "phone": "081122223333",
+    "email": "anna.lee@example.com",
+    "room_type": "single",
+    "check_in": "2026-12-12",
+    "nights": "2",
+    "requests": "high floor"
+   }
+  },
+  {
+   "id": "DB2",
+   "form": "B",
+   "paste": "double room for Ben from Jan 5 2027, 3 nights, 0812 0000 9999",
+   "gold": {
+    "guest_name": "Ben",
+    "phone": "081200009999",
+    "email": "",
+    "room_type": "double",
+    "check_in": "2027-01-05",
+    "nights": "3",
+    "requests": ""
+   }
+  },
+  {
+   "id": "DA3",
+   "form": "A",
+   "paste": "Pesanan ya kak 🙏 3x scented candle (vanilla) for Rina Wulandari, Jl. Gajah Mada 12, Pontianak, Kalimantan Barat 78111. WA 0896 5550 3301. no rush, thx!!",
+   "gold": {
+    "name": "Rina Wulandari",
+    "phone": "089655503301",
+    "street": "Jl. Gajah Mada 12",
+    "city": "Pontianak",
+    "province": "Kalimantan Barat",
+    "postal_code": "78111",
+    "item": "scented candle",
+    "quantity": "3",
+    "notes": "no rush"
+   }
+  },
+  {
+   "id": "DA4",
+   "form": "A",
+   "paste": "Fwd from Lisa: please ship to my brother Dani Pratama 0818-5550-6620 (my number 0815 5550 1187 is only for billing). Address Jl. Sudirman 21, Pekanbaru 28112. 2 phone cases. Call before delivery.",
+   "gold": {
+    "name": "Dani Pratama",
+    "phone": "081855506620",
+    "street": "Jl. Sudirman 21",
+    "city": "Pekanbaru",
+    "province": "",
+    "postal_code": "28112",
+    "item": "phone cases",
+    "quantity": "2",
+    "notes": "Call before delivery"
+   }
+  },
+  {
+   "id": "DB3",
+   "form": "B",
+   "paste": "Hi there, Mr. Kenji Watanabe here. Suite please, check-in 2027-03-14 for five nights. Email kenji.w@example.org. Late arrival around midnight.",
+   "gold": {
+    "guest_name": "Kenji Watanabe",
+    "phone": "",
+    "email": "kenji.w@example.org",
+    "room_type": "suite",
+    "check_in": "2027-03-14",
+    "nights": "5",
+    "requests": "Late arrival around midnight"
+   }
+  },
+  {
+   "id": "DB4",
+   "form": "B",
+   "paste": "Booking for Priya Nair: 2 nights from 9 January, double, +62 821 5550 7719. Ref 55120944. Thank you!",
+   "gold": {
+    "guest_name": "Priya Nair",
+    "phone": "082155507719",
+    "email": "",
+    "room_type": "double",
+    "check_in": "2027-01-09",
+    "nights": "2",
+    "requests": ""
+   }
+  },
+  {
+   "id": "DC1",
+   "form": "C",
+   "paste": "pls kirim 4 box of batik scarves to Yusuf Hakim, Jl. Ahmad Yani 30, Balikpapan, Kalimantan Timur 76114, hp 0852 5550 4410. same day if possible! ring the bell twice",
+   "gold": {
+    "cnee_nm": "Yusuf Hakim",
+    "cnee_tel": "085255504410",
+    "addr_1": "Jl. Ahmad Yani 30",
+    "dist_city": "Balikpapan",
+    "st_prov": "Kalimantan Timur",
+    "zip": "76114",
+    "desc": "batik scarves",
+    "pcs": "4",
+    "svc": "SDD",
+    "rmks": "ring the bell twice"
+   }
+  },
+  {
+   "id": "DC2",
+   "form": "C",
+   "paste": "From: Hana (sender)\nTo: Pak Joko Susilo\nJl. Malioboro 7, Yogyakarta 55213\nTel 0274 5550 118 (office) / 0813 5550 9902 (mobile, use this)\n1 wooden tray, regular service. Fragile, keep upright.",
+   "gold": {
+    "cnee_nm": "Joko Susilo",
+    "cnee_tel": "081355509902",
+    "addr_1": "Jl. Malioboro 7",
+    "dist_city": "Yogyakarta",
+    "st_prov": "",
+    "zip": "55213",
+    "desc": "wooden tray",
+    "pcs": "1",
+    "svc": "STD",
+    "rmks": "Fragile, keep upright"
+   }
+  }
+ ]
+}
