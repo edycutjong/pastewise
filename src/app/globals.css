@@ -153,3 +153,6 @@ button.primary:focus-visible, button.ghost:focus-visible, .linkish:focus-visible
 .samples { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-top: 10px; }
 .samples .cap { font-size: 12px; }
 .samples .linkish { font-size: 13px; }
+.notfound { max-width: 640px; margin: 96px auto; padding: 0 24px; }
+.notfound h1 { font: 700 56px/1 var(--font-display); text-transform: uppercase; margin: 8px 0 18px; }
+.notfound a { color: var(--ink); }
