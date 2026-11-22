@@ -386,7 +386,7 @@ footer{background:var(--ink);color:var(--sheet);padding:56px 0 40px}
     <div class="hero-copy">
       <p class="eyebrow rise" style="--d:0ms"><span>Build with Hybrid AI</span> · <span>Web (Chrome)</span> · <span>Gemini Nano via Firebase AI Logic</span></p>
       <h1 id="h" class="rise" style="--d:90ms">Your customer typed it once. Pastewise <em>copies it across.</em></h1>
-      <p class="lede rise" style="--d:220ms">Orders arrive as chat messages and get typed again into a courier form. Copy the message, press one shortcut: Gemini Nano reads it <b>on your laptop</b>, and code shows a value only if it is <b>really in your text</b>. The rest stays amber.</p>
+      <p class="lede rise" style="--d:220ms">Orders arrive as chat messages and get typed again into a courier form. Paste it into Pastewise and press ⌘↵: Gemini Nano reads it <b>on your laptop</b>, and code shows a value only if it is <b>really in your text</b>. The rest stays amber.</p>
       <div class="ctas rise" style="--d:320ms">
         <a class="btn" href="https://github.com/edycutjong/pastewise"><span class="g" aria-hidden="true">&lt;/&gt;</span> Source</a>
         <a class="btn" href="/pitch/">Pitch deck</a>
@@ -424,7 +424,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
     <div class="receipt"><span class="fig blue" data-count="77.9" data-dec="1" data-suf="%">77.9%</span><p>of boxes with an answer in the message arrive with the right value, found in your text (held-out)</p><code>evidence/<wbr>bench/<wbr>report-<wbr>holdout.json</code></div>
     <div class="receipt"><span class="fig" data-count="2.34" data-dec="2" data-suf=" s">2.34 s</span><p>warm median per fill, Nano on an M1 Max</p><code>evidence/<wbr>bench/<wbr>aggregates/<wbr>2026-<wbr>11-<wbr>22-<wbr>f00f35d-<wbr>holdout-<wbr>off.json</code></div>
   </div>
-  <p class="wrap forms-line">Three forms in the app, one shortcut: a courier consignment note, a hotel front-desk booking, a shop order form.</p>
+  <p class="wrap forms-line">Three demo forms built into the app: a courier consignment note, a hotel front-desk booking, a shop order form.</p>
 </section>
 
 <section class="sec" id="watch" aria-labelledby="h-watch">
@@ -584,7 +584,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
     <div class="faq">
       <details open><summary>Is the message really never sent?</summary><p>With Gemini Nano, fills run <code>ONLY_ON_DEVICE</code>. The hosted check saw 0 requests during 4 fills and 0 message words in any request; a planted canary was caught. The <a href="/receipt/">receipt page</a> shows the log. It covers this page's requests, not the whole browser.</p></details>
       <details><summary>No Nano? Here is what you still get.</summary><p>A plain notice, a recorded run labelled as recorded, and a consent sheet showing the bytes before one message goes to the cloud. Nothing is sent before Yes; the fill is labelled <code>in_cloud</code>. The gate above works without Nano too.</p></details>
-      <details><summary>Then what does the cloud do?</summary><p>Two jobs. It reads the empty form and writes hints for cryptic boxes (measured: +0.1 points on the hard form, small). Without Nano it runs that one message after Yes; the sheet's byte count matched Chrome's wire log.</p></details>
+      <details><summary>Then what does the cloud do?</summary><p>Two jobs. Without Nano it reads that one message, only after Yes (<code>PREFER_ON_DEVICE</code>); the sheet's byte count matched Chrome's wire log. On every laptop it reads the empty form and writes hints for cryptic boxes (measured: +0.1 points on the hard form, small).</p></details>
       <details><summary>Why do some boxes stay amber?</summary><p>Code could not accept them: not in your text, wrong format, two phone numbers, an assumed year, or a recipient name. Amber costs a second; a wrong blue box costs an error.</p></details>
       <details><summary>Does it work on any website?</summary><p>No. It is a hosted web app with three forms; there is no extension, so it does not fill other sites.</p></details>
       <details><summary>What is synthetic?</summary><p>Every message: invented people, phone numbers in the 5550 block. Nothing on the fill path is mocked.</p></details>
@@ -601,7 +601,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
       <div><h3>Use it</h3><ul><li><a href="/">Try it live</a></li><li><a href="/receipt/">Network receipt</a></li><li><a href="/bench/">Bench numbers</a></li></ul></div>
       <div><h3>Read it</h3><ul><li><a href="/pitch/">Pitch deck</a></li><li><a href="https://github.com/edycutjong/pastewise">Source code</a></li><li><a href="https://github.com/edycutjong/pastewise/blob/main/LICENSE">Apache-2.0</a></li></ul></div>
     </div>
-    <p class="stamp-line">Built from evidence at 0c570e1 · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
+    <p class="stamp-line">Built from evidence at 6ea4f90 · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
   </div>
 </footer>
 <script src="/site/gate.js"></script>

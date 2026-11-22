@@ -12,7 +12,7 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 | Under the paste box, click the sample **Gift order with two phone numbers** (message **S1**, [`fixtures/demo/S1.json`](fixtures/demo/S1.json); the click also switches to form **C · CONSIGNMENT NOTE**), then press **Fill this message**. Pasting S1 by hand? Pick tab C first | Boxes fill in carbon blue; each value's source words are underlined in the message |
 | Look at the **CNEE TEL** box | It stays **amber**: the message holds two phone numbers (an old dead one and a new one), and the code refuses to guess |
 | Look at the badge on the fill | `ON_DEVICE` on a Chrome with Gemini Nano. This is the `inferenceSource` Firebase AI Logic reports |
-| Open the **Teach** drawer | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload, and after a fresh cloud call its `IN_CLOUD` source (otherwise it says it is showing a saved copy) |
+| Press **Teach this form** | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload, and after a fresh cloud call its `IN_CLOUD` source (otherwise it says it is showing a saved copy) |
 | Open [`/receipt/`](https://pastewise.edycu.dev/receipt/) | The recorded network log behind the "0 bytes" counter |
 | Open [`/bench/`](https://pastewise.edycu.dev/bench/) | The measured numbers below, with hints off and on |
 
@@ -51,7 +51,7 @@ Needs Chrome desktop with Gemini Nano downloaded, a Firebase web config, and an 
 ```bash
 git clone https://github.com/edycutjong/pastewise.git && cd pastewise
 cp .env.example .env.local        # Firebase web config
-npm install && npm test           # 123 unit tests
+npm install && npm test           # 126 unit tests
 npm run build                     # static export to out/
 node scripts/bench.mjs --set sets/holdout.json --repeats 3 --hints off          # refuses a second held-out run per prompt/gate/arm
 node scripts/bench.mjs --set sets/bench.json --repeats 3 --hints cloud          # calls the real cloud teacher once per form

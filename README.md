@@ -1,7 +1,7 @@
 <div align="center">
   <img src="docs/assets/icon.svg" alt="Pastewise icon" width="144">
   <h1>Pastewise ✍️</h1>
-  <p><em>Orders arrive as chat messages and get typed again into a form. Copy the message, press one shortcut, and the fields fill on your laptop; code keeps only what is really in your text.</em></p>
+  <p><em>Orders arrive as chat messages and get typed again into a form. Paste the message into Pastewise, press ⌘↵, and the fields fill on your laptop; code keeps only what is really in your text.</em></p>
   <img src="docs/assets/readme-hero-animated.svg" alt="Pastewise: boxes press through in carbon blue; one phone number stays amber. Text from your paste sent to the cloud: 0 bytes found." width="100%">
 
   <br/>
@@ -23,7 +23,7 @@
 
 ---
 
-> **Judges: 30-second path.** Open the [live page](https://pastewise.edycu.dev), click one of the **Try a sample** links under the paste box (synthetic messages, also in [`fixtures/demo/`](fixtures/demo)), press **Fill this message**. On a Chrome desktop with
+> **Judges: 30-second path.** Open the [live page](https://pastewise.edycu.dev), click one of the samples under **No message handy? Try one** below the paste box (synthetic messages, also in [`fixtures/demo/`](fixtures/demo)), press **Fill this message**. On a Chrome desktop with
 > Gemini Nano you will see `ON_DEVICE` on every fill. Without Nano you get a plain notice and are asked before that one paste goes to the cloud.
 > The [receipt page](https://pastewise.edycu.dev/receipt/) shows the recorded network log behind the "0 bytes" counter.
 
@@ -35,6 +35,7 @@
 2. Gemini Nano, through Firebase AI Logic, proposes a value for each box on the pink **copy**.
 3. Plain code decides. A value is kept (carbon blue, with its source words underlined in your text) **only if it appears in your text and fits the box's format**. Anything else stays **amber**, with the reason in words ("two numbers in your text — pick one").
 4. A counter reads how many words from your paste were found in any network request. On the recorded run: **0**.
+5. Check the amber boxes, then **Copy the boxes as one row**: captions and values go to the clipboard, tab-separated, for a sheet or your real courier or booking form. It says how many boxes were still amber.
 
 Pastewise never presses Submit. You always see the form before it goes anywhere.
 
@@ -44,7 +45,7 @@ Pastewise never presses Submit. You always see the form before it goes anywhere.
 People who take orders in chat re-type each message into a courier portal, a booking form or a stock sheet. Browser autofill is mainly built around saved profiles, not around a message you just copied, which holds someone else's name, phone number and address. Sending that message to a cloud model to read it means sending a customer's private details to a third party.
 
 ### The Solution
-The message is read by the model on the laptop. The model is not trusted: a value is accepted by **code**, not by a model's "confidence". The cloud is used for what it is better at and what carries no customer data: the "form teacher" sees only the **empty form** (labels, names, options) and writes hints for cryptic boxes such as "CNEE" or "RMKS". On a laptop without Nano, the message itself goes to the cloud only after you press **Yes**, and the screen shows the bytes sent.
+The message is read by the model on the laptop. The model is not trusted: a value is accepted by **code**, not by a model's "confidence". The cloud has two jobs. On a laptop without Nano it is the fallback: that one message goes through `PREFER_ON_DEVICE` only after you press **Yes**, and the screen shows the bytes sent. On every laptop it is the "form teacher", which carries no customer data: it sees only the **empty form** (labels, names, options) and writes hints for cryptic boxes such as "CNEE" or "RMKS".
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -54,7 +55,7 @@ The message is read by the model on the laptop. The model is not trusted: a valu
 |---|---|
 | App | Next.js (App Router) + TypeScript, **static export**: no Pastewise server exists to receive customer data |
 | On-device AI | Gemini Nano in Chrome desktop, reached through Firebase AI Logic `InferenceMode.ONLY_ON_DEVICE` |
-| Cloud AI | Firebase AI Logic `ONLY_IN_CLOUD` "form teacher" (empty form only); `PREFER_ON_DEVICE` consent path when Nano is missing |
+| Cloud AI | Firebase AI Logic `PREFER_ON_DEVICE` consent path when Nano is missing (that one message, only after Yes); `ONLY_IN_CLOUD` "form teacher" (empty form only) |
 | Attestation | Firebase App Check, reCAPTCHA Enterprise (debug token injected only in local tests, never in the bundle) |
 | Config / data | Remote Config (paste cap, timeout, batch size, teacher model, cloud kill switch); Firestore (saved hints by form shape, structure only, read-only to clients) |
 | Hosting | Vercel, CSP and security headers in `vercel.json` |
@@ -105,8 +106,8 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 |---|---|---|
 | Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-4b8f0b5-live.json`](evidence/network/2026-11-22-4b8f0b5-live.json) |
 | No-Nano consent path | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
-| Unit tests (Vitest) | **123 passing** in 13 files, about 90% statement coverage (89% of lines) | `npm run test:coverage` |
-| Browser tests (Playwright) | **16** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
+| Unit tests (Vitest) | **126 passing** in 13 files, 90% of lines and 86% of statements covered | `npm run test:coverage` |
+| Browser tests (Playwright) | **17** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
 | Interaction check on the deployed page | 13/13 hover and focus states, 0 dead links | [`evidence/interaction-qa.json`](evidence/interaction-qa.json) |
 
 ### Attacks defeated
@@ -144,10 +145,10 @@ npm install && npm run dev   # http://localhost:3102
 ## 🧪 Testing & CI
 
 ```bash
-npm test          # 123 unit tests (Vitest)
+npm test          # 126 unit tests (Vitest)
 npm run typecheck # tsc --noEmit
 npm run lint
-npm run e2e       # 16 browser tests (Playwright, installed Chrome)
+npm run e2e       # 17 browser tests (Playwright, installed Chrome)
 ```
 
 The bench and the network capture drive a headed Chrome that has Nano; their scripts are in [`scripts/`](scripts) and their outputs in [`evidence/`](evidence).
