@@ -1,0 +1,133 @@
+{
+ "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36",
+ "availability": "available",
+ "appCheck": {
+  "ok": true,
+  "length": 944
+ },
+ "remoteConfig": {
+  "ok": true,
+  "activated": false,
+  "values": {
+   "batch_max_fields": "10 (remote)",
+   "cloud_kill_switch": "false (remote)",
+   "fill_timeout_ms": "10000 (remote)",
+   "gate_rules_version": "2 (remote)",
+   "paste_char_cap": "2000 (remote)",
+   "teacher_model": "gemini-3.5-flash-lite (remote)"
+  }
+ },
+ "init": "init: done",
+ "deviceRuns": [
+  {
+   "file": "raw-test-ailogic-r1.json",
+   "sources": [
+    "on_device"
+   ],
+   "errors": 0
+  }
+ ],
+ "deviceFillNetwork": {
+  "total": 0,
+  "aiEndpoint": 0,
+  "requests": []
+ },
+ "formC": [
+  {
+   "ok": true,
+   "ms": 3544,
+   "text": "{\"cnee_nm\":\"Mrs. Ratna Kusuma\",\"cnee_tel\":\"085755508812\",\"addr_1\":\"Jl. Cempaka Putih Raya No. 41\",\"dist_city\":\"Jakarta Pusat\",\"st_prov\":\"\",\"zip\":\"10510\",\"desc\":\"2 linen tablecloths (the sage ones)\",\"pcs\": \"2\",\"svc\":\"EXP\",\"rmks\":\"leave at the guard post if nobody home\"}",
+   "inferenceSource": "on_device",
+   "schemaValid": true
+  },
+  {
+   "ok": true,
+   "ms": 3545,
+   "text": "{\"cnee_nm\":\"Maya Kusuma\",\"cnee_tel\":\"085755508812\",\"addr_1\":\"Jl. Cempaka Putih Raya No. 41\",\"dist_city\":\"Jakarta Pusat\",\"st_prov\":\"\",\"zip\":\"10510\",\"desc\":\"linen tablecloths (the sage ones)\",\"pcs\":\"2\",\"svc\":\"EXP\",\"rmks\":\"express pls, she needs them before Friday 🙏 leave at the guard post if nobody home\"}",
+   "inferenceSource": "on_device",
+   "schemaValid": true
+  },
+  {
+   "ok": true,
+   "ms": 3551,
+   "text": "{\"cnee_nm\":\"Maya Kusuma\",\"cnee_tel\":\"085755508812\",\"addr_1\":\"Jl. Cempaka Putih Raya No. 41\",\"dist_city\":\"Jakarta Pusat\",\"st_prov\":\"\",\"zip\":\"10510\",\"desc\":\"linen tablecloths (the sage ones)\",\"pcs\":\"2\",\"svc\":\"EXP\",\"rmks\":\"express pls, she needs them before Friday 🙏 leave at the guard post if nobody home\"}",
+   "inferenceSource": "on_device",
+   "schemaValid": true
+  }
+ ],
+ "formCNetwork": {
+  "aiEndpoint": 0
+ },
+ "teacher": {
+  "ok": true,
+  "ms": 3606,
+  "text": "{\n  \"hints\": [\n    {\n      \"key\": \"cnee_nm\",\n      \"meaning\": \"The name of the consignee or receiver\",\n      \"expected\": \"name\"\n    },\n    {\n      \"key\": \"cnee_tel\",\n      \"meaning\": \"The telephone number of the consignee\",\n      \"expected\": \"phone\"\n    },\n    {\n      \"key\": \"addr_1\",\n      \"meaning\": \"The first line of the delivery address\",\n      \"expected\": \"address\"\n    },\n    {\n      \"key\": \"dist_city\",\n      \"meaning\": \"The district or city for the delivery\",\n      \"expected\": \"text\"\n    },\n    {\n      \"key\": \"st_prov\",\n      \"meaning\": \"The state or province for the delivery\",\n      \"expected\": \"text\"\n    },\n    {\n      \"key\": \"zip\",\n      \"meaning\": \"The postal or ZIP code for the delivery\",\n      \"expected\": \"postal\"\n    },\n    {\n      \"key\": \"desc\",\n      \"meaning\": \"The description of the goods being shipped\",\n      \"expected\": \"text\"\n    },\n    {\n      \"key\": \"pcs\",\n      \"meaning\": \"The number of pieces in the shipment\",\n      \"expected\": \"int\"\n    },\n    {\n      \"key\": \"svc\",\n      \"meaning\": \"The service level, such as standard, express, or same day\",\n      \"expected\": \"enum\"\n    },\n    {\n      \"key\": \"rmks\",\n      \"meaning\": \"Any additional remarks or delivery instructions\",\n      \"expected\": \"notes\"\n    }\n  ]\n}",
+  "inferenceSource": "in_cloud"
+ },
+ "teacherNetwork": [
+  {
+   "url": "https://content-firebaseappcheck.googleapis.com/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:exchangeDebugToken",
+   "method": "POST",
+   "postBytes": 73
+  },
+  {
+   "url": "https://content-firebaseappcheck.googleapis.com/v1/projects/pastewise-hybrid-ai/apps/1:206257638331:web:7e38b0f9e5bff4d2e6d29e:exchangeDebugToken",
+   "method": "OPTIONS",
+   "postBytes": 0
+  },
+  {
+   "url": "https://firebasevertexai.googleapis.com/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateContent",
+   "method": "POST",
+   "postBytes": 1248
+  },
+  {
+   "url": "https://firebasevertexai.googleapis.com/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateContent",
+   "method": "OPTIONS",
+   "postBytes": 0
+  }
+ ],
+ "consent": {
+  "ok": true,
+  "ms": 3832,
+  "text": "{\"cnee_nm\":\"Maya Kusuma\",\"cnee_tel\":\"085755508812\",\"addr_1\":\"Jl. Cempaka Putih Raya No. 41\",\"dist_city\":\"Jakarta Pusat\",\"st_prov\":\"\",\"zip\":\"10510\",\"desc\":\"linen tablecloths (the sage ones)\",\"pcs\":\"2\",\"svc\":\"EXP\",\"rmks\":\"express pls, she needs them before Friday 🙏 leave at the guard post if nobody home\"}",
+  "inferenceSource": "on_device"
+ },
+ "consentNetwork": {
+  "aiEndpoint": 0
+ },
+ "sdkPassThrough": {
+  "creates": 24,
+  "uniqueCreateOptions": [
+   {
+    "expectedInputs": [
+     {
+      "type": "text",
+      "languages": [
+       "en"
+      ]
+     }
+    ],
+    "expectedOutputs": [
+     {
+      "type": "text",
+      "languages": [
+       "en"
+      ]
+     }
+    ],
+    "temperature": 0,
+    "topK": 1
+   }
+  ],
+  "prompts": 24,
+  "promptsWithResponseConstraint": 24
+ },
+ "allExternalHosts": [
+  "content-firebaseappcheck.googleapis.com",
+  "firebaseremoteconfig.googleapis.com",
+  "firebasevertexai.googleapis.com",
+  "www.google.com",
+  "www.gstatic.com"
+ ],
+ "finishedAt": "2026-11-22T11:07:36.690Z"
+}
