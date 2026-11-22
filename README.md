@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/readme-hero-animated.svg" alt="Pastewise — fills the form from your paste, on your laptop. Boxes press through in carbon blue; one phone number stays amber. Text from your paste sent to the cloud: 0 bytes found." width="100%">
+</p>
+
 # Pastewise
 
 Copy a messy order message, press one shortcut, and the form's fields fill on your laptop.
