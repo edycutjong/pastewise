@@ -42,7 +42,7 @@ tables in `evidence/bench/report-*.json` (`node scripts/bench_report.mjs --set h
 [/bench](https://pastewise.edycu.dev/bench/) and are not mixed into the figures above; continuity-20 is a frozen set kept out of the repo (SHA-256 `8b019d42…e997f0`).
 
 Network capture of the hosted page (5 synthetic messages: 4 fills, all on-device, plus 1 over-long paste refused): 0 paste-word hits, 0 requests during the on-device fills, canary caught:
-[`evidence/network/2026-11-22-94854aa-live.json`](evidence/network/2026-11-22-94854aa-live.json).
+[`evidence/network/2026-11-22-4b8f0b5-live.json`](evidence/network/2026-11-22-4b8f0b5-live.json).
 
 ## 3. Reproduce
 

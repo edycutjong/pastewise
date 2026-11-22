@@ -103,7 +103,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 
 | Check | Result | Evidence |
 |---|---|---|
-| Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-94854aa-live.json`](evidence/network/2026-11-22-94854aa-live.json) |
+| Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-4b8f0b5-live.json`](evidence/network/2026-11-22-4b8f0b5-live.json) |
 | No-Nano consent path | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
 | Unit tests (Vitest) | **123 passing** in 13 files, 90% line coverage | `npm run test:coverage` |
 | Browser tests (Playwright) | **15** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
