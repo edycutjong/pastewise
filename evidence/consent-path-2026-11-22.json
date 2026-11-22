@@ -1,0 +1,58 @@
+{
+ "label": "synthetic S1 only",
+ "base": "https://pastewise.edycu.dev/",
+ "date": "2026-11-22T12:36:21.098Z",
+ "commit": "e88ab71",
+ "availability": "downloadable",
+ "firstDialog": "Getting the on-device model ready",
+ "sheetOpened": true,
+ "sheetHeading": "The on-device model isn't ready yet",
+ "aiRequestsBeforeYes": 0,
+ "afterYesMs": 60016,
+ "batches": [
+  {
+   "status": "error",
+   "attempts": 2,
+   "ms": 2861,
+   "error": "AI: Error fetching from https://firebasevertexai.googleapis.com/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateContent: [400 ] * GenerateContentRequest.generation_config.response_schema.properties[svc].enum[0]: cannot be empty\n (AI/fetch-error)",
+   "retryReason": "error",
+   "raw": ""
+  }
+ ],
+ "fill": {
+  "done": true,
+  "error": null,
+  "sources": [
+   null
+  ],
+  "states": {
+   "cnee_nm": "amber",
+   "cnee_tel": "amber",
+   "addr_1": "amber",
+   "dist_city": "amber",
+   "st_prov": "amber",
+   "zip": "amber",
+   "desc": "amber",
+   "pcs": "amber",
+   "svc": "amber",
+   "rmks": "amber"
+  }
+ },
+ "badge": [
+  "NO ANSWER"
+ ],
+ "consentBytesShown": "341 bytes",
+ "messageBytes": 341,
+ "aiRequests": [
+  {
+   "host": "firebasevertexai.googleapis.com",
+   "size": 2557,
+   "tokensFound": 31
+  },
+  {
+   "host": "firebasevertexai.googleapis.com",
+   "size": 2557,
+   "tokensFound": 31
+  }
+ ]
+}

@@ -32,10 +32,12 @@ export function deviceModel(schema: JsonSchema): GenerativeModel {
   });
 }
 
-/** Same fields for the cloud half of the consent path (the on-device half takes the JSON schema as is). */
+/** Same fields for the cloud half of the consent path (the on-device half takes the JSON schema as is).
+ *  The cloud API rejects an empty string in an enum (measured: 400 "enum[0]: cannot be empty"), so the blank option is dropped here;
+ *  the code gate still decides whether the chosen option is backed by the message. */
 export function toCloudSchema(schema: { properties: Record<string, { type: "string"; enum?: string[] }> }): Schema {
   const properties: Record<string, Schema> = {};
-  for (const [k, v] of Object.entries(schema.properties)) properties[k] = v.enum ? Schema.enumString({ enum: v.enum }) : Schema.string();
+  for (const [k, v] of Object.entries(schema.properties)) properties[k] = v.enum ? Schema.enumString({ enum: v.enum.filter((e) => e !== "") }) : Schema.string();
   return Schema.object({ properties });
 }
 
