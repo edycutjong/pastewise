@@ -135,9 +135,11 @@ try {
   const missingFromLedger = Object.entries(cdpApi).filter(([h, n]) => (ledgerHosts[h] ?? 0) < n).map(([h, n]) => ({ host: h, cdp: n, ledger: ledgerHosts[h] ?? 0 }));
   const appHost = new URL(base ?? "http://localhost:3102").host; // the canary is a relative URL, so it lands on the app's own origin
   const ledgerCanaryCaught = ledgerRecs.some((r) => r.host === appHost && r.pasteBytesFound > 0);
-  const real = rows.filter((r) => r.phase !== "canary");
+  // only the control request itself (and its redirect continuation) is exempt; any other request in the canary window is real traffic
+  const isControl = (r) => r.phase === "canary" && r.path.startsWith("/__egress_canary");
+  const real = rows.filter((r) => !isControl(r));
   const hitRows = real.filter((r) => Object.keys(r.hits).length);
-  const canaryCaught = rows.some((r) => r.phase === "canary" && r.hits.S3);
+  const canaryCaught = rows.some((r) => isControl(r) && r.hits.S3);
   const fillPhases = results.filter((r) => !r.refused);
   const verdict = {
     pasteTokenHitsOnRealRequests: hitRows.length,
