@@ -15,7 +15,13 @@ try {
   if (!rec.batches.every((b) => b.inferenceSource === "on_device")) throw new Error("not an on-device run");
   const ua = await page.evaluate(() => navigator.userAgent);
   const cap = Object.fromEntries(spec.fields.map((f) => [f.key, f.label]));
-  const reasonText = { two_candidates: "two numbers in the text", not_in_text: "not in the text", format: "format", too_long: "longer than the box allows" };
+  const reasonText = {
+    two_candidates: "two numbers in the text",
+    not_in_text: "not in the text",
+    format: "format",
+    too_long: "longer than the box allows",
+    check_by_hand: "names are always yours to confirm",
+  };
   const out = {
     label: "Synthetic message S1 on the consignment note (form C)",
     recorded: new Date().toISOString(),
@@ -26,9 +32,19 @@ try {
     paste: S1.paste,
     inferenceSource: "on_device",
     totalMs: rec.totalMs,
+    gate: await page.evaluate(() => window.__pastewise.versions),
     fields: spec.fields.map((f) => {
       const r = rec.fields[f.key];
-      return { key: f.key, caption: cap[f.key], state: r.state === "found" ? "found" : r.state === "amber" ? "amber" : "empty", value: r.value ?? "", note: r.reason ? (reasonText[r.reason] ?? r.reason) : undefined };
+      return {
+        key: f.key,
+        caption: cap[f.key],
+        state: r.state === "found" ? "found" : r.state === "amber" ? "amber" : "empty",
+        value: r.value ?? "",
+        note: r.reason ? (reasonText[r.reason] ?? r.reason) : undefined,
+        // the reason code and what the model proposed (the gate's input), so a replay can show why a box stayed amber
+        reason: r.reason,
+        proposed: r.proposed ?? "",
+      };
     }),
   };
   fs.mkdirSync(path.join(ROOT, "evidence/replay"), { recursive: true });

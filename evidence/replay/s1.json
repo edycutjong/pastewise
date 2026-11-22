@@ -1,75 +1,93 @@
 {
  "label": "Synthetic message S1 on the consignment note (form C)",
- "recorded": "2026-11-22T12:12:13.407Z",
- "commit": "ba8a64a",
+ "recorded": "2026-11-22T16:53:22.507Z",
+ "commit": "ee635b4",
  "machine": "Apple M1 Max, 32 GB",
  "chrome": "157.0.0.0",
  "form": "C",
  "paste": "hiii 👋 it's Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:\nMrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.\nher old number 0813-5550-2290 is dead don't use it, new one is 0857 5550 8812.\nexpress pls, she needs them before Friday 🙏 leave at the guard post if nobody home",
  "inferenceSource": "on_device",
- "totalMs": 5327,
+ "totalMs": 6063,
+ "gate": {
+  "prompt": "p0c-v3",
+  "gate": "4"
+ },
  "fields": [
   {
    "key": "cnee_nm",
    "caption": "CNEE",
-   "state": "found",
-   "value": "Maya Kusuma"
+   "state": "amber",
+   "value": "Maya Kusuma",
+   "note": "names are always yours to confirm",
+   "reason": "check_by_hand",
+   "proposed": "Maya Kusuma"
   },
   {
    "key": "cnee_tel",
    "caption": "CNEE TEL",
    "state": "amber",
    "value": "085755508812",
-   "note": "two numbers in the text"
+   "note": "two numbers in the text",
+   "reason": "two_candidates",
+   "proposed": "085755508812"
   },
   {
    "key": "addr_1",
    "caption": "ADDR 1",
    "state": "found",
-   "value": "Jl. Cempaka Putih Raya No. 41"
+   "value": "Jl. Cempaka Putih Raya No. 41",
+   "proposed": "Jl. Cempaka Putih Raya No. 41"
   },
   {
    "key": "dist_city",
    "caption": "DIST/CITY",
    "state": "found",
-   "value": "Jakarta Pusat"
+   "value": "Jakarta Pusat",
+   "proposed": "Jakarta Pusat"
   },
   {
    "key": "st_prov",
    "caption": "ST/PROV",
    "state": "empty",
-   "value": ""
+   "value": "",
+   "proposed": ""
   },
   {
    "key": "zip",
    "caption": "ZIP",
    "state": "found",
-   "value": "10510"
+   "value": "10510",
+   "proposed": "10510"
   },
   {
    "key": "desc",
    "caption": "DESC",
    "state": "found",
-   "value": "linen tablecloths"
+   "value": "linen tablecloths",
+   "proposed": "2 linen tablecloths (the sage ones)"
   },
   {
    "key": "pcs",
    "caption": "PCS",
    "state": "found",
-   "value": "2"
+   "value": "2",
+   "proposed": "2"
   },
   {
    "key": "svc",
    "caption": "SVC",
    "state": "found",
-   "value": "EXP"
+   "value": "EXP",
+   "proposed": "EXP"
   },
   {
    "key": "rmks",
    "caption": "RMKS",
    "state": "amber",
    "value": "",
-   "note": "not in the text"
+   "note": "not in the text",
+   "reason": "not_in_text",
+   "proposed": "express pls, she needs them before Friday 🙏 leave at the guard post if nobody 홈"
   }
  ]
 }
