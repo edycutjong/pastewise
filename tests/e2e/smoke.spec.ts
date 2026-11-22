@@ -40,3 +40,32 @@ test("samples: one click loads a synthetic message and switches to its form", as
   await expect(page.getByRole("tab", { name: "B · FRONT DESK" })).toHaveAttribute("aria-selected", "true");
   await expect(page.getByTestId("ledger-bytes")).toHaveText("0 bytes found");
 });
+
+// Unplug must fail, in the browser: Nano is "available" but the model call dies. The page must say so, fill nothing and send nothing.
+test("unplug: the on-device model dies mid-fill -> a visible failure, every box stays empty, nothing is sent", async ({ page }) => {
+  const ai: string[] = [];
+  page.on("request", (r) => /firebasevertexai|generativelanguage/.test(r.url()) && ai.push(r.url()));
+  await page.addInitScript(() => {
+    (globalThis as unknown as { LanguageModel: unknown }).LanguageModel = {
+      availability: async () => "available",
+      params: async () => ({ defaultTopK: 3, maxTopK: 8, defaultTemperature: 1, maxTemperature: 2 }),
+      create: async () => ({
+        prompt: async () => {
+          throw new Error("UnpluggedError: model removed");
+        },
+        promptStreaming: () => {
+          throw new Error("UnpluggedError: model removed");
+        },
+        destroy() {},
+        inputUsage: 0,
+        inputQuota: 9000,
+      }),
+    };
+  });
+  await page.goto("/");
+  await page.getByTestId("sample-S3").click();
+  await page.getByRole("button", { name: /Fill this message/ }).click();
+  await expect(page.getByText("the on-device model failed — try again").first()).toBeVisible({ timeout: 40_000 });
+  for (const id of ["name", "phone", "street", "city"]) await expect(page.locator(`#A-${id}`)).toHaveValue("");
+  expect(ai).toEqual([]);
+});
