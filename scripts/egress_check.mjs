@@ -5,8 +5,9 @@
 // in-page ledger, src/ledger/tokens.ts).
 //
 // Verdict: 0 paste-token hits on the on-device path. A positive control (a
-// request to localhost carrying the paste, never leaving this machine) must be
-// caught, or the checker itself is broken and the run fails.
+// same-origin request carrying the synthetic S3 demo paste: localhost when run
+// locally, the deployed host with --base; never a third party) must be caught,
+// or the checker itself is broken and the run fails.
 //
 // Usage: npm run build && node scripts/egress_check.mjs [--base URL]
 import fs from "node:fs";
@@ -99,7 +100,8 @@ try {
   phase = "teach:C";
   const teach = await app.evaluate(() => window.__pastewise.teach("C").then((t) => ({ n: t.hints.length, src: t.inferenceSource })));
   await sleep(800);
-  // positive control: a localhost request carrying S3 must be caught
+  // positive control: a same-origin synthetic request (this app's own origin: localhost locally, the deployed host with --base)
+  // carrying the S3 demo paste must be caught by both the CDP log and the in-page ledger; it reaches no third party
   phase = "canary";
   await app.evaluate((p) => fetch(`/__egress_canary?m=${encodeURIComponent(p)}`).catch(() => null), demos[2].paste);
   await sleep(800);
@@ -129,7 +131,8 @@ try {
   const cdpApi = byHost(rows.filter((r) => r.target === "page" && !r.local && r.method !== "OPTIONS" && ["Fetch", "XHR", "Ping", "WebSocket", "EventSource"].includes(r.type)));
   const ledgerHosts = byHost(ledgerRecs);
   const missingFromLedger = Object.entries(cdpApi).filter(([h, n]) => (ledgerHosts[h] ?? 0) < n).map(([h, n]) => ({ host: h, cdp: n, ledger: ledgerHosts[h] ?? 0 }));
-  const ledgerCanaryCaught = ledgerRecs.some((r) => r.host.startsWith("localhost") && r.pasteBytesFound > 0);
+  const appHost = new URL(base ?? "http://localhost:3102").host; // the canary is a relative URL, so it lands on the app's own origin
+  const ledgerCanaryCaught = ledgerRecs.some((r) => r.host === appHost && r.pasteBytesFound > 0);
   const real = rows.filter((r) => r.phase !== "canary");
   const hitRows = real.filter((r) => Object.keys(r.hits).length);
   const canaryCaught = rows.some((r) => r.phase === "canary" && r.hits.S3);
