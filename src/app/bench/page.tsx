@@ -40,7 +40,7 @@ function load(): Agg[] {
     .readdirSync(dir)
     .filter((f) => f.endsWith(".json"))
     .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")) as Agg)
-    .sort((a, b) => (a.date + a.set).localeCompare(b.date + b.set) || Number(!!a.stalledRun) - Number(!!b.stalledRun) || (a.arm === b.arm ? 0 : a.arm === "off" ? -1 : 1));
+    .sort((a, b) => (a.date + a.set).localeCompare(b.date + b.set) || Number(!!b.stalledRun) - Number(!!a.stalledRun) || (a.arm === b.arm ? 0 : a.arm === "off" ? -1 : 1));
 }
 
 const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.toFixed(1)})`;
@@ -57,8 +57,8 @@ export default function Bench() {
       <header className="top">
         <h1>Bench</h1>
         <p>
-          Measured on one laptop through the real Fill button, with the on-device model. Each row is a committed file in{" "}
-          <span className="mono">evidence/bench/aggregates/</span>; nothing here is typed in by hand.
+          Measured on one laptop through the real Fill button, with the on-device model. Every figure comes from a committed file in{" "}
+          <span className="mono">evidence/bench/aggregates/</span>; only the captions are written by hand.
         </p>
       </header>
       <SiteNav current="bench" />
@@ -77,9 +77,10 @@ export default function Bench() {
                 <thead>
                   <tr>
                     <th>Teacher hints</th>
-                    <th>Wrong value shown as found</th>
+                    <th>Wrong value shown as found (% of all boxes)</th>
                     <th>Right value in the box (strict)</th>
                     <th>Filled (coverage)</th>
+                    <th>Filled and right</th>
                     <th>Left amber</th>
                     <th>Warm p50 / p95</th>
                     <th>JSON valid per repeat</th>
@@ -90,12 +91,13 @@ export default function Bench() {
                   {rows.map((a) => (
                     <tr key={`${a.arm}-${a.commit}`}>
                       <td>
-                        {a.arm === "off" ? "off" : `on (${a.hintsSource})`}
+                        {a.arm === "off" ? "off" : `on (hints from the ${a.hintsSource === "cloud" ? "cloud teacher" : a.hintsSource})`}
                         {a.stalledRun && <div className="fine">first run, with model stalls — see note</div>}
                       </td>
                       <td>{pct(a.metrics.acceptedWrongPct)}</td>
                       <td>{pct(a.metrics.rawAccuracyStrict)}</td>
                       <td>{pct(a.metrics.coverage)}</td>
+                      <td>{pct(a.metrics.usefulCoverage)}</td>
                       <td>{pct(a.metrics.amberPct)}</td>
                       <td>
                         {secs(a.metrics.warmP50)} / {secs(a.metrics.warmP95)}
@@ -119,12 +121,16 @@ export default function Bench() {
                 .map((h) => {
                   const off = rows.find((o) => o.arm === "off" && sameRun(o, h));
                   if (!off) return null;
-                  const d = (k: "rawAccuracyStrict" | "acceptedWrongPct") => +(h.metrics[k].mean - off.metrics[k].mean).toFixed(1);
+                  const verdict = (k: "rawAccuracyStrict" | "acceptedWrongPct", label: string) => {
+                    const hi = h.metrics[k];
+                    const lo = off.metrics[k];
+                    const delta = +(hi.mean - lo.mean).toFixed(1);
+                    const apart = hi.min > lo.max || hi.max < lo.min;
+                    return `${label}: ${lo.mean.toFixed(1)}% → ${hi.mean.toFixed(1)}% (${delta >= 0 ? "+" : ""}${delta} points) — ${apart ? "outside the run-to-run spread" : "within the run-to-run spread, so no measurable difference"}`;
+                  };
                   return (
                     <p key={h.commit} className="delta">
-                      Hints on vs off, same commit: correct {d("rawAccuracyStrict") >= 0 ? "+" : ""}
-                      {d("rawAccuracyStrict")} points, wrong-shown {d("acceptedWrongPct") >= 0 ? "+" : ""}
-                      {d("acceptedWrongPct")} points. If the number is near zero, the hints add nothing on this set.
+                      Hints off → on, same commit. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
                     </p>
                   );
                 })}

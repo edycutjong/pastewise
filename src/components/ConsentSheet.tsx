@@ -11,18 +11,20 @@ export default function ConsentSheet(props: {
   open: boolean;
   availability: string | null;
   message: string;
+  /** bytes of the whole request text (message + the form's field names + our reading instructions) */
+  requestBytes: number;
   killSwitch: boolean;
   state: ConsentState;
   replay: ReplayData;
   onSend: () => void;
   onDecline: () => void;
 }) {
-  const { open, availability, message, killSwitch, state, replay, onSend, onDecline } = props;
+  const { open, availability, message, requestBytes, killSwitch, state, replay, onSend, onDecline } = props;
   const [showReplay, setShowReplay] = useState(false);
   const notReady = availability === "downloadable" || availability === "downloading";
   const bytes = new TextEncoder().encode(message).length;
   return (
-    <Modal open={open} onClose={onDecline} label="Send this one message to the cloud?">
+    <Modal open={open} onClose={onDecline} label="Send this one message to the cloud?" dismissable={state !== "sending"}>
       <h2 className="cap">{notReady ? "The on-device model isn't ready yet" : "This laptop can't run the on-device model"}</h2>
       {killSwitch ? (
         <p className="big" data-testid="consent-off">
@@ -34,11 +36,14 @@ export default function ConsentSheet(props: {
           <p className="big">
             {notReady ? "The on-device model isn't ready yet. " : ""}Send <em>this one message</em> to the cloud to fill the form?
           </p>
-          <p className="fine">Exactly this text would be sent — {message.length.toLocaleString("en-US")} characters, {bytes.toLocaleString("en-US")} bytes:</p>
+          <p className="fine">
+            Your message, exactly as below — {message.length.toLocaleString("en-US")} characters, {bytes.toLocaleString("en-US")} bytes — goes inside a request of about{" "}
+            {requestBytes.toLocaleString("en-US")} bytes that also carries this form&apos;s field names and our reading instructions:
+          </p>
           <pre className="consent-text" data-testid="consent-text">
             {message}
           </pre>
-          <p className="fine">Nothing is sent unless you press Send this one. After it, the receipt shows these bytes as “sent with your Yes”, and the badge shows where the fill really ran.</p>
+          <p className="fine">Nothing is sent unless you press Send this one. After it, the receipt shows your message&apos;s bytes as “sent with your Yes” (counted again if a retry sends it twice), and the badge shows where the fill really ran.</p>
         </>
       )}
       {state === "failed" && (
@@ -52,7 +57,7 @@ export default function ConsentSheet(props: {
             {state === "sending" ? "Sending…" : "Send this one"}
           </button>
         )}
-        <button type="button" className="ghost" onClick={onDecline} data-testid="consent-decline">
+        <button type="button" className="ghost" onClick={onDecline} disabled={state === "sending"} data-testid="consent-decline" data-autofocus>
           I&apos;ll type it
         </button>
       </div>

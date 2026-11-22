@@ -3,10 +3,14 @@
 import { getValue } from "firebase/remote-config";
 import { firebase, RC_DEFAULTS } from "./firebase";
 
+// A bad remote value must not weaken a guard (cap 5,000,000) or break fills (timeout 1 ms): clamp, else use the default.
+const LIMITS = { paste_char_cap: [200, 20000], fill_timeout_ms: [2000, 60000], batch_max_fields: [1, 20] } as const;
+
 export function rcNumber(key: "paste_char_cap" | "fill_timeout_ms" | "batch_max_fields"): number {
   try {
     const v = getValue(firebase().rc, key).asNumber();
-    return v > 0 ? v : RC_DEFAULTS[key];
+    const [lo, hi] = LIMITS[key];
+    return v >= lo && v <= hi ? v : RC_DEFAULTS[key];
   } catch {
     return RC_DEFAULTS[key];
   }

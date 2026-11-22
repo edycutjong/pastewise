@@ -8,7 +8,7 @@ const data = Fragment_Mono({ subsets: ["latin"], weight: "400", variable: "--fon
 
 export const metadata: Metadata = {
   title: "Pastewise",
-  description: "Paste a messy order message; the form fills on your laptop with Gemini Nano via Firebase AI Logic.",
+  description: "Paste a messy order message; with the on-device model the form fills on your laptop (Gemini Nano via Firebase AI Logic); the cloud is used only if you say Yes.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

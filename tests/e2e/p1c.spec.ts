@@ -20,6 +20,9 @@ test("no on-device model: Fill opens the consent sheet with the exact text and s
   await expect(sheet.getByTestId("consent-text")).toHaveText(MSG);
   await expect(sheet).toContainText(`${MSG.length} characters, ${new TextEncoder().encode(MSG).length} bytes`);
   await expect(sheet).toContainText("This laptop can't run the on-device model");
+  await expect(sheet).toContainText("also carries this form's field names and our reading instructions");
+  // focus lands on the safe button, so a held Enter from the shortcut can never press Send
+  await expect(sheet.getByTestId("consent-decline")).toBeFocused();
   await sheet.getByTestId("consent-decline").click();
   await expect(sheet).toBeHidden();
   expect(aiRequests).toEqual([]);
@@ -83,7 +86,9 @@ test("first run: download screen shows progress and the cloud choice opens the n
   const overlay = page.getByRole("dialog", { name: "Getting the on-device model ready" });
   await expect(overlay).toBeVisible();
   await expect(overlay.getByTestId("download-pct")).toHaveText("40%");
-  await overlay.getByRole("button", { name: /Allow the cloud for this paste instead/ }).click();
+  await page.keyboard.press("Escape"); // the progress screen cannot be dismissed by accident
+  await expect(overlay).toBeVisible();
+  await overlay.getByRole("button", { name: /Use the cloud for this paste instead/ }).click();
   const sheet = page.getByRole("dialog", { name: /Send this one message to the cloud/ });
   await expect(sheet).toContainText("The on-device model isn't ready yet");
   await expect(sheet.getByTestId("consent-text")).toHaveText(MSG);
@@ -106,4 +111,28 @@ test("kill switch on: consent sheet has no Send button and says the cloud is off
   await sheet.getByTestId("consent-decline").click();
   await page.getByRole("button", { name: "Teach this form" }).click();
   await expect(page.getByRole("dialog", { name: "Teach this form" }).getByRole("button", { name: /Send this empty form/ })).toBeDisabled();
+});
+
+test("first run: a model that fails to start shows the reason and offers retry or the cloud, sending nothing", async ({ page }) => {
+  const aiRequests: string[] = [];
+  page.on("request", (r) => /firebasevertexai|generativelanguage/.test(r.url()) && aiRequests.push(r.url()));
+  await page.addInitScript(() => {
+    (globalThis as unknown as { LanguageModel: unknown }).LanguageModel = {
+      availability: async () => "downloadable",
+      create: async () => {
+        await new Promise((r) => setTimeout(r, 200));
+        throw new Error("disk full");
+      },
+    };
+  });
+  await page.goto("/");
+  await page.locator("#paste").fill(MSG);
+  await page.getByRole("button", { name: /Fill this message/ }).click();
+  const overlay = page.getByRole("dialog", { name: "Getting the on-device model ready" });
+  await expect(overlay.getByTestId("download-failed")).toContainText("didn't get ready");
+  await expect(overlay.getByRole("button", { name: "Close" })).toBeVisible();
+  await overlay.getByRole("button", { name: "Close" }).click();
+  await expect(overlay).toBeHidden();
+  expect(aiRequests).toEqual([]);
+  await expect(page.getByRole("button", { name: /Fill this message/ })).toBeEnabled();
 });

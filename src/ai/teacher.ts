@@ -39,5 +39,6 @@ export async function teachForm(form: FormSpec, modelName: string, timeoutMs = 2
   const keys = new Set(form.fields.map((f) => f.key));
   const raw = parsed.hints ?? [];
   const hints = raw.map(sanitizeHint).filter((h): h is Hint => !!h && keys.has(h.key));
+  if (!hints.length) throw new Error(`teacher: no usable hints (${raw.length} returned, ${raw.length - hints.length} dropped by the checks)`);
   return { hints, dropped: raw.length - hints.length, inferenceSource: r.response.inferenceSource, ms: Math.round(performance.now() - t0), payload };
 }

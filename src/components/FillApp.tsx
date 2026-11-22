@@ -12,7 +12,7 @@ import { fetchAndActivate } from "firebase/remote-config";
 import { firebase, RC_DEFAULTS } from "@/lib/firebase";
 import { deviceModel } from "@/ai/models";
 import { fillForm, type BatchResult } from "@/ai/fill";
-import { PROMPT_VERSION } from "@/ai/prompt";
+import { PROMPT_VERSION, buildPrompt } from "@/ai/prompt";
 import { teachForm, teacherPayload, type TeachResult } from "@/ai/teacher";
 import type { Consent } from "@/ai/fill";
 import { rcNumber, rcString, cloudKillSwitch, rcSnapshot } from "@/lib/rc";
@@ -25,7 +25,7 @@ import type { ReplayData } from "./Replay";
 import replayS1 from "../../evidence/replay/s1.json";
 import { FORMS, formById, type InputDef } from "@/forms/defs";
 import type { FormSpec } from "@/forms/types";
-import { readForm, type Hint } from "@/schema/buildSchema";
+import { batches as splitBatches, readForm, type Hint } from "@/schema/buildSchema";
 import { gateField, GATE_VERSION } from "@/gate";
 import LedgerStrip from "./LedgerStrip";
 import SiteNav from "./SiteNav";
@@ -82,6 +82,8 @@ export default function FillApp() {
   const [downloading, setDownloading] = useState(false);
   const [viaCloud, setViaCloud] = useState(false);
   const [kill, setKill] = useState(false);
+  const [dlFailed, setDlFailed] = useState<string | null>(null);
+  const [requestBytes, setRequestBytes] = useState(0);
   const [consent, setConsent] = useState<{ open: boolean; state: ConsentState; message: string }>({ open: false, state: "ask", message: "" });
   const [consentBytes, setConsentBytes] = useState(0);
   const [teachOpen, setTeachOpen] = useState(false);
@@ -255,10 +257,28 @@ export default function FillApp() {
     void run(formId, runId, paste, s, today, cold, api);
   }
 
+  /** Re-fetches Remote Config (short timeout) so a switch flipped after page load is honoured; a failed fetch keeps the last known value. */
+  async function refreshKill(): Promise<boolean> {
+    try {
+      await Promise.race([fetchAndActivate(firebase().rc), new Promise((_, rej) => setTimeout(() => rej(new Error("rc timeout")), 2500))]);
+    } catch {
+      /* keep the last activated value */
+    }
+    const k = cloudKillSwitch();
+    setKill(k);
+    return k;
+  }
+
   function openConsent(formId: string, paste: string, availability: string) {
     consentForm.current = formId;
-    setKill(cloudKillSwitch()); // read at the moment of asking, not only at page load
+    setKill(cloudKillSwitch());
+    void refreshKill();
     setAvail(availability);
+    const s = spec(formId);
+    const today = todayLocal();
+    // the whole request text: the message inside the prompt, per batch, as it would be built
+    const rb = s ? splitBatches(s.fields, rcNumber("batch_max_fields")).reduce((n, b) => n + new TextEncoder().encode(buildPrompt(s.title, b, paste, today)).length, 0) : 0;
+    setRequestBytes(rb);
     setConsent({ open: true, state: "ask", message: paste });
   }
 
@@ -284,16 +304,23 @@ export default function FillApp() {
         setAvail(a);
         if (a === "unavailable") throw new Error("unavailable");
         if (a === "downloadable" || a === "downloading") setDownloading(true);
-        await initRef.current;
+        // a model that is already downloaded must start quickly; a download may take many minutes
+        const limit = a === "available" ? 60_000 : 20 * 60_000;
+        await Promise.race([initRef.current, new Promise((_, rej) => setTimeout(() => rej(new Error(`the model did not start within ${limit / 1000} s`)), limit))]);
         setProgress(null);
         setDownloading(false);
       } catch (e) {
         setDownloading(false);
+        setProgress(null);
         if (runIdRef.current[formId] !== runId) return false; // the person chose the cloud instead while this waited
         setPhase("idle");
         setRuns((prev) => ({ ...prev, [formId]: undefined }));
         record({ ...base, done: true, error: String(e) });
-        openConsent(formId, paste, "unavailable");
+        if (String(e).includes("unavailable")) openConsent(formId, paste, "unavailable");
+        else {
+          initRef.current = null; // the next Fill starts the model afresh
+          setDlFailed(String(e instanceof Error ? e.message : e).slice(0, 200));
+        }
         return false;
       }
       if (runIdRef.current[formId] !== runId) return false;
@@ -323,7 +350,8 @@ export default function FillApp() {
     });
     } catch (e) {
       // fill.ts turns model errors into results; this guards anything unexpected so the button never stays locked
-      setNotice("Something went wrong on this laptop's model, so nothing was filled. Try again.");
+      setViaCloud(false);
+      setNotice("Something went wrong filling the form, so nothing was filled. Try again.");
       record({ ...base, done: true, error: String(e) });
       setRuns((prev) => (prev[formId]?.runId === runId ? { ...prev, [formId]: undefined } : prev));
       setPhase("idle");
@@ -360,12 +388,9 @@ export default function FillApp() {
     const paste = consent.message;
     const s = spec(formId);
     if (!s || phase !== "idle") return;
-    if (cloudKillSwitch()) {
-      setKill(true);
-      return;
-    }
+    if (await refreshKill()) return; // the sheet now shows "the cloud path is off"
     setConsent((c) => ({ ...c, state: "sending" }));
-    setConsentBytes((n) => n + new TextEncoder().encode(paste).length);
+    const sentBefore = ledger.records().length;
     const runId = crypto.randomUUID();
     runIdRef.current[formId] = runId;
     trackRun(runId, paste, vocabOf(s));
@@ -373,11 +398,15 @@ export default function FillApp() {
     setViaCloud(true);
     setPhase("preparing");
     const ok = await run(formId, runId, paste, s, todayLocal(), false, null, true);
+    // count the message once per request that actually left (a retry sends it again); nothing counts if no request went out
+    const left = ledger.records().slice(sentBefore).filter((r) => /vertexai|generativelanguage/.test(r.host)).length;
+    setConsentBytes((n) => n + left * new TextEncoder().encode(paste).length);
     setConsent((c) => (ok ? { ...c, open: false, state: "ask" } : { ...c, open: true, state: "failed" }));
   }
 
   function chooseCloudInstead() {
     const formId = activeRef.current;
+    setDlFailed(null);
     runIdRef.current[formId] = crypto.randomUUID(); // the waiting run drops itself
     setRuns((prev) => ({ ...prev, [formId]: undefined }));
     setPhase("idle");
@@ -490,7 +519,7 @@ export default function FillApp() {
     <>
       <header className="top">
         <h1>Pastewise</h1>
-        <p>Paste a messy order message. The form fills on this laptop, and code accepts only what is in your text.</p>
+        <p>Paste a messy order message. With the on-device model the form fills on this laptop — otherwise nothing leaves unless you say Yes — and code accepts only what is in your text.</p>
       </header>
       <SiteNav current="fill" />
       <main className="desk">
@@ -597,7 +626,7 @@ export default function FillApp() {
             {taught[active] && (
               <label className="toggle inline">
                 <input type="checkbox" checked={hintsOn[active] !== false} onChange={(e) => setHintsOn((p) => ({ ...p, [active]: e.target.checked }))} />
-                Hints {hintsOn[active] !== false ? "on" : "off"} ({taught[active]!.source === "cloud" ? "taught just now" : "saved copy"})
+                Hints {hintsOn[active] !== false ? "on" : "off"} ({taught[active]!.source === "cloud" ? "taught this session" : "saved copy"})
               </label>
             )}
             {badges.map((b, i) => (
@@ -635,7 +664,7 @@ export default function FillApp() {
           <LedgerStrip bytes={pasteBytes} records={records} consentBytes={consentBytes} />
         </section>
       </main>
-      <FirstRunOverlay open={downloading && phase === "preparing"} progress={progress} onUseCloud={chooseCloudInstead} />
+      <FirstRunOverlay open={(downloading && phase === "preparing") || !!dlFailed} progress={progress} failed={dlFailed} onUseCloud={chooseCloudInstead} onClose={() => setDlFailed(null)} />
       <ConsentSheet
         open={consent.open}
         availability={avail}
@@ -644,7 +673,11 @@ export default function FillApp() {
         state={consent.state}
         replay={replayS1 as ReplayData}
         onSend={() => void onConsentSend()}
-        onDecline={() => setConsent((c) => ({ ...c, open: false, state: "ask" }))}
+        requestBytes={requestBytes}
+        onDecline={() => {
+          setConsent((c) => ({ ...c, open: false, state: "ask" }));
+          setNotice("Nothing was sent. Type the form by hand, or press Fill to ask again.");
+        }}
       />
       <TeachDrawer
         open={teachOpen}

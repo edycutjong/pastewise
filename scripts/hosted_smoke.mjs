@@ -26,10 +26,11 @@ try {
   await app.reload({ waitUntil: "networkidle2" });
   await app.waitForFunction(() => !!window.__pastewise, { timeout: 30000 });
   out.availability = await app.evaluate(async () => (globalThis.LanguageModel ? await globalThis.LanguageModel.availability() : "no LanguageModel"));
-  const rec = await fillOnce(app, "C", S1.paste);
-  // the saved (Firestore) hint copy for form C is loaded on tab open; read it from the page
-  await app.waitForSelector(".toggle.inline", { timeout: 15000 }).catch(() => {});
+  // open form C and wait for the saved (Firestore) hint copy, so the fill below really uses it
+  await (await app.$$('[role="tab"]'))[2].click();
+  await app.waitForSelector(".toggle.inline", { timeout: 20000 }).catch(() => {});
   out.savedHints = await app.$eval(".toggle.inline", (e) => e.textContent.trim()).catch(() => "none shown");
+  const rec = await fillOnce(app, "C", S1.paste);
   out.fillHintsUsed = rec.hints;
   out.fill = { done: rec.done, error: rec.error ?? null, sources: rec.batches.map((b) => b.inferenceSource), totalMs: rec.totalMs, states: Object.fromEntries(Object.entries(rec.fields).map(([k, v]) => [k, v.state])) };
   out.ledgerAfterFill = await app.evaluate(() => window.__pastewise.ledger().map((r) => ({ host: r.host, purpose: r.purpose, size: r.size, hits: r.hits })));
