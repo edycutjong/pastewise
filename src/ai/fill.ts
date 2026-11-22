@@ -7,7 +7,10 @@
 import type { FieldSpec, FormSpec } from "@/forms/types";
 import { batches, checkAnswer, toJsonSchema } from "@/schema/buildSchema";
 import { buildPrompt } from "./prompt";
-import { deviceModel } from "./models";
+import { consentModel, deviceModel, toCloudSchema } from "./models";
+
+/** Set only after an explicit Yes on the consent sheet: PREFER_ON_DEVICE for that one message. */
+export type Consent = { teacherModel: string };
 
 export type BatchResult = {
   keys: string[];
@@ -24,13 +27,13 @@ export type BatchResult = {
 
 const TIMEOUT = Symbol("timeout");
 
-async function once(fields: FieldSpec[], title: string, paste: string, today: string, timeoutMs: number) {
+async function once(fields: FieldSpec[], title: string, paste: string, today: string, timeoutMs: number, consent?: Consent) {
   const t0 = performance.now();
   let timer: ReturnType<typeof setTimeout> | undefined;
   const timeout = new Promise<typeof TIMEOUT>((r) => (timer = setTimeout(() => r(TIMEOUT), timeoutMs)));
   try {
     const schema = toJsonSchema(fields);
-    const model = deviceModel(schema); // fresh instance per attempt; a construction error is an "error" result, never a throw
+    const model = consent ? consentModel(schema, toCloudSchema(schema), consent.teacherModel) : deviceModel(schema); // fresh instance per attempt; a construction error is an "error" result, never a throw
     const r = await Promise.race([model.generateContent(buildPrompt(title, fields, paste, today)), timeout]);
     const ms = Math.round(performance.now() - t0);
     if (r === TIMEOUT) return { kind: "timeout" as const, ms };
@@ -54,6 +57,7 @@ export async function fillBatch(
   timeoutMs: number,
   onRetry?: (why: "timeout" | "invalid" | "error") => void,
   firstAttemptTimeoutMs = timeoutMs,
+  consent?: Consent,
 ): Promise<BatchResult> {
   const keys = fields.map((f) => f.key);
   let total = 0;
@@ -63,7 +67,7 @@ export async function fillBatch(
     const retryReason = attempt === 2 && last ? last.kind : undefined;
     if (retryReason) firstFail = retryReason;
     if (retryReason) onRetry?.(retryReason as "timeout" | "invalid" | "error");
-    last = await once(fields, title, paste, today, attempt === 1 ? firstAttemptTimeoutMs : timeoutMs);
+    last = await once(fields, title, paste, today, attempt === 1 ? firstAttemptTimeoutMs : timeoutMs, consent);
     total += last.ms;
     if (last.kind === "ok") return { keys, status: "ok", values: last.values, inferenceSource: last.inferenceSource, ms: last.ms, attempts: attempt, raw: last.raw, retryReason };
   }
@@ -93,12 +97,13 @@ export async function fillForm(
     coldTimeoutMs?: number;
     onBatch?: (b: BatchResult) => void;
     onRetry?: (why: "timeout" | "invalid" | "error") => void;
+    consent?: Consent;
   },
 ): Promise<BatchResult[]> {
   const out: BatchResult[] = [];
   for (const [i, b] of batches(form.fields, opts.batchMax).entries()) {
     const first = i === 0 && opts.coldTimeoutMs ? opts.coldTimeoutMs : opts.timeoutMs;
-    const r = await fillBatch(b, form.title, paste, opts.today, opts.timeoutMs, opts.onRetry, first);
+    const r = await fillBatch(b, form.title, paste, opts.today, opts.timeoutMs, opts.onRetry, first, opts.consent);
     out.push(r);
     opts.onBatch?.(r);
   }

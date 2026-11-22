@@ -1,0 +1,74 @@
+{
+ "label": "Synthetic message S1 on the consignment note (form C)",
+ "recorded": "2026-11-22T12:11:41.799Z",
+ "commit": "621b6df",
+ "machine": "Apple M1 Max, 32 GB",
+ "chrome": "157.0.0.0",
+ "form": "C",
+ "paste": "hiii 👋 it's Maya Kusuma again! can u send the 2 linen tablecloths (the sage ones) to my mom this time:\nMrs. Ratna Kusuma, Jl. Cempaka Putih Raya No. 41, Jakarta Pusat 10510.\nher old number 0813-5550-2290 is dead don't use it, new one is 0857 5550 8812.\nexpress pls, she needs them before Friday 🙏 leave at the guard post if nobody home",
+ "inferenceSource": "on_device",
+ "totalMs": 6031,
+ "fields": [
+  {
+   "key": "cnee_nm",
+   "caption": "CNEE",
+   "state": "found",
+   "value": "Ratna Kusuma"
+  },
+  {
+   "key": "cnee_tel",
+   "caption": "CNEE TEL",
+   "state": "amber",
+   "value": "085755508812",
+   "note": "two numbers in the text"
+  },
+  {
+   "key": "addr_1",
+   "caption": "ADDR 1",
+   "state": "found",
+   "value": "Jl. Cempaka Putih Raya No. 41"
+  },
+  {
+   "key": "dist_city",
+   "caption": "DIST/CITY",
+   "state": "found",
+   "value": "Jakarta Pusat"
+  },
+  {
+   "key": "st_prov",
+   "caption": "ST/PROV",
+   "state": "empty",
+   "value": ""
+  },
+  {
+   "key": "zip",
+   "caption": "ZIP",
+   "state": "found",
+   "value": "10510"
+  },
+  {
+   "key": "desc",
+   "caption": "DESC",
+   "state": "found",
+   "value": "linen tablecloths"
+  },
+  {
+   "key": "pcs",
+   "caption": "PCS",
+   "state": "found",
+   "value": "2"
+  },
+  {
+   "key": "svc",
+   "caption": "SVC",
+   "state": "found",
+   "value": "EXP"
+  },
+  {
+   "key": "rmks",
+   "caption": "RMKS",
+   "state": "found",
+   "value": "leave at the guard post if nobody home"
+  }
+ ]
+}

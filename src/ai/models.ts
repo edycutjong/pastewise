@@ -32,6 +32,13 @@ export function deviceModel(schema: JsonSchema): GenerativeModel {
   });
 }
 
+/** Same fields for the cloud half of the consent path (the on-device half takes the JSON schema as is). */
+export function toCloudSchema(schema: { properties: Record<string, { type: "string"; enum?: string[] }> }): Schema {
+  const properties: Record<string, Schema> = {};
+  for (const [k, v] of Object.entries(schema.properties)) properties[k] = v.enum ? Schema.enumString({ enum: v.enum }) : Schema.string();
+  return Schema.object({ properties });
+}
+
 /** Consent path (no Nano): asked first, then PREFER_ON_DEVICE for that one paste. */
 export function consentModel(schema: JsonSchema, cloudSchema: Schema, teacherModelName: string): GenerativeModel {
   return getGenerativeModel(firebase().ai, {

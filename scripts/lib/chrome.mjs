@@ -76,17 +76,19 @@ export async function launchChrome({ profile = process.env.PW_CHROME_PROFILE ?? 
 }
 
 /** Opens the app with the debug App Check token (localhost only) and a fixed "today" for reproducible dates. */
-export async function openApp(browser, { base, today } = {}) {
+export async function openApp(browser, { base, today, savedHints = false } = {}) {
   const page = await browser.newPage();
   const isLocal = !base || /localhost|127\.0\.0\.1/.test(base);
   const token = isLocal ? debugToken() : "";
   await page.evaluateOnNewDocument(
-    (t, d) => {
+    (t, d, ns) => {
       if (t) self.FIREBASE_APPCHECK_DEBUG_TOKEN = t;
       if (d) globalThis.__pastewiseToday = d;
+      if (ns) globalThis.__pastewiseNoSaved = true; // scripted runs control hints themselves (no saved-copy auto-load)
     },
     token,
     today ?? "",
+    !savedHints,
   );
   await page.goto(base ?? `http://localhost:${PORT}/`, { waitUntil: "networkidle2" });
   await page.waitForFunction(() => !!window.__pastewise, { timeout: 30000 });

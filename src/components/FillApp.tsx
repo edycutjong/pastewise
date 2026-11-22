@@ -8,12 +8,21 @@ import { installLedger, ledger, trackRun } from "@/ledger/egress";
 installLedger(); // must run before Firebase makes its first request
 
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { fetchAndActivate, getValue } from "firebase/remote-config";
+import { fetchAndActivate } from "firebase/remote-config";
 import { firebase, RC_DEFAULTS } from "@/lib/firebase";
 import { deviceModel } from "@/ai/models";
 import { fillForm, type BatchResult } from "@/ai/fill";
 import { PROMPT_VERSION } from "@/ai/prompt";
-import { teachForm, type TeachResult } from "@/ai/teacher";
+import { teachForm, teacherPayload, type TeachResult } from "@/ai/teacher";
+import type { Consent } from "@/ai/fill";
+import { rcNumber, rcString, cloudKillSwitch } from "@/lib/rc";
+import { formFingerprint } from "@/hints/fingerprint";
+import { readSaved } from "@/hints/store";
+import ConsentSheet, { type ConsentState } from "./ConsentSheet";
+import FirstRunOverlay from "./FirstRunOverlay";
+import TeachDrawer, { type Taught } from "./TeachDrawer";
+import type { ReplayData } from "./Replay";
+import replayS1 from "../../evidence/replay/s1.json";
 import { FORMS, formById, type InputDef } from "@/forms/defs";
 import type { FormSpec } from "@/forms/types";
 import { readForm, type Hint } from "@/schema/buildSchema";
@@ -42,9 +51,6 @@ export type RunRecord = {
   error?: string;
 };
 
-const NO_NANO =
-  "This browser can't run the on-device model (Chrome's built-in AI), so nothing was filled and nothing was sent anywhere.";
-
 function todayLocal(): string {
   const o = (globalThis as { __pastewiseToday?: string }).__pastewiseToday;
   if (o && /^\d{4}-\d{2}-\d{2}$/.test(o)) return o;
@@ -52,27 +58,12 @@ function todayLocal(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
-function rcNumber(key: "paste_char_cap" | "fill_timeout_ms" | "batch_max_fields"): number {
-  try {
-    const v = getValue(firebase().rc, key).asNumber();
-    return v > 0 ? v : RC_DEFAULTS[key];
-  } catch {
-    return RC_DEFAULTS[key];
-  }
-}
-const rcString = (key: "teacher_model") => {
-  try {
-    return getValue(firebase().rc, key).asString() || RC_DEFAULTS[key];
-  } catch {
-    return RC_DEFAULTS[key];
-  }
-};
-
 const vocabOf = (spec: FormSpec) => [spec.title, ...spec.fields.flatMap((f) => [f.key, f.label, f.placeholder ?? "", ...(f.options ?? []).flatMap((o) => [o.value, o.text])])];
 const fmt = (n: number) => n.toLocaleString("en-US");
 const clock = () => performance.now();
 
 type LM = { availability: (o?: unknown) => Promise<string> };
+const DEVICE_AVAILABILITY = { expectedInputs: [{ type: "text", languages: ["en"] }], expectedOutputs: [{ type: "text", languages: ["en"] }] };
 const lm = () => (globalThis as { LanguageModel?: LM }).LanguageModel;
 
 export default function FillApp() {
@@ -87,6 +78,18 @@ export default function FillApp() {
   const [progress, setProgress] = useState<number | null>(null);
   const [mac, setMac] = useState<boolean | null>(null);
   const [cap, setCap] = useState<number>(RC_DEFAULTS.paste_char_cap);
+  const [avail, setAvail] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const [viaCloud, setViaCloud] = useState(false);
+  const [kill, setKill] = useState(false);
+  const [consent, setConsent] = useState<{ open: boolean; state: ConsentState; message: string }>({ open: false, state: "ask", message: "" });
+  const [consentBytes, setConsentBytes] = useState(0);
+  const [teachOpen, setTeachOpen] = useState(false);
+  const [taught, setTaught] = useState<Record<string, Taught | undefined>>({});
+  const [hintsOn, setHintsOn] = useState<Record<string, boolean>>({});
+  const [teachStatus, setTeachStatus] = useState<"idle" | "sending" | "error">("idle");
+  const [teachError, setTeachError] = useState<string | null>(null);
+  const [payload, setPayload] = useState<ReturnType<typeof teacherPayload> | null>(null);
 
   const formRefs = useRef<Record<string, HTMLFormElement | null>>({});
   const runIdRef = useRef<Record<string, string>>({});
@@ -97,6 +100,9 @@ export default function FillApp() {
   const filledOnce = useRef(false);
   const lastRef = useRef<RunRecord | null>(null);
   const backdropRef = useRef<HTMLDivElement | null>(null);
+  const consentForm = useRef<string>("A");
+  const savedTried = useRef<Set<string>>(new Set());
+  const manualHints = useRef(false); // the bench/egress hooks set hints directly; the saved-copy loader then stays out of the way
   useEffect(() => {
     textRef.current = text;
     activeRef.current = active;
@@ -110,11 +116,24 @@ export default function FillApp() {
     queueMicrotask(() => setMac(/Mac|iPhone|iPad/.test(navigator.platform)));
     const { rc } = firebase();
     fetchAndActivate(rc)
-      .then(() => setCap(rcNumber("paste_char_cap")))
+      .then(() => {
+        setCap(rcNumber("paste_char_cap"));
+        setKill(cloudKillSwitch());
+      })
       .catch(() => {
         /* compiled-in defaults stay */
       });
+    const api = lm();
+    if (!api) queueMicrotask(() => setAvail("unavailable"));
+    else api.availability(DEVICE_AVAILABILITY).then(setAvail, () => setAvail("unavailable"));
   }, []);
+
+  // hints in force = the taught set for the form while its toggle is on (the toggle moves the live fill)
+  useEffect(() => {
+    if (manualHints.current) return;
+    for (const f of FORMS) hintsRef.current[f.id] = taught[f.id] && hintsOn[f.id] !== false ? taught[f.id]!.hints : [];
+  }, [taught, hintsOn]);
+
 
   const spec = useCallback(
     (formId: string): FormSpec | null => {
@@ -125,6 +144,22 @@ export default function FillApp() {
     [],
   );
 
+  // the builder-seeded copy for the open form, read once (structure only; every hint is re-validated). Off for scripted runs.
+  useEffect(() => {
+    if ((globalThis as { __pastewiseNoSaved?: boolean }).__pastewiseNoSaved || savedTried.current.has(active)) return;
+    savedTried.current.add(active);
+    const s = spec(active);
+    if (!s) return;
+    void (async () => {
+      try {
+        const saved = await readSaved(await formFingerprint(s), s);
+        if (saved) setTaught((p) => (p[active] ? p : { ...p, [active]: { hints: saved.hints, source: "saved", savedAt: saved.seededAt } }));
+      } catch {
+        /* no saved copy: the form simply fills without hints */
+      }
+    })();
+  }, [active, spec]);
+
   // Read-only hooks for the bench and egress scripts (no customer data is stored here beyond the last run's gate output).
   useEffect(() => {
     const api = {
@@ -133,16 +168,23 @@ export default function FillApp() {
       },
       hints: (formId: string) => hintsRef.current[formId] ?? [],
       setHints: (formId: string, hints: Hint[]) => {
+        manualHints.current = true;
         hintsRef.current[formId] = hints;
       },
       teach: async (formId: string): Promise<TeachResult> => {
         const s = spec(formId);
         if (!s) throw new Error("form not mounted");
         const r = await teachForm({ ...s, fields: s.fields.map((f) => ({ ...f, hint: undefined })) }, rcString("teacher_model"));
+        manualHints.current = true;
         hintsRef.current[formId] = r.hints;
         return r;
       },
       schema: (formId: string) => spec(formId),
+      fingerprint: async (formId: string) => {
+        const s = spec(formId);
+        if (!s) throw new Error("form not mounted");
+        return formFingerprint(s);
+      },
       tokens: (paste: string, formId: string) => {
         const s = spec(formId);
         return pasteTokens(paste, s ? vocabOf(s) : []);
@@ -188,7 +230,7 @@ export default function FillApp() {
     }
     const api = lm();
     if (!api) {
-      setNotice(NO_NANO);
+      openConsent(formId, paste, "unavailable");
       return;
     }
     // initializeDeviceModel must follow a user interaction: start it now, before any await.
@@ -212,7 +254,13 @@ export default function FillApp() {
     void run(formId, runId, paste, s, today, cold, api);
   }
 
-  async function run(formId: string, runId: string, paste: string, s: FormSpec, today: string, cold: boolean, api: LM) {
+  function openConsent(formId: string, paste: string, availability: string) {
+    consentForm.current = formId;
+    setAvail(availability);
+    setConsent({ open: true, state: "ask", message: paste });
+  }
+
+  async function run(formId: string, runId: string, paste: string, s: FormSpec, today: string, cold: boolean, api: LM | null, viaConsent = false): Promise<boolean> {
     const base: RunRecord = {
       runId,
       form: formId,
@@ -228,17 +276,25 @@ export default function FillApp() {
       batches: [],
       fields: {},
     };
-    try {
-      const a = await api.availability({ expectedInputs: [{ type: "text", languages: ["en"] }], expectedOutputs: [{ type: "text", languages: ["en"] }] });
-      if (a === "unavailable") throw new Error("unavailable");
-      await initRef.current;
-      setProgress(null);
-    } catch (e) {
-      setNotice(NO_NANO);
-      setPhase("idle");
-      setRuns((prev) => ({ ...prev, [formId]: undefined }));
-      record({ ...base, done: true, error: String(e) });
-      return;
+    if (!viaConsent && api) {
+      try {
+        const a = await api.availability(DEVICE_AVAILABILITY);
+        setAvail(a);
+        if (a === "unavailable") throw new Error("unavailable");
+        if (a === "downloadable" || a === "downloading") setDownloading(true);
+        await initRef.current;
+        setProgress(null);
+        setDownloading(false);
+      } catch (e) {
+        setDownloading(false);
+        if (runIdRef.current[formId] !== runId) return false; // the person chose the cloud instead while this waited
+        setPhase("idle");
+        setRuns((prev) => ({ ...prev, [formId]: undefined }));
+        record({ ...base, done: true, error: String(e) });
+        openConsent(formId, paste, "unavailable");
+        return false;
+      }
+      if (runIdRef.current[formId] !== runId) return false;
     }
     setPhase("reading");
     const t0 = clock();
@@ -251,7 +307,8 @@ export default function FillApp() {
       today,
       timeoutMs: rcNumber("fill_timeout_ms"),
       // the first call of a page session also loads the model: only its first attempt gets twice the budget
-      coldTimeoutMs: cold ? rcNumber("fill_timeout_ms") * 2 : undefined,
+      coldTimeoutMs: cold && !viaConsent ? rcNumber("fill_timeout_ms") * 2 : undefined,
+      consent: viaConsent ? ({ teacherModel: rcString("teacher_model") } satisfies Consent) : undefined,
       batchMax: rcNumber("batch_max_fields"),
       onRetry: (why) => {
         setRetryWhy(why);
@@ -268,7 +325,7 @@ export default function FillApp() {
       record({ ...base, done: true, error: String(e) });
       setRuns((prev) => (prev[formId]?.runId === runId ? { ...prev, [formId]: undefined } : prev));
       setPhase("idle");
-      return;
+      return false;
     }
     const totalMs = Math.round(clock() - t0);
     filledOnce.current = true;
@@ -288,8 +345,85 @@ export default function FillApp() {
         fields[f.key] = { proposed: g.proposed, state: g.state, value: g.value, reason: g.reason, candidates: g.candidates?.map((c) => c.value) };
       }
     }
+    const answered = results.some((b) => b.status === "ok");
     record({ ...base, done: true, discarded, totalMs, batches: results.map(({ keys, status, inferenceSource, ms, attempts, raw, error, retryReason }) => ({ keys, status, inferenceSource, ms, attempts, raw, error, retryReason })), fields });
     setPhase("idle");
+    setViaCloud(false);
+    return answered;
+  }
+
+  /** The Yes: one message, PREFER_ON_DEVICE, counted in the ledger as "sent with your Yes". */
+  async function onConsentSend() {
+    const formId = consentForm.current;
+    const paste = consent.message;
+    const s = spec(formId);
+    if (!s || phase !== "idle") return;
+    if (cloudKillSwitch()) {
+      setKill(true);
+      return;
+    }
+    setConsent((c) => ({ ...c, state: "sending" }));
+    setConsentBytes((n) => n + new TextEncoder().encode(paste).length);
+    const runId = crypto.randomUUID();
+    runIdRef.current[formId] = runId;
+    trackRun(runId, paste, vocabOf(s));
+    setRuns((prev) => ({ ...prev, [formId]: { runId, paste, boxes: {}, batches: [], ms: 0, done: false } }));
+    setViaCloud(true);
+    setPhase("preparing");
+    const ok = await run(formId, runId, paste, s, todayLocal(), false, null, true);
+    setConsent((c) => (ok ? { ...c, open: false, state: "ask" } : { ...c, open: true, state: "failed" }));
+  }
+
+  function chooseCloudInstead() {
+    const formId = activeRef.current;
+    runIdRef.current[formId] = crypto.randomUUID(); // the waiting run drops itself
+    setRuns((prev) => ({ ...prev, [formId]: undefined }));
+    setPhase("idle");
+    setDownloading(false);
+    openConsent(formId, textRef.current, "downloading");
+  }
+
+  function openTeach() {
+    const s = spec(active);
+    if (!s) return;
+    setPayload(teacherPayload(s));
+    setTeachStatus("idle");
+    setTeachError(null);
+    setTeachOpen(true);
+  }
+
+  async function sendTeach() {
+    const formId = active;
+    const s = spec(formId);
+    if (!s) return;
+    setTeachStatus("sending");
+    setTeachError(null);
+    let why: string;
+    if (cloudKillSwitch()) why = "the cloud is switched off right now";
+    else {
+      try {
+        const r = await teachForm(s, rcString("teacher_model"));
+        setTaught((p) => ({ ...p, [formId]: { hints: r.hints, source: "cloud", inferenceSource: r.inferenceSource, ms: r.ms } }));
+        setHintsOn((p) => ({ ...p, [formId]: true }));
+        setTeachStatus("idle");
+        return;
+      } catch {
+        why = "the cloud teacher didn't answer";
+      }
+    }
+    try {
+      const saved = await readSaved(await formFingerprint(s), s);
+      if (saved) {
+        setTaught((p) => ({ ...p, [formId]: { hints: saved.hints, source: "saved", savedAt: saved.seededAt, fallbackWhy: why } }));
+        setHintsOn((p) => ({ ...p, [formId]: true }));
+        setTeachStatus("idle");
+        return;
+      }
+    } catch {
+      /* fall through to the plain error */
+    }
+    setTeachStatus("error");
+    setTeachError(`Nothing taught: ${why}, and there is no saved copy for this form. Fill still works without hints.`);
   }
 
   async function pasteFromClipboard() {
@@ -393,11 +527,6 @@ export default function FillApp() {
               {notice}
             </div>
           )}
-          {progress !== null && progress < 1 && (
-            <div className="notice" role="status">
-              Getting the on-device model ready — this happens once and can take several minutes: {Math.round(progress * 100)}%
-            </div>
-          )}
         </section>
 
         <section className="copy" aria-label="Copy sheet: the form">
@@ -452,10 +581,23 @@ export default function FillApp() {
                 : phase === "retrying"
                   ? `${retryWhy === "timeout" ? "Taking too long — trying" : "No usable answer — trying"} once more ${elapsed.toFixed(1)} s`
                   : phase === "preparing"
-                    ? "Starting the on-device model…"
-                    : `Reading on this laptop… ${elapsed.toFixed(1)} s`}
+                    ? viaCloud
+                      ? "Sending your one Yes…"
+                      : "Starting the on-device model…"
+                    : viaCloud
+                      ? `Asking the cloud… ${elapsed.toFixed(1)} s`
+                      : `Reading on this laptop… ${elapsed.toFixed(1)} s`}
               {phase === "idle" && <kbd>{shortcut}</kbd>}
             </button>
+            <button type="button" className="teach-btn" onClick={openTeach}>
+              Teach this form
+            </button>
+            {taught[active] && (
+              <label className="toggle inline">
+                <input type="checkbox" checked={hintsOn[active] !== false} onChange={(e) => setHintsOn((p) => ({ ...p, [active]: e.target.checked }))} />
+                Hints {hintsOn[active] !== false ? "on" : "off"} ({taught[active]!.source === "cloud" ? "taught just now" : "saved copy"})
+              </label>
+            )}
             {badges.map((b, i) => (
               <span key={i} className="badge" title="inferenceSource reported by Firebase AI Logic for this batch">
                 {b}
@@ -488,9 +630,33 @@ export default function FillApp() {
               )}
             </div>
           )}
-          <LedgerStrip bytes={pasteBytes} records={records} />
+          <LedgerStrip bytes={pasteBytes} records={records} consentBytes={consentBytes} />
         </section>
       </main>
+      <FirstRunOverlay open={downloading && phase === "preparing"} progress={progress} onUseCloud={chooseCloudInstead} />
+      <ConsentSheet
+        open={consent.open}
+        availability={avail}
+        message={consent.message}
+        killSwitch={kill}
+        state={consent.state}
+        replay={replayS1 as ReplayData}
+        onSend={() => void onConsentSend()}
+        onDecline={() => setConsent((c) => ({ ...c, open: false, state: "ask" }))}
+      />
+      <TeachDrawer
+        open={teachOpen}
+        onClose={() => setTeachOpen(false)}
+        formTitle={def.title}
+        payload={payload}
+        taught={taught[active]}
+        hintsOn={hintsOn[active] !== false}
+        onToggle={(on) => setHintsOn((p) => ({ ...p, [active]: on }))}
+        status={teachStatus}
+        error={teachError}
+        killSwitch={kill}
+        onSend={() => void sendTeach()}
+      />
     </>
   );
 }

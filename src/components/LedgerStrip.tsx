@@ -5,7 +5,7 @@ import { ledger } from "@/ledger/egress";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
 
-export default function LedgerStrip({ bytes, records, open = false, link = true }: { bytes: number; records: ReturnType<typeof ledger.records>; open?: boolean; link?: boolean }) {
+export default function LedgerStrip({ bytes, records, open = false, link = true, consentBytes = 0 }: { bytes: number; consentBytes?: number; records: ReturnType<typeof ledger.records>; open?: boolean; link?: boolean }) {
   return (
     <div className="strip" id="ledger">
       <div className="strip-row">
@@ -17,6 +17,12 @@ export default function LedgerStrip({ bytes, records, open = false, link = true 
           </Link>
         )}
       </div>
+      {consentBytes > 0 && (
+        <div className="strip-row" data-testid="consent-bytes">
+          <span className="cap">Sent with your Yes (the message you agreed to send)</span>
+          <b>{fmt(consentBytes)} bytes</b>
+        </div>
+      )}
       {records.some((r) => r.unreadable) && (
         <div className="notice" role="status">
           {records.filter((r) => r.unreadable).length} request(s) had a body this page could not read, so they are not counted above — see the
