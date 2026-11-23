@@ -24,7 +24,10 @@
 ---
 
 > **Judges: 30-second path.** Open the [live page](https://pastewise.edycu.dev), click one of the samples under **No message handy? Try one** below the paste box (synthetic messages, also in [`fixtures/demo/`](fixtures/demo)), press **Fill this message**. On a Chrome desktop with
-> Gemini Nano you will see `ON_DEVICE` on every fill. Without Nano you get a plain notice and are asked before that one paste goes to the cloud.
+> Gemini Nano you will see `ON_DEVICE` on every fill; pick a number under an amber box, then **Copy for a spreadsheet**. With Nano a fill also works with the
+> network off (DevTools → Network → Offline): still `ON_DEVICE`, still 0 bytes. Without Nano you get a plain notice: the sheet shows the exact message
+> that would leave and offers **Watch a recorded run** (a real on-device fill); nothing is sent unless you press Send. Or open [/about](https://pastewise.edycu.dev/about/),
+> change `10510` to `10511` in the message and watch the ZIP box turn amber: the shipped gate, re-run in your browser, no model call.
 > The [receipt page](https://pastewise.edycu.dev/receipt/) shows the recorded network log behind the "0 bytes" counter.
 
 ## 📸 See it in Action
@@ -34,7 +37,7 @@
 1. Copy an order message from a chat. Paste it on the white **top sheet**.
 2. Gemini Nano, through Firebase AI Logic, proposes a value for each box on the pink **copy**.
 3. Plain code decides. A value is kept (carbon blue, with its source words underlined in your text) **only if it appears in your text and fits the box's format**. Anything else stays **amber**, with the reason in words ("two numbers in your text — pick one").
-4. A counter reads how many words from your paste were found in any network request. On the recorded run: **0**.
+4. A counter reads how many bytes of your paste's words and numbers (4+ characters) were found in any network request. On the recorded run: **0**.
 5. Check the amber boxes, then **Copy for a spreadsheet**: a header row and a values row go to the clipboard, tab-separated, and the status line names any box that is still amber. A portal form still takes one box at a time.
 
 Pastewise never presses Submit. You always see the form before it goes anywhere.
@@ -67,12 +70,13 @@ Every model call goes through Firebase AI Logic. Nothing calls another model API
 
 | What | Where |
 |---|---|
-| `getAI` + `GoogleAIBackend`, limited-use App Check tokens | [`src/lib/firebase.ts:44`](src/lib/firebase.ts) |
-| `initializeAppCheck` + `ReCaptchaEnterpriseProvider` | [`src/lib/firebase.ts:39`](src/lib/firebase.ts) |
-| `getGenerativeModel` with `InferenceMode.ONLY_ON_DEVICE`, `onDeviceParams.promptOptions.responseConstraint` (JSON schema built from the live form) | [`src/ai/models.ts:34`](src/ai/models.ts) |
-| `PREFER_ON_DEVICE` with `onDeviceParams` + `inCloudParams` (consent path, asks first) | [`src/ai/models.ts:55`](src/ai/models.ts) |
-| `ONLY_IN_CLOUD` with `inCloudParams` (form teacher) | [`src/ai/models.ts:87`](src/ai/models.ts) |
-| `response.inferenceSource` shown as a badge on every fill and teacher call | [`src/ai/fill.ts:44`](src/ai/fill.ts), [`src/ai/teacher.ts:42`](src/ai/teacher.ts) |
+| `getAI` + `GoogleAIBackend`, limited-use App Check tokens | [`src/lib/firebase.ts:44`](src/lib/firebase.ts#L44) |
+| `initializeAppCheck` + `ReCaptchaEnterpriseProvider` | [`src/lib/firebase.ts:39`](src/lib/firebase.ts#L39) |
+| `getGenerativeModel` with `InferenceMode.ONLY_ON_DEVICE`, `onDeviceParams.promptOptions.responseConstraint` (JSON schema built from the live form) | [`src/ai/models.ts:34`](src/ai/models.ts#L34) |
+| `initializeDeviceModel` inside the Fill click, with download progress on first run | [`src/components/FillApp.tsx:257`](src/components/FillApp.tsx#L257) |
+| `PREFER_ON_DEVICE` with `onDeviceParams` + `inCloudParams` (consent path, asks first) | [`src/ai/models.ts:55`](src/ai/models.ts#L55) |
+| `ONLY_IN_CLOUD` with `inCloudParams` (form teacher) | [`src/ai/models.ts:87`](src/ai/models.ts#L87) |
+| `response.inferenceSource` shown as a badge on every fill and teacher call | [`src/ai/fill.ts:44`](src/ai/fill.ts#L44), [`src/ai/teacher.ts:42`](src/ai/teacher.ts#L42) |
 | Remote Config `fetchAndActivate` / `getValue` with clamped limits and a kill switch | [`src/lib/rc.ts`](src/lib/rc.ts) |
 | Hybrid split: customer text only on the laptop, form structure only to the cloud | [`src/ai/fill.ts`](src/ai/fill.ts), [`src/ai/teacher.ts`](src/ai/teacher.ts) |
 
@@ -89,7 +93,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 | Strict field accuracy | 80.7% (80.3–81.5) | 81.5% (80.0–82.6) |
 | Wrong value shown as found, all boxes | 5.9% (5.1–6.4) | 5.3% (5.1–5.4) |
 | …in name, phone, address and postal-code boxes only | 2.0% | 1.3% |
-| Left amber | 17.7% (17.4–18.0) | 17.3% (16.9–17.4) |
+| Left amber | 17.7% (17.4–17.9) | 17.3% (16.9–17.4) |
 | Right value shown as found, name/phone/address/postal boxes | 67.5% | 71.6% |
 | Warm p50 / p95 per fill (mean of the 3 repeats) | 2.34 s / 2.94 s | 2.40 s / 2.93 s |
 | JSON valid, on-device | 45/45 ×3 | 45/45 ×3 |
@@ -105,7 +109,8 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 | Check | Result | Evidence |
 |---|---|---|
 | Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-4b8f0b5-live.json`](evidence/network/2026-11-22-4b8f0b5-live.json) |
-| No-Nano consent path | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
+| Offline fill (network switched off after the page loaded, sample S1) | finished `on_device` with `navigator.onLine` false and 0 new requests in the ledger | [`evidence/offline/2026-11-23-offline-fill.json`](evidence/offline/2026-11-23-offline-fill.json) |
+| No-Nano consent path (hosted page) | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
 | Unit tests (Vitest) | **128 passing** in 13 files, 90% of lines and 86% of statements covered | `npm run test:coverage` |
 | Browser tests (Playwright) | **18** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
 | Interaction check on the deployed page | 13/13 hover and focus states, 0 dead links | [`evidence/interaction-qa.json`](evidence/interaction-qa.json) |
@@ -114,11 +119,11 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 
 | Control | Why it is load-bearing | Test |
 |---|---|---|
-| Two phone numbers in the paste: the box stays amber whatever the model picked | the model cannot guess between two numbers | [`tests/unit/gate.test.ts:64`](tests/unit/gate.test.ts) |
-| A value with a dropped digit is not in your text | a near-match is how a wrong phone number gets in | [`tests/unit/gate.test.ts:78`](tests/unit/gate.test.ts) |
-| A model-invented year the paste contradicts is never accepted | dates are the field a model fabricates most | [`tests/unit/gate.test.ts:123`](tests/unit/gate.test.ts) |
-| Paste copied into a request body is caught raw, URL-encoded and JSON-escaped | the 0-bytes counter must not be blind to simple encodings | [`tests/unit/ledger.test.ts:25`](tests/unit/ledger.test.ts) |
-| A pasted `=HYPERLINK(...)` that lands in a notes box is copied to the spreadsheet as text, not run as a formula | the gate keeps it because it IS in your text, so the copy step defuses it | [`tests/unit/runState.test.ts:103`](tests/unit/runState.test.ts) |
+| Two phone numbers in the paste: the box stays amber whatever the model picked | the model cannot guess between two numbers | [`tests/unit/gate.test.ts:64`](tests/unit/gate.test.ts#L64) |
+| A value with a dropped digit is not in your text | a near-match is how a wrong phone number gets in | [`tests/unit/gate.test.ts:78`](tests/unit/gate.test.ts#L78) |
+| A model-invented year the paste contradicts is never accepted | dates are the field a model fabricates most | [`tests/unit/gate.test.ts:123`](tests/unit/gate.test.ts#L123) |
+| Paste copied into a request body is caught raw, URL-encoded and JSON-escaped | the 0-bytes counter must not be blind to simple encodings | [`tests/unit/ledger.test.ts:25`](tests/unit/ledger.test.ts#L25) |
+| A pasted `=HYPERLINK(...)` that lands in a notes box is copied to the spreadsheet as text, not run as a formula | the gate keeps it because it IS in your text, so the copy step defuses it | [`tests/unit/runState.test.ts:103`](tests/unit/runState.test.ts#L103) |
 
 ### Honest limits (8)
 
@@ -127,7 +132,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 3. **The form teacher adds little.** On the 180-pair bench, hints moved strict accuracy on form C from 78.3% to 78.4% (we had hoped for +10 points) and on the held-out set from 76.9% to 78.0%; the other forms did not move beyond run-to-run noise. The cloud teacher is a measured experiment, not a selling point, and it only ever sees the empty form.
 4. **Held-out measured once, on gate v4.** The bench rows are gate v3; the held-out rows are the shipped gate v4. Older midpoint rows (continuity-20, form-c-mid) are on [/bench](https://pastewise.edycu.dev/bench/) with their own gate version and are not mixed into the figures above.
 5. **One machine, synthetic data, three repeats, on-device only.** Latency and accuracy are the builder's laptop, and every accuracy figure is Gemini Nano through `ONLY_ON_DEVICE`; the no-Nano cloud path goes through the same gate, but its extraction accuracy was not measured. Messages are mostly English. A few code-mixed Indonesian/English messages are inside the bench and held-out sets (at least 12 of the 120 bench pastes and 1 of the 30 held-out pastes) but are not reported separately, so no claim is made for Indonesian.
-6. **The 0-byte counter has stated blind spots:** words shorter than four letters and encoded text (such as base64) are not matched ([`tests/unit/ledger.test.ts:37`](tests/unit/ledger.test.ts)). It is a measurement of this page's own requests, not a proof about the browser.
+6. **The 0-byte counter has stated blind spots:** words shorter than four letters and encoded text (such as base64) are not matched ([`tests/unit/ledger.test.ts:37`](tests/unit/ledger.test.ts#L37)). It is a measurement of this page's own requests, not a proof about the browser.
 7. **Nano can stall under load.** A fill has a 10 s default timeout per batch (20 s for the first fill of a session) and one retry; a stalled fill leaves its boxes amber, labelled "timed out".
 8. **The CSP still allows `unsafe-inline`** for scripts and styles (a static export needs it for now).
 

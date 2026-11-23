@@ -10,14 +10,16 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 | Step | What you should see |
 |---|---|
 | Under the paste box, click the sample **Gift order with two phone numbers** (message **S1**, [`fixtures/demo/S1.json`](fixtures/demo/S1.json); the click also switches to form **C · CONSIGNMENT NOTE**), then press **Fill this message**. Pasting S1 by hand? Pick tab C first | Boxes fill in carbon blue; each value's source words are underlined in the message |
-| Look at the **CNEE TEL** box | It stays **amber**: the message holds two phone numbers (an old dead one and a new one), and the code refuses to guess |
+| Look at the **CNEE TEL** box | It stays **amber**: the message holds two phone numbers (an old dead one and a new one), and the code refuses to guess. Click the number you want under the box to pick it |
 | Look at the badge on the fill | `ON_DEVICE` on a Chrome with Gemini Nano. This is the `inferenceSource` Firebase AI Logic reports |
+| With Nano: DevTools → Network → **Offline**, then fill another sample | Still `ON_DEVICE`, and the counter still reads 0 bytes: the fill never needed the network ([`evidence/offline/2026-11-23-offline-fill.json`](evidence/offline/2026-11-23-offline-fill.json)) |
 | Press **Copy for a spreadsheet** | A header row and a values row go to the clipboard, tab-separated; the status line names any box still amber, copied as it stands |
-| Press **Teach this form** | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload, and after a fresh cloud call its `IN_CLOUD` source (otherwise it says it is showing a saved copy) |
 | Open [`/receipt/`](https://pastewise.edycu.dev/receipt/) | The recorded network log behind the "0 bytes" counter |
 | Open [`/bench/`](https://pastewise.edycu.dev/bench/) | The measured numbers below, with hints off and on |
+| Optional: press **Teach this form** | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload first, and **Send** makes a fresh cloud call whose `IN_CLOUD` source it prints (a saved copy is used, and labelled, only if that call fails) |
 
-**No Nano on your browser?** A plain notice appears. Nothing is sent until you press **Yes**; that one paste then goes through
+**No Nano on your browser?** A plain notice appears; the sheet shows the exact message that would leave, its byte count, and **Watch a recorded run** (a real
+on-device fill). Nothing is sent until you press **Send this one**; that one paste then goes through
 `PREFER_ON_DEVICE` to the cloud, and the screen shows the bytes sent. In one recorded S1 run the first attempt timed out and was retried, so it showed 682 bytes (2 × the 341-byte message), matching the 2 requests Chrome's wire log recorded carrying it ([`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json)).
 
 ## 2. What was measured
