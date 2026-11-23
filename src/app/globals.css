@@ -158,3 +158,8 @@ button.primary:focus-visible, button.ghost:focus-visible, .linkish:focus-visible
 .notfound { max-width: 640px; margin: 96px auto; padding: 0 24px; }
 .notfound h1 { font: 700 56px/1 var(--font-display); text-transform: uppercase; margin: 8px 0 18px; }
 .notfound a { color: var(--ink); }
+/* /bench: the small sets from earlier in the build fold away under one summary */
+.early-sets > summary { cursor: pointer; font: 600 13px/1.4 var(--font-display); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); padding: 12px 0; }
+.early-sets > summary:hover, .early-sets > summary:focus-visible { color: var(--ink); }
+.early-sets > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.early-sets-body { display: grid; gap: 20px; margin-top: 8px; }

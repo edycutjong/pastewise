@@ -50,6 +50,8 @@ const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.
 const secs = (r: Range) => `${(r.mean / 1000).toFixed(1)} s${r.max - r.min > 1000 ? ` (${(r.min / 1000).toFixed(1)}–${(r.max / 1000).toFixed(1)})` : ""}`;
 // Same set file, same prompt and gate, not a stalled run, and (where both runs recorded them) the same src/ai and src/gate trees.
 // (Two commits can differ by tests and scripts only; the aggregate records the commit.)
+// The held-out set (frozen release) and the 180-pair bench stay open; the small sets used earlier in the build fold away.
+const MAIN_SETS = ["holdout", "bench"];
 const sameTrees = (a: Agg, b: Agg) => !a.srcTrees || !b.srcTrees || (a.srcTrees.ai === b.srcTrees.ai && a.srcTrees.gate === b.srcTrees.gate);
 const sameRun = (a: Agg, b: Agg) =>
   a.set === b.set && a.setSha256 === b.setSha256 && a.promptVersion === b.promptVersion && a.gateVersion === b.gateVersion && sameTrees(a, b) && !a.stalledRun && !b.stalledRun;
@@ -77,6 +79,89 @@ export default function Bench() {
   // The held-out set leads: it is the only set measured on the frozen release; the rest were used while building.
   const sets = [...new Set(all.map((a) => a.set))].sort((a, b) => Number(b === "holdout") - Number(a === "holdout"));
   const reports = loadReports();
+  const renderSet = (set: string) => {
+    const rows = all.filter((a) => a.set === set);
+    const first = rows.find((r) => !r.stalledRun) ?? rows[0];
+    return (
+      <section key={set} className="sheet" aria-label={`Set ${set}`}>
+        <h2 className="cap">
+          Set {set} · {first.pastes} pastes · forms {first.forms.join(", ")}
+        </h2>
+        {ABOUT[set] && <p className="fine">{ABOUT[set]}</p>}
+        <table className="data">
+          <thead>
+            <tr>
+              <th>Teacher hints</th>
+              <th>Wrong value shown as found (% of all boxes)</th>
+              <th>Right value in the box (strict)</th>
+              <th>Filled (coverage, of boxes with an answer in the message)</th>
+              <th>Filled and right (same base)</th>
+              <th>Left amber</th>
+              <th>Warm p50 / p95</th>
+              <th>JSON valid per repeat</th>
+              <th>Run</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((a, i) => (
+              <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-${i}`}>
+                <td>
+                  {a.arm === "off"
+                    ? "off"
+                    : a.hintsSource === "cloud"
+                      ? "on (hints from the cloud teacher)"
+                      : `on (frozen cloud hints saved in ${String(a.hintsSource ?? "").replace(/^file:/, "")})`}
+                  {a.stalledRun && <div className="fine">first run, with model stalls{a.note ? " — see note" : ""}</div>}
+                </td>
+                <td>{pct(a.metrics.acceptedWrongPct)}</td>
+                <td>{pct(a.metrics.rawAccuracyStrict)}</td>
+                <td>{pct(a.metrics.coverage)}</td>
+                <td>{pct(a.metrics.usefulCoverage)}</td>
+                <td>{pct(a.metrics.amberPct)}</td>
+                <td>
+                  {secs(a.metrics.warmP50)} / {secs(a.metrics.warmP95)}
+                </td>
+                <td>{a.perRepeat.map((r) => r.jsonValid).join(" · ")}</td>
+                <td>
+                  {a.date} · {a.commit.slice(0, 7)}
+                  {a.srcDirty ? " (dirty)" : ""}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {rows.filter((a) => a.note).map((a, i) => (
+          <p key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-note-${i}`} className="fine">
+            Note: {a.note}
+          </p>
+        ))}
+        {rows
+          .filter((a) => a.arm === "hints")
+          .map((h, i) => {
+            const off = rows.find((o) => o.arm === "off" && sameRun(o, h));
+            if (!off) return null;
+            const verdict = (k: "rawAccuracyStrict" | "acceptedWrongPct", label: string) => {
+              const hi = h.metrics[k];
+              const lo = off.metrics[k];
+              const delta = +(hi.mean - lo.mean).toFixed(1);
+              const apart = hi.min > lo.max || hi.max < lo.min;
+              return `${label}: ${lo.mean.toFixed(1)}% → ${hi.mean.toFixed(1)}% (${delta >= 0 ? "+" : ""}${delta} points) — ${apart ? "outside the run-to-run spread" : "within the run-to-run spread, so no measurable difference"}`;
+            };
+            return (
+              <p key={`${h.commit}-${i}`} className="delta">
+                Hints off → on, same message set, prompt and gate. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
+                {(h.srcDirty || off.srcDirty) && " One of the two arms ran with uncommitted changes in src/ (marked “(dirty)” in the table)."}
+              </p>
+            );
+          })}
+        <p className="fine">
+          {first.repeats} repeats per row, mean with (min–max). Set sha256 <span className="mono">{first.setSha256.slice(0, 16)}…</span> · prompt{" "}
+          {first.promptVersion} · gate v{first.gateVersion} · {first.machine} · Chrome {/Chrome\/([\d.]+)/.exec(first.chrome)?.[1]}
+          {rows.some((r) => r.contendedBySiblingChrome) ? " · a second Chrome with the model was running during some rows" : ""}
+        </p>
+      </section>
+    );
+  };
   return (
     <>
       <header className="top">
@@ -84,95 +169,22 @@ export default function Bench() {
         <p>
           Measured on one laptop through the real Fill button, with the on-device model. Every figure comes from a committed file in{" "}
           <span className="mono">evidence/bench/aggregates/</span>; only the captions are written by hand. The held-out set comes first: it is the only
-          set measured on the frozen release (gate v4). The sets below it were used while building.
+          set measured on the frozen release (gate v4). The bench set below it was used while building; the smaller sets from earlier in the build are folded
+          at the end.
         </p>
       </header>
       <SiteNav current="bench" />
       <main className="page">
         {all.length === 0 && <p className="notice">No bench run is committed yet.</p>}
-        {sets.map((set) => {
-          const rows = all.filter((a) => a.set === set);
-          const first = rows.find((r) => !r.stalledRun) ?? rows[0];
-          return (
-            <section key={set} className="sheet" aria-label={`Set ${set}`}>
-              <h2 className="cap">
-                Set {set} · {first.pastes} pastes · forms {first.forms.join(", ")}
-              </h2>
-              {ABOUT[set] && <p className="fine">{ABOUT[set]}</p>}
-              <table className="data">
-                <thead>
-                  <tr>
-                    <th>Teacher hints</th>
-                    <th>Wrong value shown as found (% of all boxes)</th>
-                    <th>Right value in the box (strict)</th>
-                    <th>Filled (coverage, of boxes with an answer in the message)</th>
-                    <th>Filled and right (same base)</th>
-                    <th>Left amber</th>
-                    <th>Warm p50 / p95</th>
-                    <th>JSON valid per repeat</th>
-                    <th>Run</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {rows.map((a, i) => (
-                    <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-${i}`}>
-                      <td>
-                        {a.arm === "off"
-                          ? "off"
-                          : a.hintsSource === "cloud"
-                            ? "on (hints from the cloud teacher)"
-                            : `on (frozen cloud hints saved in ${String(a.hintsSource ?? "").replace(/^file:/, "")})`}
-                        {a.stalledRun && <div className="fine">first run, with model stalls{a.note ? " — see note" : ""}</div>}
-                      </td>
-                      <td>{pct(a.metrics.acceptedWrongPct)}</td>
-                      <td>{pct(a.metrics.rawAccuracyStrict)}</td>
-                      <td>{pct(a.metrics.coverage)}</td>
-                      <td>{pct(a.metrics.usefulCoverage)}</td>
-                      <td>{pct(a.metrics.amberPct)}</td>
-                      <td>
-                        {secs(a.metrics.warmP50)} / {secs(a.metrics.warmP95)}
-                      </td>
-                      <td>{a.perRepeat.map((r) => r.jsonValid).join(" · ")}</td>
-                      <td>
-                        {a.date} · {a.commit.slice(0, 7)}
-                        {a.srcDirty ? " (dirty)" : ""}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {rows.filter((a) => a.note).map((a, i) => (
-                <p key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-note-${i}`} className="fine">
-                  Note: {a.note}
-                </p>
-              ))}
-              {rows
-                .filter((a) => a.arm === "hints")
-                .map((h, i) => {
-                  const off = rows.find((o) => o.arm === "off" && sameRun(o, h));
-                  if (!off) return null;
-                  const verdict = (k: "rawAccuracyStrict" | "acceptedWrongPct", label: string) => {
-                    const hi = h.metrics[k];
-                    const lo = off.metrics[k];
-                    const delta = +(hi.mean - lo.mean).toFixed(1);
-                    const apart = hi.min > lo.max || hi.max < lo.min;
-                    return `${label}: ${lo.mean.toFixed(1)}% → ${hi.mean.toFixed(1)}% (${delta >= 0 ? "+" : ""}${delta} points) — ${apart ? "outside the run-to-run spread" : "within the run-to-run spread, so no measurable difference"}`;
-                  };
-                  return (
-                    <p key={`${h.commit}-${i}`} className="delta">
-                      Hints off → on, same message set, prompt and gate. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
-                      {(h.srcDirty || off.srcDirty) && " One of the two arms ran with uncommitted changes in src/ (marked “(dirty)” in the table)."}
-                    </p>
-                  );
-                })}
-              <p className="fine">
-                {first.repeats} repeats per row, mean with (min–max). Set sha256 <span className="mono">{first.setSha256.slice(0, 16)}…</span> · prompt{" "}
-                {first.promptVersion} · gate v{first.gateVersion} · {first.machine} · Chrome {/Chrome\/([\d.]+)/.exec(first.chrome)?.[1]}
-                {rows.some((r) => r.contendedBySiblingChrome) ? " · a second Chrome with the model was running during some rows" : ""}
-              </p>
-            </section>
-          );
-        })}
+        {sets.filter((s) => MAIN_SETS.includes(s)).map(renderSet)}
+        {sets.some((s) => !MAIN_SETS.includes(s)) && (
+          <details className="early-sets">
+            <summary>
+              Sets used while building ({sets.filter((s) => !MAIN_SETS.includes(s)).join(", ")}): measured on an earlier gate (v2), kept for the record
+            </summary>
+            <div className="early-sets-body">{sets.filter((s) => !MAIN_SETS.includes(s)).map(renderSet)}</div>
+          </details>
+        )}
         {reports.map((r) => (
           <section key={r.file} className="sheet" aria-label={`Per form ${r.file}`}>
             <h2 className="cap">
