@@ -106,8 +106,8 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 |---|---|---|
 | Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-4b8f0b5-live.json`](evidence/network/2026-11-22-4b8f0b5-live.json) |
 | No-Nano consent path | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json) |
-| Unit tests (Vitest) | **126 passing** in 13 files, 90% of lines and 86% of statements covered | `npm run test:coverage` |
-| Browser tests (Playwright) | **17** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
+| Unit tests (Vitest) | **128 passing** in 13 files, 90% of lines and 86% of statements covered | `npm run test:coverage` |
+| Browser tests (Playwright) | **18** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
 | Interaction check on the deployed page | 13/13 hover and focus states, 0 dead links | [`evidence/interaction-qa.json`](evidence/interaction-qa.json) |
 
 ### Attacks defeated
@@ -118,6 +118,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 | A value with a dropped digit is not in your text | a near-match is how a wrong phone number gets in | [`tests/unit/gate.test.ts:78`](tests/unit/gate.test.ts) |
 | A model-invented year the paste contradicts is never accepted | dates are the field a model fabricates most | [`tests/unit/gate.test.ts:123`](tests/unit/gate.test.ts) |
 | Paste copied into a request body is caught raw, URL-encoded and JSON-escaped | the 0-bytes counter must not be blind to simple encodings | [`tests/unit/ledger.test.ts:25`](tests/unit/ledger.test.ts) |
+| A pasted `=HYPERLINK(...)` that lands in a notes box is copied to the spreadsheet as text, not run as a formula | the gate keeps it because it IS in your text, so the copy step defuses it | [`tests/unit/runState.test.ts:103`](tests/unit/runState.test.ts) |
 
 ### Honest limits (8)
 
@@ -145,10 +146,10 @@ npm install && npm run dev   # http://localhost:3102
 ## 🧪 Testing & CI
 
 ```bash
-npm test          # 126 unit tests (Vitest)
+npm test          # 128 unit tests (Vitest)
 npm run typecheck # tsc --noEmit
 npm run lint
-npm run e2e       # 17 browser tests (Playwright, installed Chrome)
+npm run e2e       # 18 browser tests (Playwright, installed Chrome)
 ```
 
 The bench and the network capture drive a headed Chrome that has Nano; their scripts are in [`scripts/`](scripts) and their outputs in [`evidence/`](evidence).

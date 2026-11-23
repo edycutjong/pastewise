@@ -52,7 +52,7 @@ Needs Chrome desktop with Gemini Nano downloaded, a Firebase web config, and an 
 ```bash
 git clone https://github.com/edycutjong/pastewise.git && cd pastewise
 cp .env.example .env.local        # Firebase web config
-npm install && npm test           # 126 unit tests
+npm install && npm test           # 128 unit tests
 npm run build                     # static export to out/
 node scripts/bench.mjs --set sets/holdout.json --repeats 3 --hints off          # refuses a second held-out run per prompt/gate/arm
 node scripts/bench.mjs --set sets/bench.json --repeats 3 --hints cloud          # calls the real cloud teacher once per form
