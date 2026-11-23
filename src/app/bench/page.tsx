@@ -54,7 +54,10 @@ const sameTrees = (a: Agg, b: Agg) => !a.srcTrees || !b.srcTrees || (a.srcTrees.
 const sameRun = (a: Agg, b: Agg) =>
   a.set === b.set && a.setSha256 === b.setSha256 && a.promptVersion === b.promptVersion && a.gateVersion === b.gateVersion && sameTrees(a, b) && !a.stalledRun && !b.stalledRun;
 
-type FormStats = { strictAccuracy: number; wrongShown: number; criticalWrongShown: number; amber: number; amberButRight: number; warmP50: number; warmP95: number; pastes: number; jsonValid: string };
+// bench_report.mjs writes null when a form has no rows of that kind (no critical box, no warm fill): show a dash, never throw at build time.
+const pct1 = (v: number | null) => (v == null ? "—" : `${v.toFixed(1)}%`);
+const sec1 = (ms: number | null) => (ms == null ? "—" : `${(ms / 1000).toFixed(1)} s`);
+type FormStats = { strictAccuracy: number | null; wrongShown: number | null; criticalWrongShown: number | null; amber: number | null; amberButRight: number | null; warmP50: number | null; warmP95: number | null; pastes: number; jsonValid: string };
 type Report = { set: string; gateView: string; arms: Record<string, { repeats: number; byForm: Record<string, FormStats> }>; file: string };
 
 function loadReports(): Report[] {
@@ -111,8 +114,8 @@ export default function Bench() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((a) => (
-                    <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}`}>
+                  {rows.map((a, i) => (
+                    <tr key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-${i}`}>
                       <td>
                         {a.arm === "off"
                           ? "off"
@@ -138,14 +141,14 @@ export default function Bench() {
                   ))}
                 </tbody>
               </table>
-              {rows.filter((a) => a.note).map((a) => (
-                <p key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-note`} className="fine">
+              {rows.filter((a) => a.note).map((a, i) => (
+                <p key={`${a.arm}-${a.commit}${a.stalledRun ? "-stalled" : ""}-note-${i}`} className="fine">
                   Note: {a.note}
                 </p>
               ))}
               {rows
                 .filter((a) => a.arm === "hints")
-                .map((h) => {
+                .map((h, i) => {
                   const off = rows.find((o) => o.arm === "off" && sameRun(o, h));
                   if (!off) return null;
                   const verdict = (k: "rawAccuracyStrict" | "acceptedWrongPct", label: string) => {
@@ -156,7 +159,7 @@ export default function Bench() {
                     return `${label}: ${lo.mean.toFixed(1)}% → ${hi.mean.toFixed(1)}% (${delta >= 0 ? "+" : ""}${delta} points) — ${apart ? "outside the run-to-run spread" : "within the run-to-run spread, so no measurable difference"}`;
                   };
                   return (
-                    <p key={h.commit} className="delta">
+                    <p key={`${h.commit}-${i}`} className="delta">
                       Hints off → on, same message set, prompt and gate. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
                       {(h.srcDirty || off.srcDirty) && " One of the two arms ran with uncommitted changes in src/ (marked “(dirty)” in the table)."}
                     </p>
@@ -194,12 +197,12 @@ export default function Bench() {
                     <tr key={`${arm}-${form}`}>
                       <td>{form}</td>
                       <td>{arm === "off" ? "off" : "on"}</td>
-                      <td>{v.strictAccuracy.toFixed(1)}%</td>
-                      <td>{v.wrongShown.toFixed(1)}%</td>
-                      <td>{v.criticalWrongShown.toFixed(1)}%</td>
-                      <td>{v.amber.toFixed(1)}%</td>
+                      <td>{pct1(v.strictAccuracy)}</td>
+                      <td>{pct1(v.wrongShown)}</td>
+                      <td>{pct1(v.criticalWrongShown)}</td>
+                      <td>{pct1(v.amber)}</td>
                       <td>
-                        {(v.warmP50 / 1000).toFixed(1)} s / {(v.warmP95 / 1000).toFixed(1)} s
+                        {sec1(v.warmP50)} / {sec1(v.warmP95)}
                       </td>
                       <td>{v.jsonValid}</td>
                     </tr>
