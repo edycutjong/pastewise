@@ -1,0 +1,51 @@
+{
+ "label": "synthetic S1 only",
+ "base": "https://pastewise.edycu.dev/",
+ "date": "2026-11-23T18:28:33.805Z",
+ "commit": "b2a8835",
+ "availability": "downloadable",
+ "firstDialog": "Getting the on-device model ready",
+ "sheetOpened": true,
+ "sheetHeading": "The on-device model isn't ready yet",
+ "aiRequestsBeforeYes": 0,
+ "afterYesMs": 60018,
+ "batches": [
+  {
+   "status": "error",
+   "attempts": 2,
+   "ms": 247,
+   "error": "AI: Error fetching from https://firebasevertexai.googleapis.com/v1beta/projects/pastewise-hybrid-ai/models/gemini-3.5-flash-lite:generateContent: AppCheck: Requests throttled due to previous 403 error. Attempts allowed again after 01d:00m:00s (appCheck/throttled). (AI/error)",
+   "retryReason": "error",
+   "raw": ""
+  }
+ ],
+ "fill": {
+  "done": true,
+  "error": null,
+  "sources": [
+   null
+  ],
+  "states": {
+   "cnee_nm": "amber",
+   "cnee_tel": "amber",
+   "addr_1": "amber",
+   "dist_city": "amber",
+   "st_prov": "amber",
+   "zip": "amber",
+   "desc": "amber",
+   "pcs": "amber",
+   "svc": "amber",
+   "rmks": "amber"
+  }
+ },
+ "badge": [
+  "NO ANSWER"
+ ],
+ "consentBytesShown": null,
+ "messageBytes": 341,
+ "aiRequests": [],
+ "aiPostsSeenByChrome": 0,
+ "aiPostsCarryingMessage": 0,
+ "consentBytesExpected": 0,
+ "consentShownMatchesWire": false
+}

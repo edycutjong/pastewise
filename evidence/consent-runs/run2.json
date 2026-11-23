@@ -1,0 +1,56 @@
+{
+ "label": "synthetic S1 only",
+ "base": "https://pastewise.edycu.dev/",
+ "date": "2026-11-23T18:27:51.625Z",
+ "commit": "b2a8835",
+ "availability": "downloadable",
+ "firstDialog": "Getting the on-device model ready",
+ "sheetOpened": true,
+ "sheetHeading": "The on-device model isn't ready yet",
+ "aiRequestsBeforeYes": 0,
+ "afterYesMs": 3216,
+ "batches": [
+  {
+   "status": "ok",
+   "attempts": 1,
+   "ms": 2848,
+   "error": "",
+   "raw": "{\"cnee_nm\": \"Mrs. Ratna Kusuma\", \"cnee_tel\": \"0857 5550 8812\", \"addr_1\": \"Jl. Ce"
+  }
+ ],
+ "fill": {
+  "done": true,
+  "error": null,
+  "sources": [
+   "in_cloud"
+  ],
+  "states": {
+   "cnee_nm": "amber",
+   "cnee_tel": "amber",
+   "addr_1": "found",
+   "dist_city": "found",
+   "st_prov": "empty",
+   "zip": "found",
+   "desc": "found",
+   "pcs": "found",
+   "svc": "found",
+   "rmks": "found"
+  }
+ },
+ "badge": [
+  "in_cloud"
+ ],
+ "consentBytesShown": "341 bytes",
+ "messageBytes": 341,
+ "aiRequests": [
+  {
+   "host": "firebasevertexai.googleapis.com",
+   "size": 2554,
+   "tokensFound": 31
+  }
+ ],
+ "aiPostsSeenByChrome": 1,
+ "aiPostsCarryingMessage": 1,
+ "consentBytesExpected": 341,
+ "consentShownMatchesWire": true
+}

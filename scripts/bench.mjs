@@ -68,8 +68,11 @@ const uniq = (p) => { if (!fs.existsSync(p)) return p; const e = path.extname(p)
 
 let contended = false;
 try {
-  execSync("pgrep -f footing-nano-chrome");
-  contended = true;
+  // Optional: name another Chrome profile that shares this GPU (PW_CONTENDING_PROFILE=<dir name>).
+  if (process.env.PW_CONTENDING_PROFILE) {
+    execSync(`pgrep -f ${JSON.stringify(process.env.PW_CONTENDING_PROFILE)}`);
+    contended = true;
+  }
 } catch {
   /* nothing else using the GPU */
 }
