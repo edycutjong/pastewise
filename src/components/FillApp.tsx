@@ -610,6 +610,9 @@ export default function FillApp() {
                 className="linkish"
                 data-testid={`sample-${s.id}`}
                 onClick={() => {
+                  // a message the person pasted is not thrown away by one click on a sample
+                  const own = text.trim() !== "" && !SAMPLES.some((x) => x.paste === text);
+                  if (own && !window.confirm("Replace the message in the box with this sample?")) return;
                   setActive(s.form);
                   setText(s.paste);
                   setNotice(null);

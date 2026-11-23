@@ -41,6 +41,20 @@ test("samples: one click loads a synthetic message and switches to its form", as
   await expect(page.getByTestId("ledger-bytes")).toHaveText("0 bytes found");
 });
 
+test("samples: a message the person pasted is not replaced without a Yes", async ({ page }) => {
+  await page.goto("/");
+  await page.locator("#paste").fill("Kirim 2 kotak ke Bu Rina, 0812 5550 1188, Jl. Melati 3, Bogor 16111");
+  page.once("dialog", (d) => d.dismiss());
+  await page.getByTestId("sample-S2").click();
+  await expect(page.locator("#paste")).toHaveValue(/Bu Rina/);
+  page.once("dialog", (d) => d.accept());
+  await page.getByTestId("sample-S2").click();
+  await expect(page.locator("#paste")).toHaveValue(/double room for 3 nights/);
+  // switching between samples asks nothing
+  await page.getByTestId("sample-S3").click();
+  await expect(page.locator("#paste")).toHaveValue(/ceramic mug set/);
+});
+
 // Unplug must fail, in the browser: Nano is "available" but the model call dies. The page must say so, fill nothing and send nothing.
 test("unplug: the on-device model dies mid-fill -> a visible failure, every box stays empty, nothing is sent", async ({ page }) => {
   const ai: string[] = [];
