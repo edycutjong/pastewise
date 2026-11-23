@@ -1,0 +1,96 @@
+{
+ "label": "offline on-device fill, synthetic sample S1 (form C), hosted page https://pastewise.edycu.dev/, Chrome 157 with Gemini Nano, builder's M1 Max laptop",
+ "date": "2026-11-23T14:54:25.131Z",
+ "capture": "Chrome DevTools Protocol: network set offline after the page loaded (the same switch as DevTools > Network > Offline), then one Fill",
+ "versions": {
+  "prompt": "p0c-v3",
+  "gate": "4"
+ },
+ "navigatorOnLineDuringFill": false,
+ "newLedgerRowsDuringFill": [],
+ "run": {
+  "tag": "S1-offline",
+  "form": "C",
+  "wallMs": 2695,
+  "err": null,
+  "sources": [
+   "on_device"
+  ],
+  "batchMs": [
+   2578
+  ],
+  "boxes": [
+   {
+    "cap": "CNEE",
+    "value": "Ratna Kusuma",
+    "cls": "box amber",
+    "why": "names are always yours to confirm — the model suggested “Mrs. Ratna Kusuma”"
+   },
+   {
+    "cap": "CNEE TEL",
+    "value": "085755508812",
+    "cls": "box amber",
+    "why": "two numbers in your text — pick one"
+   },
+   {
+    "cap": "ADDR 1",
+    "value": "Jl. Cempaka Putih Raya No. 41",
+    "cls": "box wide found",
+    "why": "found in your text"
+   },
+   {
+    "cap": "DIST/CITY",
+    "value": "Jakarta Pusat",
+    "cls": "box found",
+    "why": "found in your text"
+   },
+   {
+    "cap": "ST/PROV",
+    "value": "",
+    "cls": "box"
+   },
+   {
+    "cap": "ZIP",
+    "value": "10510",
+    "cls": "box found",
+    "why": "found in your text"
+   },
+   {
+    "cap": "DESC",
+    "value": "linen tablecloths",
+    "cls": "box found",
+    "why": "found in your text"
+   },
+   {
+    "cap": "PCS",
+    "value": "2",
+    "cls": "box found",
+    "why": "found in your text"
+   },
+   {
+    "cap": "SVC",
+    "value": "EXP",
+    "cls": "box found",
+    "why": "found in your text"
+   },
+   {
+    "cap": "RMKS",
+    "value": "leave at the guard post if nobody home",
+    "cls": "box wide found",
+    "why": "found in your text"
+   }
+  ],
+  "badges": [
+   "on_device"
+  ],
+  "sum": "7 of 10 found in your text · 2 to check · 1 empty · 2.6 s",
+  "ledger": "0 bytes found",
+  "status": null
+ },
+ "offline": {
+  "done": true,
+  "sources": [
+   "on_device"
+  ]
+ }
+}
