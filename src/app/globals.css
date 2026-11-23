@@ -114,6 +114,8 @@ summary:hover { color: var(--after); text-decoration: underline; }
 .site-nav a[aria-current="page"] { color: var(--ink); border-color: var(--ink); }
 .site-nav a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .page { display: grid; gap: 20px; padding: 16px 40px 48px; max-width: 1200px; }
+/* phones: a wide table scrolls inside its own sheet instead of pushing the whole page sideways */
+@media (max-width: 699px) { .page { grid-template-columns: minmax(0, 1fr); padding: 12px 16px 40px; } .page .sheet { padding: 18px 16px; } table.data, .page .sheet table { display: block; overflow-x: auto; } .page .sheet p, .page .sheet li { overflow-wrap: anywhere; } }
 .page .sheet h2.cap { margin: 0 0 10px; }
 table.data { border-collapse: collapse; width: 100%; font: 13px var(--font-data); }
 table.data th, table.data td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
