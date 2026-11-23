@@ -13,6 +13,13 @@ const set = arg("set", "bench");
 const commit = arg("commit");
 const dir = path.join(ROOT, "evidence/bench");
 const files = fs.readdirSync(dir).filter((f) => new RegExp(`-${set}-(off|hints)-r\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
+// bench.mjs never overwrites a run file: a rerun is saved as "...-r1-run2.json". This report reads first runs only, so it refuses
+// to run while a rerun of the same set exists instead of quietly reporting the earlier numbers (pooling both would inflate repeats).
+const reruns = fs.readdirSync(dir).filter((f) => new RegExp(`-${set}-(off|hints)-r\\d+-run\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
+if (reruns.length) {
+  console.error(`refusing: ${reruns.length} rerun file(s) for set ${set} (${reruns.slice(0, 3).join(", ")}…); move the superseded run files out of evidence/bench/ first, keeping them in git history, then re-run`);
+  process.exit(1);
+}
 const pct = (n, d) => (d ? +((n / d) * 100).toFixed(2) : null);
 const q = (a, p) => (a.length ? [...a].sort((x, y) => x - y)[Math.min(a.length - 1, Math.floor(p * a.length))] : null);
 const CRIT = new Set(["name", "phone", "address", "postal"]);

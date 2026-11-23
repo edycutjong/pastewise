@@ -16,6 +16,7 @@ type Agg = {
   date: string;
   commit: string;
   srcDirty: boolean;
+  srcTrees?: { ai: string; gate: string }; // git tree ids of src/ai and src/gate (runs after 2026-11-22 record them)
   promptVersion: string;
   gateVersion: string;
   chrome: string;
@@ -47,9 +48,11 @@ function load(): Agg[] {
 
 const pct = (r: Range) => `${r.mean.toFixed(1)}% (${r.min.toFixed(1)}–${r.max.toFixed(1)})`;
 const secs = (r: Range) => `${(r.mean / 1000).toFixed(1)} s${r.max - r.min > 1000 ? ` (${(r.min / 1000).toFixed(1)}–${(r.max / 1000).toFixed(1)})` : ""}`;
-// Same set file, same prompt and gate, not a stalled run. (Two commits can differ by tests and scripts only; the aggregate records the commit.)
+// Same set file, same prompt and gate, not a stalled run, and (where both runs recorded them) the same src/ai and src/gate trees.
+// (Two commits can differ by tests and scripts only; the aggregate records the commit.)
+const sameTrees = (a: Agg, b: Agg) => !a.srcTrees || !b.srcTrees || (a.srcTrees.ai === b.srcTrees.ai && a.srcTrees.gate === b.srcTrees.gate);
 const sameRun = (a: Agg, b: Agg) =>
-  a.set === b.set && a.setSha256 === b.setSha256 && a.promptVersion === b.promptVersion && a.gateVersion === b.gateVersion && !a.stalledRun && !b.stalledRun;
+  a.set === b.set && a.setSha256 === b.setSha256 && a.promptVersion === b.promptVersion && a.gateVersion === b.gateVersion && sameTrees(a, b) && !a.stalledRun && !b.stalledRun;
 
 type FormStats = { strictAccuracy: number; wrongShown: number; criticalWrongShown: number; amber: number; amberButRight: number; warmP50: number; warmP95: number; pastes: number; jsonValid: string };
 type Report = { set: string; gateView: string; arms: Record<string, { repeats: number; byForm: Record<string, FormStats> }>; file: string };
@@ -155,6 +158,7 @@ export default function Bench() {
                   return (
                     <p key={h.commit} className="delta">
                       Hints off → on, same message set, prompt and gate. {verdict("rawAccuracyStrict", "Right value in the box")}. {verdict("acceptedWrongPct", "Wrong value shown as found")}.
+                      {(h.srcDirty || off.srcDirty) && " One of the two arms ran with uncommitted changes in src/ (marked “(dirty)” in the table)."}
                     </p>
                   );
                 })}
