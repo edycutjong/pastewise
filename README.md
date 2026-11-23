@@ -94,7 +94,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 | Wrong value shown as found, all boxes | 5.9% (5.1–6.4) | 5.3% (5.1–5.4) |
 | …in name, phone, address and postal-code boxes only | 2.0% | 1.3% |
 | Left amber | 17.7% (17.4–17.9) | 17.3% (16.9–17.4) |
-| Right value shown as found, name/phone/address/postal boxes | 67.5% | 71.6% |
+| Right value shown as found, name/phone/address/postal boxes | 70.4% | 71.6% |
 | Warm p50 / p95 per fill (mean of the 3 repeats) | 2.34 s / 2.94 s | 2.40 s / 2.93 s |
 | JSON valid, on-device | 45/45 ×3 | 45/45 ×3 |
 
@@ -110,7 +110,7 @@ All numbers below come from committed run files in [`evidence/bench/`](evidence/
 |---|---|---|
 | Customer text in network requests (5 synthetic demo messages, hosted page) | 4 fills, all `on_device`, with 0 requests during them; the 5th, a 2,001-character paste, was refused with nothing sent; 0 paste-word hits; the planted canary was caught, so the detector works | [`evidence/network/2026-11-22-4b8f0b5-live.json`](evidence/network/2026-11-22-4b8f0b5-live.json) |
 | Offline fill (network switched off after the page loaded, sample S1) | finished `on_device` with `navigator.onLine` false and 0 new requests in the ledger | [`evidence/offline/2026-11-23-offline-fill.json`](evidence/offline/2026-11-23-offline-fill.json) |
-| No-Nano consent path (hosted page) | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message. Re-run 5 times on 2026-11-23 (fresh profile each): 0 AI requests before Yes in 5/5; 4/5 filled `in_cloud` with 341 bytes shown = 341 on the wire; 1/5 hit an App Check throttle (error shown, nothing sent) | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json), [`evidence/consent-runs/`](evidence/consent-runs/) |
+| No-Nano consent path (hosted page) | 0 AI requests before Yes; the screen showed 682 bytes (2 attempts × the 341-byte message) and Chrome's wire log recorded 2 requests carrying the message. Re-run 5 times on 2026-11-23 (fresh profile each): 0 AI requests before Yes in 5/5; 4/5 filled `in_cloud` with 341 bytes shown = 341 on the wire; 1/5 hit an App Check throttle (recorded in the run file after an earlier 403; all boxes left amber, nothing sent) | [`evidence/consent-path-2026-11-22.json`](evidence/consent-path-2026-11-22.json), [`evidence/consent-runs/`](evidence/consent-runs/) |
 | Unit tests (Vitest) | **128 passing** in 13 files, 90% of lines and 86% of statements covered | `npm run test:coverage` |
 | Browser tests (Playwright) | **18** tests in 2 files, plus 5 against the live URL | `npm run e2e`, `npm run e2e:live` |
 | Interaction check on the deployed page | 13/13 hover and focus states, 0 dead links | [`evidence/interaction-qa.json`](evidence/interaction-qa.json) |
