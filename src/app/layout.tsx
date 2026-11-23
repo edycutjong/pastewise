@@ -7,7 +7,7 @@ const body = Archivo({ subsets: ["latin"], weight: ["400", "500", "600"], variab
 const data = Fragment_Mono({ subsets: ["latin"], weight: "400", variable: "--font-fragment", display: "swap" });
 
 const description =
-  "Paste a messy order message and the form fills on your laptop with Gemini Nano. Code keeps only what is in your text.";
+  "Paste a messy order; Gemini Nano fills the form on your laptop via Firebase AI Logic. Code keeps only what is in your text.";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://pastewise.edycu.dev"),
