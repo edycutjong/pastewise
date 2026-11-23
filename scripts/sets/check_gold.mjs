@@ -245,7 +245,7 @@ if (set.set === "bench") {
     ["orders", covO, "injected", 4], ["bookings", covB, "injected", 4],
     ["orders", covO, "forwarded", 4], ["bookings", covB, "forwarded", 4],
   ];
-  for (const [grp, c, name, min] of T) { const k = K(name); if (c[k] < min) fails.push(`TARGET ${grp} "${k}" = ${c[k]} < ${min}`); }
+  for (const [grp, c, name, min] of T) { const k = K(name); if (!k) { fails.push(`TARGET ${grp} "${name}": no coverage row starts with this label`); continue; } if (!(c[k] >= min)) fails.push(`TARGET ${grp} "${k}" = ${c[k]} < ${min}`); }
   if (groups.orders.length !== 60 || groups.bookings.length !== 60) fails.push(`expected 60+60 pastes, got ${groups.orders.length}+${groups.bookings.length}`);
   if (set.items.length !== 180) fails.push(`expected 180 items, got ${set.items.length}`);
   if (set.pairs !== 60) fails.push(`pairs should be 60, is ${set.pairs}`);

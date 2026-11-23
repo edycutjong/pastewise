@@ -58,7 +58,7 @@ const overlap = items.length ? items.filter((x) => holdoutPastes.has(x.paste)).l
 const isHoldout = SET.set === "holdout" || (sums["holdout.json"] && sums["holdout.json"] === setHash) || overlap >= 0.5;
 if (isHoldout) {
   if (dirty && !rerunReason) throw new Error("holdout refused: src/ has uncommitted changes (commit first, or pass --rerun-reason)");
-  const seen = fs.readdirSync(AGG).map((f) => JSON.parse(fs.readFileSync(path.join(AGG, f), "utf8")))
+  const seen = fs.readdirSync(AGG).filter((f) => f.endsWith(".json")).map((f) => JSON.parse(fs.readFileSync(path.join(AGG, f), "utf8")))
     .filter((d) => (d.setSha256 === setHash || d.set === "holdout") && d.arm === armName0 && d.promptVersion === promptV && d.gateVersion === gateV && (!d.srcTrees || (d.srcTrees.ai === srcTrees.ai && d.srcTrees.gate === srcTrees.gate)));
   if (seen.length >= 1 && !rerunReason) throw new Error(`holdout already scored for prompt ${promptV} / gate ${gateV} on this hints arm; pass --rerun-reason "<why>"`);
   if (seen.length >= 1) console.log(`HOLDOUT RERUN (reason: ${rerunReason})`);
