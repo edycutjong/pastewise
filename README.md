@@ -26,7 +26,7 @@
 > **Judges: 30-second path.** Open the [live page](https://pastewise.edycu.dev), click one of the samples under **No message handy? Try one** below the paste box (synthetic messages, also in [`fixtures/demo/`](fixtures/demo)), press **Fill this message**. On a Chrome desktop with
 > Gemini Nano you will see `ON_DEVICE` on every fill; pick a number under an amber box, then **Copy for a spreadsheet**. With Nano a fill also works with the
 > network off (DevTools → Network → Offline): still `ON_DEVICE`, still 0 bytes. Without Nano you get a plain notice: the sheet shows the exact message
-> that would leave and offers **Watch a recorded run** (a real on-device fill); nothing is sent unless you press Send. Or open [/about](https://pastewise.edycu.dev/about/),
+> that would leave and offers **Watch a recorded run** (a real on-device fill); nothing is sent unless you press **Send this one**. Or open [/about](https://pastewise.edycu.dev/about/),
 > change `10510` to `10511` in the message and watch the ZIP box turn amber: the shipped gate, re-run in your browser, no model call.
 > The [receipt page](https://pastewise.edycu.dev/receipt/) shows the recorded network log behind the "0 bytes" counter.
 
@@ -37,7 +37,7 @@
 1. Copy an order message from a chat. Paste it on the white **top sheet**.
 2. Gemini Nano, through Firebase AI Logic, proposes a value for each box on the pink **copy**.
 3. Plain code decides. A value is kept (carbon blue, with its source words underlined in your text) **only if it appears in your text and fits the box's format**. Anything else stays **amber**, with the reason in words ("two numbers in your text — pick one").
-4. A counter reads how many bytes of your paste's words and numbers (4+ characters) were found in any network request. On the recorded run: **0**.
+4. A counter reads how many bytes of your paste's words and numbers (4+ characters, minus the form's own labels and common words) were found in any network request. On the recorded run: **0**.
 5. Check the amber boxes, then **Copy for a spreadsheet**: a header row and a values row go to the clipboard, tab-separated, and the status line names any box that is still amber. A portal form still takes one box at a time.
 
 Pastewise never presses Submit. You always see the form before it goes anywhere.

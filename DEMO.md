@@ -16,7 +16,7 @@ Open <https://pastewise.edycu.dev> in Chrome on a desktop.
 | Press **Copy for a spreadsheet** | A header row and a values row go to the clipboard, tab-separated; the status line names any box still amber, copied as it stands |
 | Open [`/receipt/`](https://pastewise.edycu.dev/receipt/) | The recorded network log behind the "0 bytes" counter |
 | Open [`/bench/`](https://pastewise.edycu.dev/bench/) | The measured numbers below, with hints off and on |
-| Optional: press **Teach this form** | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload first, and **Send** makes a fresh cloud call whose `IN_CLOUD` source it prints (a saved copy is used, and labelled, only if that call fails) |
+| Optional: press **Teach this form** | The cloud "form teacher" gets only the empty form; the drawer shows the exact payload first. A form with a builder-seeded saved copy already uses it, labelled "saved copy"; **Ask again with this empty form** (**Send this empty form** when there is no copy) makes a fresh cloud call whose `IN_CLOUD` source it prints. If that call fails, the saved copy is shown with the reason |
 
 **No Nano on your browser?** A plain notice appears; the sheet shows the exact message that would leave, its byte count, and **Watch a recorded run** (a real
 on-device fill). Nothing is sent until you press **Send this one**; that one paste then goes through
