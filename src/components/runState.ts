@@ -23,12 +23,13 @@ export function mergeBatch(run: FormRun | undefined, runId: string, fields: Fiel
 }
 
 /**
- * A cell that a spreadsheet would read as a formula (it starts with =, +, - or @) is copied with a leading apostrophe, the usual
- * CSV/formula-injection defence: spreadsheets read the cell as text instead of running it. The gate accepts a value because it IS in the paste, so a
- * message can carry `=HYPERLINK(...)` or `=IMPORTXML(...)` into a notes box word for word; the copy must not let the sheet run it.
- * It also keeps "+62 811 5550 4471" a phone number instead of a formula parse error.
+ * Cells a spreadsheet would not keep as typed are copied with a leading apostrophe, which spreadsheets read as "this is text":
+ * - a value that starts with =, +, - or @ would run as a formula (the usual CSV/formula-injection defence). The gate accepts a
+ *   value because it IS in the paste, so a message can carry `=HYPERLINK(...)` or `=IMPORTXML(...)` into a notes box word for word;
+ * - a digit string with a leading zero would become a number and lose the zero. Phone boxes hold normalised digits
+ *   ("0857 5550 8812" -> "085755508812"), so without this every copied phone number would arrive without its 0.
  */
-const FORMULA_START = /^[=+\-@]/;
+const KEEP_AS_TEXT = /^(?:[=+\-@]|0\d)/;
 
 /**
  * The boxes as they stand, for pasting into a spreadsheet: a header row of captions and a row of values, tab-separated.
@@ -38,7 +39,7 @@ const FORMULA_START = /^[=+\-@]/;
 export function rowForCopy(run: FormRun | undefined, columns: { name: string; caption: string }[]) {
   const cell = (v: string) => {
     const t = v.replace(/[\t\r\n]+/g, " ").trim();
-    return FORMULA_START.test(t) ? `'${t}` : t;
+    return KEEP_AS_TEXT.test(t) ? `'${t}` : t;
   };
   const values = columns.map((c) => cell(run?.boxes[c.name]?.value ?? ""));
   const amber = columns

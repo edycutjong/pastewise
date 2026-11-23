@@ -117,6 +117,19 @@ describe("rowForCopy (copy for a spreadsheet)", () => {
     expect(rowForCopy(minus, cols).tsv.split("\n")[1].split("\t")[2]).toBe("'-1 box, leave it");
   });
 
+  it("a phone number with a leading zero is copied as text so the spreadsheet keeps the 0; other numbers are left alone", () => {
+    const nums = {
+      ...run,
+      boxes: {
+        name: { value: "Ratna Kusuma", gate: { state: "amber" } },
+        phone: { value: "085755508812", gate: { state: "found" } },
+        notes: { value: "2 linen tablecloths", gate: { state: "found" } },
+        city: { value: "10510", gate: { state: "found" } },
+      },
+    } as unknown as FormRun;
+    expect(rowForCopy(nums, cols).tsv.split("\n")[1].split("\t")).toEqual(["Ratna Kusuma", "'085755508812", "2 linen tablecloths", "10510"]);
+  });
+
   it("no run: empty values, nothing to check", () => {
     const r = rowForCopy(undefined, cols);
     expect(r.tsv.split("\n")[1]).toBe("\t\t\t");
