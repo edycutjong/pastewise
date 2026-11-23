@@ -31,7 +31,8 @@ export default function LedgerStrip({ bytes, records, open = false, link = true,
       )}
       <details open={open || undefined}>
         <summary>
-          {records.length} outbound request{records.length === 1 ? "" : "s"} this session, each checked for words and numbers from your paste
+          {records.length} outbound request{records.length === 1 ? "" : "s"} this session (page files and Firebase setup count too), each checked for words and
+          numbers from your paste{bytes === 0 && consentBytes === 0 && records.length > 0 ? `: none carried any` : ""}
         </summary>
         <table>
           <thead>
