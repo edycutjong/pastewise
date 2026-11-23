@@ -8,7 +8,8 @@ export default function NotFound() {
       <h1>Not in the order book</h1>
       <p>This page does not exist. The fill screen, the network receipt and the bench numbers are one click away.</p>
       <p>
-        <Link href="/">Fill a message</Link> · <Link href="/receipt/">Network receipt</Link> · <a href="/about/">About Pastewise</a>
+        <Link href="/">Fill a message</Link> · <Link href="/receipt/">Network receipt</Link> · <Link href="/bench/">Bench numbers</Link> ·{" "}
+        <a href="/about/">About Pastewise</a>
       </p>
     </main>
   );
