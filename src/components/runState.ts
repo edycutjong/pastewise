@@ -22,14 +22,24 @@ export function mergeBatch(run: FormRun | undefined, runId: string, fields: Fiel
   return { ...run, boxes, batches: [...run.batches, b] };
 }
 
-/** Summary counts; a box the person edited is counted as edited, never as found or to-check. */
+/**
+ * A cell that a spreadsheet would read as a formula (it starts with =, +, - or @) is copied with a leading apostrophe, the usual
+ * CSV/formula-injection defence: spreadsheets read the cell as text instead of running it. The gate accepts a value because it IS in the paste, so a
+ * message can carry `=HYPERLINK(...)` or `=IMPORTXML(...)` into a notes box word for word; the copy must not let the sheet run it.
+ * It also keeps "+62 811 5550 4471" a phone number instead of a formula parse error.
+ */
+const FORMULA_START = /^[=+\-@]/;
+
 /**
  * The boxes as they stand, for pasting into a spreadsheet: a header row of captions and a row of values, tab-separated.
  * Amber boxes the person has not touched are copied as they stand (a name suggestion, or empty) and named by caption,
  * so the status line can say which columns still need a look. Pastewise never submits anything; this only writes the clipboard.
  */
 export function rowForCopy(run: FormRun | undefined, columns: { name: string; caption: string }[]) {
-  const cell = (v: string) => v.replace(/[\t\r\n]+/g, " ").trim();
+  const cell = (v: string) => {
+    const t = v.replace(/[\t\r\n]+/g, " ").trim();
+    return FORMULA_START.test(t) ? `'${t}` : t;
+  };
   const values = columns.map((c) => cell(run?.boxes[c.name]?.value ?? ""));
   const amber = columns
     .filter((c) => {
@@ -40,6 +50,7 @@ export function rowForCopy(run: FormRun | undefined, columns: { name: string; ca
   return { tsv: `${columns.map((c) => cell(c.caption)).join("\t")}\n${values.join("\t")}`, filled: values.filter(Boolean).length, amber };
 }
 
+/** Summary counts; a box the person edited is counted as edited, never as found or to-check. */
 export function countBoxes(run: FormRun | undefined, keys: string[]) {
   const c = { found: 0, amber: 0, empty: 0, edited: 0, total: keys.length };
   if (!run) return c;
