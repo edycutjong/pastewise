@@ -19,6 +19,7 @@
     "lint:fix": "eslint --fix",
     "test:coverage": "vitest run --coverage",
     "e2e:live": "playwright test -c playwright.live.config.ts",
+    "check:sets": "node scripts/sets/check_gold.mjs sets/bench.json",
     "lighthouse": "npx --yes @lhci/cli@0.15.1 autorun",
     "ci": "npm run lint && npm run typecheck && npm run test:coverage && npm run build && npm run e2e"
   },

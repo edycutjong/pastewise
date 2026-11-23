@@ -141,8 +141,10 @@ for (const it of set.items) {
   // postal
   if (roles.postal) {
     const zv = g[roles.postal];
-    const fives = [...stripPhones(paste).matchAll(/(?<![\d,.])\d{5}(?![\d,.])/g)].map((m) => m[0]);
-    if (zv) { if (!/^\d{5}$/.test(zv) || !paste.includes(zv)) fail(id, `postal gold ${zv} not a 5-digit run in paste`); }
+    // standalone = not touching another digit, even across one "." or "," (so "10510." at a sentence end counts, "12.50000" does not),
+    // and found outside phone numbers (a 5-digit slice of "0857 5550 8812" is not a postal code)
+    const fives = [...stripPhones(paste).matchAll(/(?<!\d[.,]?)\d{5}(?![.,]?\d)/g)].map((m) => m[0]);
+    if (zv) { if (!/^\d{5}$/.test(zv) || !fives.includes(zv)) fail(id, `postal gold ${zv} not a standalone 5-digit run outside phone numbers`); }
     else if (fives.length) fail(id, `postal gold empty but paste has 5-digit ${fives.join(",")}`);
   }
   // svc

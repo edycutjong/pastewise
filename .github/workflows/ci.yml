@@ -36,6 +36,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Bench set gold check (every gold value derivable from its paste)
+        run: npm run check:sets
       - name: Unit tests with coverage
         run: npm run test:coverage
       - uses: actions/upload-artifact@v4
