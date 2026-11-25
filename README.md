@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/assets/icon.svg" alt="Pastewise icon" width="144">
+  <img src="docs/assets/icon-animated.svg" alt="Pastewise icon" width="144" height="144">
   <h1>Pastewise ✍️</h1>
   <p><em>Orders arrive as chat messages and get typed again into a form. Paste the message into Pastewise, press ⌘↵ (Ctrl+Enter), and the fields fill on your laptop; code keeps only what is really in your text.</em></p>
   <img src="docs/assets/readme-hero-animated.svg" alt="Pastewise: boxes press through in carbon blue; one phone number stays amber. Text from your paste sent to the cloud: 0 bytes found." width="100%">
@@ -14,6 +14,7 @@
   [![Devpost entry](https://img.shields.io/badge/Devpost-Project_page-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/pastewise)
   [![dev.to write-up](https://img.shields.io/badge/dev.to-Write--up-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/edycutjong/i-aimed-for-90-form-fill-accuracy-on-device-and-got-807-what-a-code-gate-around-gemini-nano-3937)
   [![X thread](https://img.shields.io/badge/X-Thread-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/edycutjong/status/2125695040681119878)
+  [![Release](https://img.shields.io/github/v/release/edycutjong/pastewise?style=for-the-badge&logo=github&label=Release)](https://github.com/edycutjong/pastewise/releases/latest)
 
   <br/>
 
