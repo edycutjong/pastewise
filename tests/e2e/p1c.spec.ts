@@ -110,7 +110,8 @@ test("kill switch on: consent sheet has no Send button and says the cloud is off
   await expect(sheet.getByTestId("consent-send")).toHaveCount(0);
   await sheet.getByTestId("consent-decline").click();
   await page.getByRole("button", { name: "Teach this form" }).click();
-  await expect(page.getByRole("dialog", { name: "Teach this form" }).getByRole("button", { name: /Send this empty form/ })).toBeDisabled();
+  // the label reads "Ask again" once the builder-seeded copy has loaded from Firestore (timing-dependent); either way no fresh call
+  await expect(page.getByRole("dialog", { name: "Teach this form" }).getByRole("button", { name: /(Send|Ask again with) this empty form/ })).toBeDisabled();
 });
 
 test("first run: a model that fails to start shows the reason and offers retry or the cloud, sending nothing", async ({ page }) => {

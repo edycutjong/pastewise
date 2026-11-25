@@ -43,6 +43,8 @@ test("samples: one click loads a synthetic message and switches to its form", as
 
 test("samples: a message the person pasted is not replaced without a Yes", async ({ page }) => {
   await page.goto("/");
+  // wait for hydration: a click before React attaches its handler shows no dialog and leaves the dismiss handler armed
+  await page.waitForFunction(() => "__pastewise" in window);
   await page.locator("#paste").fill("Kirim 2 kotak ke Bu Rina, 0812 5550 1188, Jl. Melati 3, Bogor 16111");
   page.once("dialog", (d) => d.dismiss());
   await page.getByTestId("sample-S2").click();
