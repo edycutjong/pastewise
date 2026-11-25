@@ -43,18 +43,29 @@ test("samples: one click loads a synthetic message and switches to its form", as
 
 test("samples: a message the person pasted is not replaced without a Yes", async ({ page }) => {
   await page.goto("/");
-  // wait for hydration: a click before React attaches its handler shows no dialog and leaves the dismiss handler armed
+  // wait for hydration: a click before React attaches its handler would do nothing at all
   await page.waitForFunction(() => "__pastewise" in window);
   await page.locator("#paste").fill("Kirim 2 kotak ke Bu Rina, 0812 5550 1188, Jl. Melati 3, Bogor 16111");
-  page.once("dialog", (d) => d.dismiss());
-  await page.getByTestId("sample-S2").click();
+  // window.confirm is answered by a stub, not a native dialog: Playwright's dialog events in Chrome occasionally arrive
+  // for a dialog that is already closed ("No dialog is showing", ~1 in 50 runs), which made this test flaky. The stub
+  // records every question and returns the scripted answers, so the assertions below are exact.
+  await page.evaluate(() => {
+    const w = window as unknown as { __asked: string[]; __answers: boolean[] };
+    w.__asked = [];
+    w.__answers = [false, true];
+    window.confirm = (m?: string) => { w.__asked.push(String(m)); return w.__answers.shift() ?? false; };
+  });
+  const asked = () => page.evaluate(() => (window as unknown as { __asked: string[] }).__asked.length);
+  await page.getByTestId("sample-S2").click(); // answered "No"
   await expect(page.locator("#paste")).toHaveValue(/Bu Rina/);
-  page.once("dialog", (d) => d.accept());
-  await page.getByTestId("sample-S2").click();
+  expect(await asked(), "replacing a pasted message asks first").toBe(1);
+  await page.getByTestId("sample-S2").click(); // answered "Yes"
   await expect(page.locator("#paste")).toHaveValue(/double room for 3 nights/);
+  expect(await asked()).toBe(2);
   // switching between samples asks nothing
   await page.getByTestId("sample-S3").click();
   await expect(page.locator("#paste")).toHaveValue(/ceramic mug set/);
+  expect(await asked(), "switching between samples must not ask").toBe(2);
 });
 
 // Unplug must fail, in the browser: Nano is "available" but the model call dies. The page must say so, fill nothing and send nothing.
