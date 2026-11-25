@@ -14,7 +14,6 @@
   [![Devpost entry](https://img.shields.io/badge/Devpost-Project_page-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/pastewise)
   [![dev.to write-up](https://img.shields.io/badge/dev.to-Write--up-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/edycutjong/i-aimed-for-90-form-fill-accuracy-on-device-and-got-807-what-a-code-gate-around-gemini-nano-3937)
   [![X thread](https://img.shields.io/badge/X-Thread-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/edycutjong/status/2125695040681119878)
-  [![Release](https://img.shields.io/github/v/release/edycutjong/pastewise?style=for-the-badge&logo=github&label=Release)](https://github.com/edycutjong/pastewise/releases/latest)
 
   <br/>
 
@@ -23,6 +22,7 @@
   ![Firebase AI Logic](https://img.shields.io/badge/Firebase_AI_Logic-FFCA28?style=flat&logo=firebase&logoColor=black)
   ![Gemini Nano](https://img.shields.io/badge/Gemini_Nano-on_device-4285F4?style=flat)
   [![License](https://img.shields.io/badge/License-Apache_2.0-yellow)](LICENSE)
+  [![Release](https://img.shields.io/github/v/release/edycutjong/pastewise?style=flat&logo=github&label=Release)](https://github.com/edycutjong/pastewise/releases/latest)
 
 </div>
 
