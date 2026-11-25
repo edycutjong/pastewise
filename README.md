@@ -7,6 +7,7 @@
   <br/>
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-2B3D9C?style=for-the-badge)](https://pastewise.edycu.dev)
+  [![Demo Video](https://img.shields.io/badge/▶_Demo-Video_2:59-C4302B?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/WShVNHWsBV0)
   [![Network receipt](https://img.shields.io/badge/🧾_Network-Receipt-B86A00?style=for-the-badge)](https://pastewise.edycu.dev/receipt/)
   [![Bench](https://img.shields.io/badge/📊_Bench-Numbers-1F2433?style=for-the-badge)](https://pastewise.edycu.dev/bench/)
   [![Built for #BuildHybridAI](https://img.shields.io/badge/Devpost-Build_Hybrid_AI-8b5cf6?style=for-the-badge)](https://firebasehybridaihackathon.devpost.com/)
@@ -176,6 +177,7 @@ sets/          dev, form-c-mid, bench (180 pairs) and holdout (45 pairs) sets, r
 
 ## 📽️ Demo Materials
 
+- Demo video (2:59): <https://youtu.be/WShVNHWsBV0>
 - Live page: <https://pastewise.edycu.dev>
 - Recorded network receipt: <https://pastewise.edycu.dev/receipt/>
 - Bench page: <https://pastewise.edycu.dev/bench/>
