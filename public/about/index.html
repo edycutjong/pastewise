@@ -308,6 +308,9 @@ footer{background:var(--ink);color:var(--sheet);padding:56px 0 40px}
 .foot li{margin:0 0 9px}
 .foot a{color:var(--sheet)}
 .stamp-line{margin-top:34px;padding-top:18px;border-top:1px solid color-mix(in srgb,var(--sheet) 25%,var(--ink));font:12px/1.6 var(--font-data);color:color-mix(in srgb,var(--sheet) 70%,var(--ink))}
+.stamp-line .release{color:var(--sheet);text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--sheet) 40%,var(--ink));text-underline-offset:3px;transition:text-decoration-color .15s}
+.stamp-line .release:hover{text-decoration-color:var(--sheet)}
+.stamp-line .release:focus-visible{outline:2px solid var(--sheet);outline-offset:2px}
 /* responsive */
 @media (max-width:1100px){
   .hero-grid{grid-template-columns:minmax(0,1fr);gap:34px}
@@ -601,7 +604,7 @@ her old number <mark data-k="cnee_tel" class="cand">0813-5550-2290</mark> is dea
       <div><h3>Use it</h3><ul><li><a href="/">Try it live</a></li><li><a href="/receipt/">Network receipt</a></li><li><a href="/bench/">Bench numbers</a></li></ul></div>
       <div><h3>Read it</h3><ul><li><a href="/pitch/">Pitch deck</a></li><li><a href="https://github.com/edycutjong/pastewise">Source code</a></li><li><a href="https://github.com/edycutjong/pastewise/blob/main/LICENSE">Apache-2.0</a></li></ul></div>
     </div>
-    <p class="stamp-line">Built from evidence at 56c15cf · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
+    <p class="stamp-line">Release <a class="release" data-release href="https://github.com/edycutjong/pastewise/releases/tag/v0.1.0">v0.1.0</a> · Built from evidence at 56c15cf · gate v4 · prompt p0c-v3 · synthetic data throughout</p>
   </div>
 </footer>
 <script src="/site/gate.js"></script>

@@ -9,6 +9,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev -p 3102",
+    "prebuild": "node scripts/release/stamp.mjs",
     "build": "next build",
     "start": "npx serve out -l 3102",
     "lint": "eslint",
