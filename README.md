@@ -11,6 +11,9 @@
   [![Network receipt](https://img.shields.io/badge/🧾_Network-Receipt-B86A00?style=for-the-badge)](https://pastewise.edycu.dev/receipt/)
   [![Bench](https://img.shields.io/badge/📊_Bench-Numbers-1F2433?style=for-the-badge)](https://pastewise.edycu.dev/bench/)
   [![Built for #BuildHybridAI](https://img.shields.io/badge/Devpost-Build_Hybrid_AI-8b5cf6?style=for-the-badge)](https://firebasehybridaihackathon.devpost.com/)
+  [![Devpost entry](https://img.shields.io/badge/Devpost-Project_page-003E54?style=for-the-badge&logo=devpost&logoColor=white)](https://devpost.com/software/pastewise)
+  [![dev.to write-up](https://img.shields.io/badge/dev.to-Write--up-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/edycutjong/i-aimed-for-90-form-fill-accuracy-on-device-and-got-807-what-a-code-gate-around-gemini-nano-3937)
+  [![X thread](https://img.shields.io/badge/X-Thread-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/edycutjong/status/2125695040681119878)
 
   <br/>
 
