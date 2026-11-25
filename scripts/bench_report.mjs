@@ -15,10 +15,11 @@ const commit = arg("commit");
 if (!/^[\w-]+$/.test(set)) throw new Error(`--set must be a plain name, got ${JSON.stringify(set)}`);
 if (commit !== undefined && !/^[0-9a-f]{4,40}$/.test(commit)) throw new Error(`--commit must be a git sha, got ${JSON.stringify(commit)}`);
 const dir = path.join(ROOT, "evidence/bench");
-const files = fs.readdirSync(dir).filter((f) => new RegExp(`-${set}-(off|hints)-r\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
+const reSet = set.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // escaped as well, so the pattern can only ever match the literal name
+const files = fs.readdirSync(dir).filter((f) => new RegExp(`-${reSet}-(off|hints)-r\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
 // bench.mjs never overwrites a run file: a rerun is saved as "...-r1-run2.json". This report reads first runs only, so it refuses
 // to run while a rerun of the same set exists instead of quietly reporting the earlier numbers (pooling both would inflate repeats).
-const reruns = fs.readdirSync(dir).filter((f) => new RegExp(`-${set}-(off|hints)-r\\d+-run\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
+const reruns = fs.readdirSync(dir).filter((f) => new RegExp(`-${reSet}-(off|hints)-r\\d+-run\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
 if (reruns.length) {
   console.error(`refusing: ${reruns.length} rerun file(s) for set ${set} (${reruns.slice(0, 3).join(", ")}…); move the superseded run files out of evidence/bench/ first, keeping them in git history, then re-run`);
   process.exit(1);
