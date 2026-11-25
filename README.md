@@ -57,7 +57,7 @@ The message is read by the model on the laptop. The model is not trusted: a valu
 
 ## 🏗️ Architecture & Tech Stack
 
-<p align="center"><img src="docs/assets/architecture.svg" alt="Architecture: the paste goes through a schema built from the live form to Gemini Nano on the laptop, then through the code gate. Only the empty form goes to the Firebase cloud model. An egress ledger watches every request." width="100%"></p>
+<p align="center"><img src="docs/assets/architecture.png" alt="Pastewise architecture: your paste stays on this laptop. The message goes through a schema built from the live form to Gemini Nano (ONLY_ON_DEVICE, no cloud fallback), then a code gate that keeps a value only if it is in your text; the egress ledger counts paste words in every request: 0 bytes found. The Firebase form teacher (ONLY_IN_CLOUD) gets only the empty form. Without Nano, the consent sheet shows the exact message and its bytes, and nothing is sent until Send this one. Measured: 80.7% strict accuracy on 45 held-out pairs, 0 requests during on-device fills, 682 B shown = 2 x the 341-byte message on the wire, 401 for an AI Logic call without App Check." width="100%"></p>
 
 | Layer | Choice |
 |---|---|
