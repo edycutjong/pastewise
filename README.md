@@ -33,6 +33,10 @@
 
 ## 📸 See it in Action
 
+<p align="center"><img src="docs/assets/broll.gif" alt="Screen capture of the live Pastewise app: a gift-order message is pasted, Fill this message is pressed, the button reads Starting the on-device model then Reading on this laptop, and the consignment-note boxes fill in blue with their source words underlined in the message while the name, phone and remarks boxes stay amber; the badge shows ON_DEVICE. Zoomed in, the amber CNEE TEL box offers two numbers, the new number 0857 5550 8812 is clicked and the box reads picked by you. The footer then shows TEXT FROM YOUR PASTE SENT TO THE CLOUD: 0 bytes found, with ten outbound requests each at 0 paste bytes found." width="100%"></p>
+
+<p align="center"><em>Real screen capture of a recorded run on the live app (Chrome 157, Gemini Nano on-device): three moments from one session, trimmed and cropped, played at 1× (no speed-up); the last frame is held 1.5 s.</em></p>
+
 <p align="center"><img src="docs/assets/devpost-gallery.png" alt="Pastewise: a white top sheet holding the pasted message beside the pink copy form, with blue values pressed through and one amber phone box" width="100%"></p>
 
 1. Copy an order message from a chat. Paste it on the white **top sheet**.
