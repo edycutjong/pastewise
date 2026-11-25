@@ -11,6 +11,9 @@ const arg = (k, d) => {
 };
 const set = arg("set", "bench");
 const commit = arg("commit");
+// both go into file-name patterns below: accept plain names and short shas only
+if (!/^[\w-]+$/.test(set)) throw new Error(`--set must be a plain name, got ${JSON.stringify(set)}`);
+if (commit !== undefined && !/^[0-9a-f]{4,40}$/.test(commit)) throw new Error(`--commit must be a git sha, got ${JSON.stringify(commit)}`);
 const dir = path.join(ROOT, "evidence/bench");
 const files = fs.readdirSync(dir).filter((f) => new RegExp(`-${set}-(off|hints)-r\\d+\\.json$`).test(f) && (!commit || f.includes(`-${commit}-`)));
 // bench.mjs never overwrites a run file: a rerun is saved as "...-r1-run2.json". This report reads first runs only, so it refuses

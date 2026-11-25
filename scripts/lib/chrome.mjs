@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import http from "node:http";
-import { spawn, execSync } from "node:child_process";
+import { spawn, execFileSync } from "node:child_process";
 import puppeteer from "puppeteer-core";
 
 export const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -42,7 +42,7 @@ export function debugToken() {
 export async function launchChrome({ profile = process.env.PW_CHROME_PROFILE ?? `${process.env.HOME}/.cache/shape-nano-chrome`, port = 9334 } = {}) {
   let running = false;
   try {
-    execSync(`pgrep -f ${path.basename(profile)}`);
+    execFileSync("pgrep", ["-f", path.basename(profile)]); // no shell: the profile path comes from the environment
     running = true;
   } catch {
     /* pgrep exits 1 when nothing matches */

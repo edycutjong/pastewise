@@ -4,7 +4,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import http from "node:http";
-import { spawn, execSync } from "node:child_process";
+import { spawn, execFileSync } from "node:child_process";
 import puppeteer from "puppeteer-core";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -72,7 +72,7 @@ const srv = process.env.BASE_URL ? { close() {} } : http
 
 // ---- Chrome (never two instances on this profile) ----
 try {
-  execSync(`pgrep -f ${path.basename(PROFILE)}`);
+  execFileSync("pgrep", ["-f", path.basename(PROFILE)]); // no shell: the profile path comes from the environment
   throw new Error(`Chrome already running on ${PROFILE}`);
 } catch (e) {
   if (String(e.message).startsWith("Chrome already")) throw e;
@@ -132,7 +132,7 @@ await cdp.send("Network.enable");
 cdp.on("Network.requestWillBeSent", (e) =>
   net.push({ phase, url: e.request.url.split("?")[0], method: e.request.method, postBytes: e.request.postData ? Buffer.byteLength(e.request.postData) : 0 }),
 );
-const AI_HOSTS = /firebasevertexai\.googleapis\.com|generativelanguage\.googleapis\.com/;
+const AI_HOSTS = /^https:\/\/(?:firebasevertexai|generativelanguage)\.googleapis\.com\//;
 const netIn = (ph) => net.filter((n) => n.phase === ph && !n.url.startsWith(BASE) && !n.url.startsWith("data:"));
 
 await page.goto(`${BASE}/spike/`, { waitUntil: "networkidle0" });

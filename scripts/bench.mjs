@@ -9,7 +9,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import os from "node:os";
-import { execSync } from "node:child_process";
+import { execSync, execFileSync } from "node:child_process";
 import { ROOT, serveOut, launchChrome, openApp, fillOnce } from "./lib/chrome.mjs";
 import { score } from "./lib/score.mjs";
 
@@ -70,7 +70,7 @@ let contended = false;
 try {
   // Optional: name another Chrome profile that shares this GPU (PW_CONTENDING_PROFILE=<dir name>).
   if (process.env.PW_CONTENDING_PROFILE) {
-    execSync(`pgrep -f ${JSON.stringify(process.env.PW_CONTENDING_PROFILE)}`);
+    execFileSync("pgrep", ["-f", process.env.PW_CONTENDING_PROFILE]); // no shell: the name comes from the environment
     contended = true;
   }
 } catch {
